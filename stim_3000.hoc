@@ -1,0 +1,418 @@
+/* In this experiment I'm going to test a classic 2 exponential NMDA model
+Its voltage dependent block provided by Mg and happens fast
+I'm going to fit my model to the Wild Type NMDAR recordings obtained from 
+Dendrites of CA1-CA3 Neurons Reported in Spruston95
+Keivan Moradi
+*/
+load_file("nrngui.hoc")
+load_file("CA1.hoc")
+
+/*********Paramètres globaux des synapses********/
+Tau1	= 20	
+Tau2	= 20
+Tau1_1	= 2	
+Tau2_1	= 9
+
+SynWeight = 0.664 //nmda
+SynWeight_1 = 2.324 //ampa
+SynWeight_2 = 0.0664 //nmda_ca
+
+//3.32*10e-12  m2 = 
+aire_soma=3.32*10e-12
+
+/**********Definitions des synapses************/
+objref sNMDA[24],sAMPA[24],sNMDA_CA[3]
+
+//apical
+for i=0,8{
+	access apical[i]{
+	//NMDA_SYNAPSES
+		sNMDA[i] = new nmda(0.5)
+		sNMDA[i].tau1	= Tau1	
+    	sNMDA[i].tau2	= Tau2
+    //AMPA_SYNAPSES	
+    	sAMPA[i] = new ampa(0.5)
+		sAMPA[i].tau1	= Tau1_1	
+    	sAMPA[i].tau2	= Tau2_1	
+		}
+	}
+
+//lateral	
+for i=9,20{
+	access lateral[i-9]{
+	//NMDA_SYNAPSES
+		sNMDA[i] = new nmda(0.5)
+		sNMDA[i].tau1	= Tau1	
+    	sNMDA[i].tau2	= Tau2
+    //AMPA_SYNAPSES	
+    	sAMPA[i] = new ampa(0.5)
+		sAMPA[i].tau1	= Tau1_1	
+    	sAMPA[i].tau2	= Tau2_1	
+		}
+	}
+	
+//spine 1,3 et 5
+
+for i=21,21{ 
+	access spine[i-20]{
+	//NMDA_SYNAPSES
+		sNMDA[i] = new nmda(0.5)
+		sNMDA[i].tau1	= Tau1	
+    	sNMDA[i].tau2	= Tau2
+    //AMPA_SYNAPSES	
+    	sAMPA[i] = new ampa(0.5)
+		sAMPA[i].tau1	= Tau1_1	
+    	sAMPA[i].tau2	= Tau2_1	
+    //NMDA_CA_SYNAPSES	
+		sNMDA_CA[0] = new nmda_ca(0.5)
+		sNMDA_CA[0].tau1	= Tau1	
+    	sNMDA_CA[0].tau2	= Tau2
+		}
+	}
+
+for i=22,22{ 
+	access spine[i-19]{
+	//NMDA_SYNAPSES
+		sNMDA[i] = new nmda(0.5)
+		sNMDA[i].tau1	= Tau1	
+    	sNMDA[i].tau2	= Tau2
+    //AMPA_SYNAPSES	
+    	sAMPA[i] = new ampa(0.5)
+		sAMPA[i].tau1	= Tau1_1	
+    	sAMPA[i].tau2	= Tau2_1	
+    //NMDA_CA_SYNAPSES	
+		sNMDA_CA[1] = new nmda_ca(0.5)
+		sNMDA_CA[1].tau1	= Tau1	
+    	sNMDA_CA[1].tau2	= Tau2
+		}
+	}
+	
+for i=23,23{ 
+	access spine[i-18]{
+	//NMDA_SYNAPSES
+		sNMDA[i] = new nmda(0.5)
+		sNMDA[i].tau1	= Tau1	
+    	sNMDA[i].tau2	= Tau2
+    //AMPA_SYNAPSES	
+    	sAMPA[i] = new ampa(0.5)
+		sAMPA[i].tau1	= Tau1_1	
+    	sAMPA[i].tau2	= Tau2_1	
+    //NMDA_CA_SYNAPSES	
+		sNMDA_CA[2] = new nmda_ca(0.5)
+		sNMDA_CA[2].tau1	= Tau1	
+    	sNMDA_CA[2].tau2	= Tau2
+		}
+	}
+
+/**********CAS DE SIMULATIONS**********/
+/*
+Interval de simulation: 1s = 1000ms
+
+Combinaison of inputs: 	-spine1
+						-spine2
+						-all dendrites on cell
+						-spine1 + all dendrites
+						-spine2 + all dendrites
+						-tetanic input on spine1 + all dendrites
+		
+*/
+
+
+/*******Paramètres globaux pre-synaptiques events**********/
+//interval = 10  //ms (mean) time between spikes
+//number = 30 //(average) number of spikes
+//start 	= 300	//ms (most likely) start time of first spike
+//noise 	= 0		//---- range 0 to 1. Fractional randomness.
+						//0 deterministic, 1 intervals have negexp distribution
+
+
+
+/*****Definitions des objets de stimulations*****/
+objref stim[90], nc[90], nc_AMPA[90], nc_NMDA_CA[6]
+
+objref stim_1[24], stim_2[24],nc_1[24], nc_AMPA_1[24],nc_2[24], nc_AMPA_2[24]
+objref stim_4[24], stim_5[24],nc_4[24], nc_AMPA_4[24],nc_5[24], nc_AMPA_5[24]
+objref stim_6[24], nc_6[24], nc_AMPA_6[24]
+
+/****All Dendrites****/
+//apical
+for i=0,8{
+	access apical[i]{
+	//Evenements pré-synaptiques
+		stim_1[i] = new NetStim(.5)
+		stim_1[i].interval = 0
+		stim_1[i].number = 1
+		stim_1[i].start 	= 1000
+		stim_1[i].noise 	= 0
+	//Definition des connections
+		//NMDA
+		nc_1[i] = new NetCon(stim_1[i], sNMDA[i])
+		nc_1[i].weight =   gmax_nmda*aire_soma*10e4*10e6 //weight = uS
+		nc_1[i].delay = 1 
+		
+		//AMPA
+		nc_AMPA_1[i] = new NetCon(stim_1[i], sAMPA[i])
+		nc_AMPA_1[i].weight = gmax_ampa*aire_soma*10e4*10e6 //weight = uS
+		nc_AMPA_1[i].delay = 1 		
+		}
+	}
+	
+//lateral	
+for i=9,20{
+	access lateral[i-9]{
+	//Evenements pré-synaptiques
+		stim_1[i] = new NetStim(.5)
+		stim_1[i].interval = 0
+		stim_1[i].number = 1
+		stim_1[i].start 	= 1000
+		stim_1[i].noise 	= 0
+	//Definition des connections
+		//NMDA
+		nc_1[i] = new NetCon(stim_1[i], sNMDA[i])
+		nc_1[i].weight =   gmax_nmda*aire_soma*10e4*10e6 //weight = uS
+		nc_1[i].delay = 1 
+		
+		//AMPA
+		nc_AMPA_1[i] = new NetCon(stim_1[i], sAMPA[i])
+		nc_AMPA_1[i].weight = gmax_ampa*aire_soma*10e4*10e6 //weight = uS
+		nc_AMPA_1[i].delay = 1 		
+		}
+	}
+
+
+
+
+/****All Dendrites****/
+//apical
+for i=0,8{
+	access apical[i]{
+	//Evenements pré-synaptiques
+		stim_2[i] = new NetStim(.5)
+		stim_2[i].interval = 0
+		stim_2[i].number = 1
+		stim_2[i].start 	= 2000
+		stim_2[i].noise 	= 0
+	//Definition des connections
+		//NMDA
+		nc_2[i] = new NetCon(stim_2[i], sNMDA[i])
+		nc_2[i].weight =   gmax_nmda*aire_soma*10e4*10e6 //weight = uS
+		nc_2[i].delay = 1 
+		
+		//AMPA
+		nc_AMPA_2[i] = new NetCon(stim_2[i], sAMPA[i])
+		nc_AMPA_2[i].weight = gmax_ampa*aire_soma*10e4*10e6 //weight = uS
+		nc_AMPA_2[i].delay = 1 		
+		}
+	}
+	
+//lateral	
+for i=9,20{
+	access lateral[i-9]{
+	///Evenements pré-synaptiques
+		stim_2[i] = new NetStim(.5)
+		stim_2[i].interval = 0
+		stim_2[i].number = 1
+		stim_2[i].start 	= 2000
+		stim_2[i].noise 	= 0
+	//Definition des connections
+		//NMDA
+		nc_2[i] = new NetCon(stim_2[i], sNMDA[i])
+		nc_2[i].weight =   gmax_nmda*aire_soma*10e4*10e6 //weight = uS
+		nc_2[i].delay = 1 
+		
+		//AMPA
+		nc_AMPA_2[i] = new NetCon(stim_2[i], sAMPA[i])
+		nc_AMPA_2[i].weight = gmax_ampa*aire_soma*10e4*10e6 //weight = uS
+		nc_AMPA_2[i].delay = 1 		
+		}
+	}
+
+
+
+/****All Dendrites****/
+//apical
+for i=0,8{
+	access apical[i]{
+	//Evenements pré-synaptiques
+		stim[i] = new NetStim(.5)
+		stim[i].interval = 0
+		stim[i].number = 1
+		stim[i].start 	= 3000
+		stim[i].noise 	= 0
+	//Definition des connections
+		//NMDA
+		nc[i] = new NetCon(stim[i], sNMDA[i])
+		nc[i].weight =   gmax_nmda*aire_soma*10e4*10e6 //weight = uS
+		nc[i].delay = 1 
+		
+		//AMPA
+		nc_AMPA[i] = new NetCon(stim[i], sAMPA[i])
+		nc_AMPA[i].weight = gmax_ampa*aire_soma*10e4*10e6 //weight = uS
+		nc_AMPA[i].delay = 1 		
+		}
+	}
+	
+//lateral	
+for i=9,20{
+	access lateral[i-9]{
+	//Evenements pré-synaptiques
+		stim[i] = new NetStim(.5)
+		stim[i].interval = 0
+		stim[i].number = 1
+		stim[i].start 	= 3000
+		stim[i].noise 	= 0
+	//Definition des connections
+		//NMDA
+		nc[i] = new NetCon(stim[i], sNMDA[i])
+		nc[i].weight =   gmax_nmda*aire_soma*10e4*10e6 //weight = uS
+		nc[i].delay = 1 
+		
+		//AMPA
+		nc_AMPA[i] = new NetCon(stim[i], sAMPA[i])
+		nc_AMPA[i].weight = gmax_ampa*aire_soma*10e4*10e6 //weight = uS
+		nc_AMPA[i].delay = 1 
+		}
+	}
+
+
+
+//apical
+for i=0,8{
+	access apical[i]{
+	//Evenements pré-synaptiques
+		stim_4[i] = new NetStim(.5)
+		stim_4[i].interval = 0
+		stim_4[i].number = 1
+		stim_4[i].start 	= 4000
+		stim_4[i].noise 	= 0
+	//Definition des connections
+		//NMDA
+		nc_4[i] = new NetCon(stim_4[i], sNMDA[i])
+		nc_4[i].weight =   gmax_nmda*aire_soma*10e4*10e6 //weight = uS
+		nc_4[i].delay = 1 
+		
+		//AMPA
+		nc_AMPA_4[i] = new NetCon(stim_4[i], sAMPA[i])
+		nc_AMPA_4[i].weight = gmax_ampa*aire_soma*10e4*10e6 //weight = uS
+		nc_AMPA_4[i].delay = 1 		
+		}
+	}
+	
+//lateral	
+for i=0,11{
+	access lateral[i]{
+	//Evenements pré-synaptiques
+		stim_4[i] = new NetStim(.5)
+		stim_4[i].interval = 0
+		stim_4[i].number = 1
+		stim_4[i].start 	= 4000
+		stim_4[i].noise 	= 0
+	//Definition des connections
+		//NMDA
+		nc_4[i] = new NetCon(stim_4[i], sNMDA[i])
+		nc_4[i].weight =   gmax_nmda*aire_soma*10e4*10e6 //weight = uS
+		nc_4[i].delay = 1 
+		
+		//AMPA
+		nc_AMPA_4[i] = new NetCon(stim_4[i], sAMPA[i])
+		nc_AMPA_4[i].weight = gmax_ampa*aire_soma*10e4*10e6 //weight = uS
+		nc_AMPA_4[i].delay = 1 		
+		}
+	}
+
+
+
+//apical
+for i=0,8{
+	access apical[i]{
+	//Evenements pré-synaptiques
+		stim_5[i] = new NetStim(.5)
+		stim_5[i].interval = 0
+		stim_5[i].number = 1
+		stim_5[i].start 	= 5000
+		stim_5[i].noise 	= 0
+	//Definition des connections
+		//NMDA
+		nc_5[i] = new NetCon(stim_5[i], sNMDA[i])
+		nc_5[i].weight =   gmax_nmda*aire_soma*10e4*10e6 //weight = uS
+		nc_5[i].delay = 1 
+		
+		//AMPA
+		nc_AMPA_5[i] = new NetCon(stim_5[i], sAMPA[i])
+		nc_AMPA_5[i].weight = gmax_ampa*aire_soma*10e4*10e6 //weight = uS
+		nc_AMPA_5[i].delay = 1 		
+		}
+	}
+	
+//lateral	
+for i=0,11{
+	access lateral[i]{
+	//Evenements pré-synaptiques
+		stim_5[i] = new NetStim(.5)
+		stim_5[i].interval = 0
+		stim_5[i].number = 1
+		stim_5[i].start 	= 5000
+		stim_5[i].noise 	= 0
+	//Definition des connections
+		//NMDA
+		nc_5[i] = new NetCon(stim_5[i], sNMDA[i])
+		nc_5[i].weight =   gmax_nmda*aire_soma*10e4*10e6 //weight = uS
+		nc_5[i].delay = 1 
+		
+		//AMPA
+		nc_AMPA_5[i] = new NetCon(stim_5[i], sAMPA[i])
+		nc_AMPA_5[i].weight = gmax_ampa*aire_soma*10e4*10e6 //weight = uS
+		nc_AMPA_5[i].delay = 1 		
+		}
+	}
+
+
+//apical
+for i=0,8{
+	access apical[i]{
+	//Evenements pré-synaptiques
+		stim_6[i] = new NetStim(.5)
+		stim_6[i].interval = 0
+		stim_6[i].number = 1
+		stim_6[i].start 	= 6000
+		stim_6[i].noise 	= 0
+	//Definition des connections
+		//NMDA
+		nc_6[i] = new NetCon(stim_6[i], sNMDA[i])
+		nc_6[i].weight =   gmax_nmda*aire_soma*10e4*10e6 //weight = uS
+		nc_6[i].delay = 1 
+		
+		//AMPA
+		nc_AMPA_6[i] = new NetCon(stim_6[i], sAMPA[i])
+		nc_AMPA_6[i].weight = gmax_ampa*aire_soma*10e4*10e6 //weight = uS
+		nc_AMPA_6[i].delay = 1 		
+		}
+	}
+	
+//lateral	
+for i=0,11{
+	access lateral[i]{
+		//Evenements pré-synaptiques
+		stim_6[i] = new NetStim(.5)
+		stim_6[i].interval = 0
+		stim_6[i].number = 1
+		stim_6[i].start 	= 6000
+		stim_6[i].noise 	= 0
+	//Definition des connections
+		//NMDA
+		nc_6[i] = new NetCon(stim_6[i], sNMDA[i])
+		nc_6[i].weight =   gmax_nmda*aire_soma*10e4*10e6 //weight = uS
+		nc_6[i].delay = 1 
+		
+		//AMPA
+		nc_AMPA_6[i] = new NetCon(stim_6[i], sAMPA[i])
+		nc_AMPA_6[i].weight = gmax_ampa*aire_soma*10e4*10e6 //weight = uS
+		nc_AMPA_6[i].delay = 1 		
+		}
+	}
+
+/****Running stimulation****/
+//run()
+
+access soma
+run()

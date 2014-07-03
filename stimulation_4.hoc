@@ -1,0 +1,388 @@
+load_file("nrngui.hoc")
+load_file("CA1.hoc")
+
+/*********Paramètres globaux des synapses********/
+Tau1	= 20	
+Tau2	= 20
+Tau1_1	= 2	
+Tau2_1	= 9
+aire_soma=3.32*1e-5 //cm2
+
+
+objref stim_1 , nc_1[24] , nc_AMPA_1[24] , nc_NMDA_CA_1[24]
+objref stim_2 , nc_2[24] , nc_AMPA_2[24] , nc_NMDA_CA_2[24] 
+objref stim_3 , nc_3[24] , nc_AMPA_3[24] , nc_NMDA_CA_3[24] 
+objref stim_4 , nc_4[24] , nc_AMPA_4[24] , nc_NMDA_CA_4[24] 
+objref stim_5 , nc_5[24] , nc_AMPA_5[24] , nc_NMDA_CA_5[24] 
+objref stim_6 , nc_6[24] , nc_AMPA_6[24] , nc_NMDA_CA_6[24] 
+
+//Evenements pré-synaptiques
+
+	stim_1 = new NetStim(.5)
+	stim_1.interval = 0
+	stim_1.number = 1
+	stim_1.start 	= 1000
+	stim_1.noise 	= 0
+
+	stim_2 = new NetStim(.5)
+	stim_2.interval = 0
+	stim_2.number = 1
+	stim_2.start 	= 2000
+	stim_2.noise 	= 0
+	
+	stim_3 = new NetStim(.5)
+	stim_3.interval = 0
+	stim_3.number = 1
+	stim_3.start 	= 3000
+	stim_3.noise 	= 0
+
+	stim_4 = new NetStim(.5)
+	stim_4.interval = 0
+	stim_4.number = 1
+	stim_4.start 	= 4000
+	stim_4.noise 	= 0
+
+	stim_5 = new NetStim(.5)
+	stim_5.interval = 0
+	stim_5.number = 1
+	stim_5.start 	= 5000
+	stim_5.noise 	= 0
+
+	stim_6 = new NetStim(.5)
+	stim_6.interval = 10
+	stim_6.number = 100
+	stim_6.start 	= 6000
+	stim_6.noise 	= 0
+	
+	
+/**********Definitions des synapses************/
+objref sNMDA[24],sAMPA[24],sNMDA_CA[3]
+
+//apical
+for i=0,8{
+	access apical[i]{
+	//NMDA_SYNAPSES
+		sNMDA[i] = new nmda(0.5)
+    //AMPA_SYNAPSES	
+    	sAMPA[i] = new ampa(0.5)	
+		}
+	}
+
+//lateral	
+for i=9,20{
+	access lateral[i-9]{
+	//NMDA_SYNAPSES
+		sNMDA[i] = new nmda(0.5)
+    //AMPA_SYNAPSES	
+    	sAMPA[i] = new ampa(0.5)
+		}
+	}
+	
+//spine 1,3 et 5
+
+for i=21,21{ 
+	access spine[i-20]{
+	//NMDA_SYNAPSES
+		sNMDA[i] = new nmda(0.5)
+    //AMPA_SYNAPSES	
+    	sAMPA[i] = new ampa(0.5)	
+    //NMDA_CA_SYNAPSES	
+		sNMDA_CA[0] = new nmda_ca(0.5)
+		}
+	}
+
+for i=22,22{ 
+	access spine[i-19]{
+	//NMDA_SYNAPSES
+		sNMDA[i] = new nmda(0.5)
+    //AMPA_SYNAPSES	
+    	sAMPA[i] = new ampa(0.5)
+    //NMDA_CA_SYNAPSES	
+		sNMDA_CA[1] = new nmda_ca(0.5)
+		}
+	}
+	
+for i=23,23{ 
+	access spine[i-18]{
+	//NMDA_SYNAPSES
+		sNMDA[i] = new nmda(0.5)
+    //AMPA_SYNAPSES	
+    	sAMPA[i] = new ampa(0.5)
+    //NMDA_CA_SYNAPSES	
+		sNMDA_CA[2] = new nmda_ca(0.5)
+		}
+	}
+/**/
+//1000
+//spine1
+for i=21,21{ 
+	access spine[i-20]{
+		//netcon
+		nc_1[i] = new NetCon(stim_1, sNMDA[i])
+		nc_1[i].weight =  10*gmax_nmda*aire_soma*1e6 //weight = uS //weight = uS
+		nc_1[i].delay = 1 
+		
+		nc_AMPA_1[i] = new NetCon(stim_1, sAMPA[i])
+		nc_AMPA_1[i].weight = 10*gmax_ampa*aire_soma*1e6 //weight = uS //weight = uS
+		nc_AMPA_1[i].delay = 1 
+		
+		nc_NMDA_CA_1[0] = new NetCon(stim_1, sNMDA_CA[0])
+		nc_NMDA_CA_1[0].weight = 10*gmax_nmda_ca*aire_soma*1e6 //weight = uS //weight = uS
+		nc_NMDA_CA_1[0].delay = 1 
+		}
+	}
+//apical
+for i=0,8{
+	access apical[i]{
+		//netcon
+		nc_1[i] = new NetCon(stim_1, sNMDA[i])
+		nc_1[i].weight =   10*gmax_nmda*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_1[i].delay = 1 
+		
+		nc_AMPA_1[i] = new NetCon(stim_1, sAMPA[i])
+		nc_AMPA_1[i].weight = 10*gmax_ampa*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_AMPA_1[i].delay = 1 
+		}
+	}
+//lateral	
+for i=0,11{
+	access lateral[i]{
+	//netcon
+		nc_1[i+9] = new NetCon(stim_1, sNMDA[i])
+		nc_1[i+9].weight =   10*gmax_nmda*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_1[i+9].delay = 1 
+		
+		nc_AMPA_1[i+9] = new NetCon(stim_1, sAMPA[i])
+		nc_AMPA_1[i+9].weight = 10*gmax_ampa*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_AMPA_1[i+9].delay = 1 
+		}
+	}
+	
+//2000
+//spine1
+for i=21,21{ 
+	access spine[i-20]{
+		//netcon
+		nc_2[i] = new NetCon(stim_2, sNMDA[i])
+		nc_2[i].weight =  10*gmax_nmda*aire_soma*1e6 //weight = uS //weight = uS
+		nc_2[i].delay = 1 
+		
+		nc_AMPA_2[i] = new NetCon(stim_2, sAMPA[i])
+		nc_AMPA_2[i].weight = 10*gmax_ampa*aire_soma*1e6 //weight = uS //weight = uS
+		nc_AMPA_2[i].delay = 1 
+		
+		nc_NMDA_CA_2[0] = new NetCon(stim_2, sNMDA_CA[0])
+		nc_NMDA_CA_2[0].weight = 10*gmax_nmda_ca*aire_soma*1e6 //weight = uS //weight = uS
+		nc_NMDA_CA_2[0].delay = 1 
+		}
+	}
+//apical
+for i=0,8{
+	access apical[i]{
+		//netcon
+		nc_2[i] = new NetCon(stim_2, sNMDA[i])
+		nc_2[i].weight =   10*gmax_nmda*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_2[i].delay = 1 
+		
+		nc_AMPA_2[i] = new NetCon(stim_2, sAMPA[i])
+		nc_AMPA_2[i].weight = 10*gmax_ampa*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_AMPA_2[i].delay = 1 
+		}
+	}
+//lateral	
+for i=0,11{
+	access lateral[i]{
+	//netcon
+		nc_2[i+9] = new NetCon(stim_2, sNMDA[i])
+		nc_2[i+9].weight =   10*gmax_nmda*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_2[i+9].delay = 1 
+		
+		nc_AMPA_2[i+9] = new NetCon(stim_2, sAMPA[i])
+		nc_AMPA_2[i+9].weight = 10*gmax_ampa*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_AMPA_2[i+9].delay = 1 
+		}
+	}	
+
+//3000
+//spine1
+for i=21,21{ 
+	access spine[i-20]{
+		//netcon
+		nc_3[i] = new NetCon(stim_3, sNMDA[i])
+		nc_3[i].weight =  10*gmax_nmda*aire_soma*1e6 //weight = uS //weight = uS
+		nc_3[i].delay = 1 
+		
+		nc_AMPA_3[i] = new NetCon(stim_3, sAMPA[i])
+		nc_AMPA_3[i].weight = 10*gmax_ampa*aire_soma*1e6 //weight = uS //weight = uS
+		nc_AMPA_3[i].delay = 1 
+		
+		nc_NMDA_CA_3[0] = new NetCon(stim_3, sNMDA_CA[0])
+		nc_NMDA_CA_3[0].weight = 10*gmax_nmda_ca*aire_soma*1e6 //weight = uS //weight = uS
+		nc_NMDA_CA_3[0].delay = 1 
+		}
+	}
+//apical
+for i=0,8{
+	access apical[i]{
+		//netcon
+		nc_3[i] = new NetCon(stim_3, sNMDA[i])
+		nc_3[i].weight =   10*gmax_nmda*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_3[i].delay = 1 
+		
+		nc_AMPA_3[i] = new NetCon(stim_3, sAMPA[i])
+		nc_AMPA_3[i].weight = 10*gmax_ampa*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_AMPA_3[i].delay = 1 
+		}
+	}
+//lateral	
+for i=0,11{
+	access lateral[i]{
+	//netcon
+		nc_3[i+9] = new NetCon(stim_3, sNMDA[i])
+		nc_3[i+9].weight =   10*gmax_nmda*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_3[i+9].delay = 1 
+		
+		nc_AMPA_3[i+9] = new NetCon(stim_3, sAMPA[i])
+		nc_AMPA_3[i+9].weight = 10*gmax_ampa*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_AMPA_3[i+9].delay = 1 
+		}
+	}
+
+//4000
+//spine1
+for i=21,21{ 
+	access spine[i-20]{
+		//netcon
+		nc_4[i] = new NetCon(stim_4, sNMDA[i])
+		nc_4[i].weight =  10*gmax_nmda*aire_soma*1e6 //weight = uS //weight = uS
+		nc_4[i].delay = 1 
+		
+		nc_AMPA_4[i] = new NetCon(stim_4, sAMPA[i])
+		nc_AMPA_4[i].weight = 10*gmax_ampa*aire_soma*1e6 //weight = uS //weight = uS
+		nc_AMPA_4[i].delay = 1 
+		
+		nc_NMDA_CA_4[0] = new NetCon(stim_4, sNMDA_CA[0])
+		nc_NMDA_CA_4[0].weight = 10*gmax_nmda_ca*aire_soma*1e6 //weight = uS //weight = uS
+		nc_NMDA_CA_4[0].delay = 1 
+		}
+	}
+//apical
+for i=0,8{
+	access apical[i]{
+		//netcon
+		nc_4[i] = new NetCon(stim_4, sNMDA[i])
+		nc_4[i].weight =   10*gmax_nmda*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_4[i].delay = 1 
+		
+		nc_AMPA_4[i] = new NetCon(stim_4, sAMPA[i])
+		nc_AMPA_4[i].weight = 10*gmax_ampa*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_AMPA_4[i].delay = 1 
+		}
+	}
+//lateral	
+for i=0,11{
+	access lateral[i]{
+	//netcon
+		nc_4[i+9] = new NetCon(stim_4, sNMDA[i])
+		nc_4[i+9].weight =   10*gmax_nmda*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_4[i+9].delay = 1 
+		
+		nc_AMPA_4[i+9] = new NetCon(stim_4, sAMPA[i])
+		nc_AMPA_4[i+9].weight = 10*gmax_ampa*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_AMPA_4[i+9].delay = 1 
+		}
+	}
+		
+//5000
+//spine1
+for i=21,21{ 
+	access spine[i-20]{
+		//netcon
+		nc_5[i] = new NetCon(stim_5, sNMDA[i])
+		nc_5[i].weight =  10*gmax_nmda*aire_soma*1e6 //weight = uS //weight = uS
+		nc_5[i].delay = 1 
+		
+		nc_AMPA_5[i] = new NetCon(stim_5, sAMPA[i])
+		nc_AMPA_5[i].weight = 10*gmax_ampa*aire_soma*1e6 //weight = uS //weight = uS
+		nc_AMPA_5[i].delay = 1 
+		
+		nc_NMDA_CA_5[0] = new NetCon(stim_5, sNMDA_CA[0])
+		nc_NMDA_CA_5[0].weight = 10*gmax_nmda_ca*aire_soma*1e6 //weight = uS //weight = uS
+		nc_NMDA_CA_5[0].delay = 1 
+		}
+	}
+//apical
+for i=0,8{
+	access apical[i]{
+		//netcon
+		nc_5[i] = new NetCon(stim_5, sNMDA[i])
+		nc_5[i].weight =   10*gmax_nmda*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_5[i].delay = 1 
+		
+		nc_AMPA_5[i] = new NetCon(stim_5, sAMPA[i])
+		nc_AMPA_5[i].weight = 10*gmax_ampa*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_AMPA_5[i].delay = 1 
+		}
+	}
+//lateral	
+for i=0,11{
+	access lateral[i]{
+	//netcon
+		nc_5[i+9] = new NetCon(stim_5, sNMDA[i])
+		nc_5[i+9].weight =   10*gmax_nmda*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_5[i+9].delay = 1 
+		
+		nc_AMPA_5[i+9] = new NetCon(stim_5, sAMPA[i])
+		nc_AMPA_5[i+9].weight = 10*gmax_ampa*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_AMPA_5[i+9].delay = 1 
+		}
+	}
+
+//6000
+//spine1
+for i=21,21{ 
+	access spine[i-20]{
+		//netcon
+		nc_6[i] = new NetCon(stim_6, sNMDA[i])
+		nc_6[i].weight =  10*gmax_nmda*aire_soma*1e6 //weight = uS //weight = uS
+		nc_6[i].delay = 1 
+		
+		nc_AMPA_6[i] = new NetCon(stim_6, sAMPA[i])
+		nc_AMPA_6[i].weight = 10*gmax_ampa*aire_soma*1e6 //weight = uS //weight = uS
+		nc_AMPA_6[i].delay = 1 
+		
+		nc_NMDA_CA_6[0] = new NetCon(stim_6, sNMDA_CA[0])
+		nc_NMDA_CA_6[0].weight = 10*gmax_nmda_ca*aire_soma*1e6 //weight = uS //weight = uS
+		nc_NMDA_CA_6[0].delay = 1 
+		}
+	}
+//apical
+for i=0,8{
+	access apical[i]{
+		//netcon
+		nc_6[i] = new NetCon(stim_6, sNMDA[i])
+		nc_6[i].weight =   10*gmax_nmda*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_6[i].delay = 1 
+		
+		nc_AMPA_6[i] = new NetCon(stim_6, sAMPA[i])
+		nc_AMPA_6[i].weight = 10*gmax_ampa*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_AMPA_6[i].delay = 1 
+		}
+	}
+//lateral	
+for i=0,11{
+	access lateral[i]{
+	//netcon
+		nc_6[i+9] = new NetCon(stim_6, sNMDA[i])
+		nc_6[i+9].weight =   10*gmax_nmda*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_6[i+9].delay = 1 
+		
+		nc_AMPA_6[i+9] = new NetCon(stim_6, sAMPA[i])
+		nc_AMPA_6[i+9].weight = 10*gmax_ampa*area(0.5)*1e-8*1e6 //weight = uS //weight = uS
+		nc_AMPA_6[i+9].delay = 1 
+		}
+	}
+/**/
+access soma
+run()
+
