@@ -36,6 +36,7 @@ NEURON {
 
 UNITS {
 	(nA) = (nanoamp)
+	(mA) = (milliamp)
 	(mV) = (millivolt)
 	(umho) = (micromho)
 }

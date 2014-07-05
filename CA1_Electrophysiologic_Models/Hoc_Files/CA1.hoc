@@ -43,7 +43,7 @@ soma {
 	nseg = 1
 	insert ca_conc_Bh
  	insert na_Bh
- //	insert ca_debug_Bh
+ 	insert ca_debug_Bh
  	insert k_dr_Bh
  	insert k_ahp_Bh
  	insert k_c_Bh

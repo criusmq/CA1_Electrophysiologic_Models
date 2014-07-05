@@ -23,6 +23,9 @@ NEURON {
 
 UNITS {
 	(mA)	= (milliamp)
+	(mol) = (1)
+  	(molar) = (mol/liter)
+ 	(mM) = (millimolar)
 }
 
 PARAMETER {
