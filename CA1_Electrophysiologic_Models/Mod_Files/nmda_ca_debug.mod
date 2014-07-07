@@ -52,7 +52,8 @@ PARAMETER {
 ASSIGNED {
 	v (mV)
 	i (nA)
-	ica     (mA/cm2)
+	ica (mA)
+	:ica     (mA/cm2)
 	gsyn (umho)
 	factor
 	total (umho)
@@ -84,7 +85,9 @@ BREAKPOINT {
 	gsyn = B - A
 	
 	i = g_mox*gsyn*Mgblock(v)*(v - eca)
-	ica = (i*1e-6)/Area :e-6 pour convertir en mA
+	ica = i*1e-6
+	
+	:ica = (i*1e-6)/Area :e-6 pour convertir en mA
 							:0.1* essaie vue que dans bhalla il dit 1/10 de NMDA channel conductance
 }
 

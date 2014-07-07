@@ -71,7 +71,7 @@ for i=0,8{
 	access apical[i]{
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
-		sNMDA[i].Area = area(0.5) //cm2
+	//	sNMDA[i].Area = area(0.5) //cm2
     //AMPA_SYNAPSES	
     	sAMPA[i] = new ampa(0.5)	
 		}
@@ -82,7 +82,7 @@ for i=9,20{
 	access lateral[i-9]{
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
-		sNMDA[i].Area = area(0.5) //cm2
+	//	sNMDA[i].Area = area(0.5) //cm2
     //AMPA_SYNAPSES	
     	sAMPA[i] = new ampa(0.5)
 		}
@@ -94,12 +94,12 @@ for i=21,21{
 	access spine[i-20]{
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
-		sNMDA[i].Area = area(0.5) //cm2
+	//	sNMDA[i].Area = area(0.5) //cm2
     //AMPA_SYNAPSES	
     	sAMPA[i] = new ampa(0.5)	
     //NMDA_CA_SYNAPSES	
 		sNMDA_CA[0] = new nmda_ca(0.5)
-		sNMDA_CA[0].Area = area(0.5)//cm2 à cause du facteur spéciale A ESSAYER!!!!
+	//	sNMDA_CA[0].Area = area(0.5)//cm2 à cause du facteur spéciale A ESSAYER!!!!
 		}
 	}
 
@@ -107,12 +107,12 @@ for i=22,22{
 	access spine[i-19]{
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
-		sNMDA[i].Area = area(0.5) //cm2
+	//	sNMDA[i].Area = area(0.5) //cm2
     //AMPA_SYNAPSES	
     	sAMPA[i] = new ampa(0.5)
     //NMDA_CA_SYNAPSES	
 		sNMDA_CA[1] = new nmda_ca(0.5)
-		sNMDA_CA[1].Area = area(0.5)//cm2 à cause du facteur spéciale A ESSAYER!!!!
+	//	sNMDA_CA[1].Area = area(0.5)//cm2 à cause du facteur spéciale A ESSAYER!!!!
 		}
 	}
 	
@@ -120,12 +120,12 @@ for i=23,23{
 	access spine[i-18]{
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
-		sNMDA[i].Area = area(0.5) //cm2
+	//	sNMDA[i].Area = area(0.5) //cm2
     //AMPA_SYNAPSES	
     	sAMPA[i] = new ampa(0.5)
     //NMDA_CA_SYNAPSES	
 		sNMDA_CA[2] = new nmda_ca(0.5)
-		sNMDA_CA[2].Area = area(0.5) //cm2 à cause du facteur spéciale A ESSAYER!!!!
+	//	sNMDA_CA[2].Area = area(0.5) //cm2 à cause du facteur spéciale A ESSAYER!!!!
 		}
 	}
 /****************************************************************/
