@@ -136,7 +136,7 @@ extern Memb_func* memb_func;
  "A", "umho",
  "B", "umho",
  "i", "nA",
- "ica", "nA",
+ "ica", "mA",
  "gsyn", "umho",
  "Area", "cm2",
  0,0
@@ -403,7 +403,7 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
 static double _nrn_current(double _v){double _current=0.;v=_v;{ {
    gsyn = B - A ;
    i = g_mox * gsyn * Mgblock ( _threadargscomma_ v ) * ( v - eca ) ;
-   ica = i ;
+   ica = i * 1e-6 ;
    }
  _current += ica;
  _current += i;
