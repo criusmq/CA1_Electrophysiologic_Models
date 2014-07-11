@@ -1,0 +1,158 @@
+load_file("nrngui.hoc")
+load_file("CA1.hoc")
+//Evenements pré-synaptiques tests on 3 differents spine 30 inputs 0.5 Hz
+objref stim_1 , stim_2 , stim_3 
+	stim_1 = new NetStim(.5)
+	stim_1.interval = 2
+	stim_1.number = 30
+	stim_1.start 	= 1000
+	stim_1.noise 	= 0
+	
+	
+	stim_2 = new NetStim(.5)
+	stim_2.interval = 2
+	stim_2.number = 30
+	stim_2.start 	= 2000
+	stim_2.noise 	= 0
+	
+	stim_3 = new NetStim(.5)
+	stim_3.interval = 2
+	stim_3.number = 30
+	stim_3.start 	= 3000
+	stim_3.noise 	= 0
+
+	
+	/**********Definitions des synapses************/
+objref sNMDA[24],sAMPA[24],sNMDA_CA[3]
+
+//apical
+for i=0,8{
+	access apical[i]{
+	//NMDA_SYNAPSES
+		sNMDA[i] = new nmda(0.5)
+	//	sNMDA[i].Area = area(0.5) //cm2
+    //AMPA_SYNAPSES	
+    	sAMPA[i] = new ampa(0.5)	
+		}
+	}
+
+//lateral	
+for i=9,20{
+	access lateral[i-9]{
+	//NMDA_SYNAPSES
+		sNMDA[i] = new nmda(0.5)
+	//	sNMDA[i].Area = area(0.5) //cm2
+    //AMPA_SYNAPSES	
+    	sAMPA[i] = new ampa(0.5)
+		}
+	}
+	
+//spine 1,3 et 5
+
+for i=21,21{ 
+	access spine[i-20]{
+	//NMDA_SYNAPSES
+		sNMDA[i] = new nmda(0.5)
+	//	sNMDA[i].Area = area(0.5) //cm2
+    //AMPA_SYNAPSES	
+    	sAMPA[i] = new ampa(0.5)	
+    //NMDA_CA_SYNAPSES	
+		sNMDA_CA[0] = new nmda_ca(0.5)
+	//	sNMDA_CA[0].Area = area(0.5)//cm2 à cause du facteur spéciale A ESSAYER!!!!
+		}
+	}
+
+for i=22,22{ 
+	access spine[i-19]{
+	//NMDA_SYNAPSES
+		sNMDA[i] = new nmda(0.5)
+	//	sNMDA[i].Area = area(0.5) //cm2
+    //AMPA_SYNAPSES	
+    	sAMPA[i] = new ampa(0.5)
+    //NMDA_CA_SYNAPSES	
+		sNMDA_CA[1] = new nmda_ca(0.5)
+	//	sNMDA_CA[1].Area = area(0.5)//cm2 à cause du facteur spéciale A ESSAYER!!!!
+		}
+	}
+	
+for i=23,23{ 
+	access spine[i-18]{
+	//NMDA_SYNAPSES
+		sNMDA[i] = new nmda(0.5)
+	//	sNMDA[i].Area = area(0.5) //cm2
+    //AMPA_SYNAPSES	
+    	sAMPA[i] = new ampa(0.5)
+    //NMDA_CA_SYNAPSES	
+		sNMDA_CA[2] = new nmda_ca(0.5)
+	//	sNMDA_CA[2].Area = area(0.5) //cm2 à cause du facteur spéciale A ESSAYER!!!!
+		}
+	}
+	
+	objref nc_stim1 , nc_AMPA_stim1 , nc_NMDA_CA_stim1
+
+//1000
+//spine1
+for i=21,21{ 
+	access spine[i-20]{
+		//netcon
+		nc_stim1 = new NetCon(stim_1, sNMDA[i])
+		nc_stim1.weight =  10*gmax_nmda*area(0.5)*1e-8*100*1e6 //weight = uS //weight = uS
+		nc_stim1.delay = 1 
+		
+		nc_AMPA_stim1 = new NetCon(stim_1, sAMPA[i])
+		nc_AMPA_stim1.weight = 10*gmax_ampa*area(0.5)*1e-8*100*1e6 //weight = uS //weight = uS
+		nc_AMPA_stim1.delay = 1 
+		
+		nc_NMDA_CA_stim1 = new NetCon(stim_1, sNMDA_CA[0])
+		nc_NMDA_CA_stim1.weight = 10*gmax_nmda_ca*area(0.5)*1e-8*100*1e6 //weight = uS //weight = uS
+		nc_NMDA_CA_stim1.delay = 1 
+		}
+	}
+	
+objref nc_stim2 , nc_AMPA_stim2 , nc_NMDA_CA_stim2
+
+//2000
+//spine2
+for i=22,22{ 
+	access spine[i-19]{
+		//netcon
+		nc_stim2 = new NetCon(stim_2, sNMDA[i])
+		nc_stim2.weight =  10*gmax_nmda*area(0.5)*1e-8*100*1e6 //weight = uS //weight = uS
+		nc_stim2.delay = 1 
+		
+		nc_AMPA_stim2 = new NetCon(stim_2, sAMPA[i])
+		nc_AMPA_stim2.weight = 10*gmax_ampa*area(0.5)*1e-8*100*1e6 //weight = uS //weight = uS
+		nc_AMPA_stim2.delay = 1 
+		
+		nc_NMDA_CA_stim2 = new NetCon(stim_2, sNMDA_CA[1])
+		nc_NMDA_CA_stim2.weight = 10*gmax_nmda_ca*area(0.5)*1e-8*100*1e6 //weight = uS //weight = uS
+		nc_NMDA_CA_stim2.delay = 1 
+		}
+	}
+
+
+objref nc_stim3 , nc_AMPA_stim3 , nc_NMDA_CA_stim3
+
+//3000
+//spine3
+for i=23,23{ 
+	access spine[i-18]{
+		//netcon
+		nc_stim3 = new NetCon(stim_3, sNMDA[i])
+		nc_stim3.weight =  10*gmax_nmda*area(0.5)*1e-8*100*1e6 //weight = uS //weight = uS
+		nc_stim3.delay = 1 
+		
+		nc_AMPA_stim3 = new NetCon(stim_3, sAMPA[i])
+		nc_AMPA_stim3.weight = 10*gmax_ampa*area(0.5)*1e-8*100*1e6 //weight = uS //weight = uS
+		nc_AMPA_stim3.delay = 1 
+		
+		nc_NMDA_CA_stim3 = new NetCon(stim_3, sNMDA_CA[1])
+		nc_NMDA_CA_stim3.weight = 10*gmax_nmda_ca*area(0.5)*1e-8*100*1e6 //weight = uS //weight = uS
+		nc_NMDA_CA_stim3.delay = 1 
+		}
+	}
+	
+	access soma
+	run()
+	
+

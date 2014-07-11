@@ -1,0 +1,68 @@
+--> Type de stimuli: 
+	Dans les 2 articles et dans le rapport aussi:
+		30 stimuli (0.5 Hz) with postsynaptic depolarization to ~ 0 mV
+
+--> Article 2007: 
+	--> Test du crosstalk (Crosstalk between plasticity at nearby synapses)
+		We induced LTP at one spine (LTP spine) and, 90 seconds later,
+provided the subthreshold protocol at a neighboring spine (sub spine)
+		--> Résultats:
+			a) The levels of functional and structural
+plasticity were similar in spines receiving the LTP and subthreshold protocols 
+				-> Seuil d'excitation épine voisine bas
+			b) Other nearby spines that received neither stimulus did not change
+				-> Épines non stimulées ne réagissent pas
+			c) Crosstalk did not occur following application of the LTP protocol
+at a postsynaptic potential of ~ −70 mV, which did not induce LTP, arguing that crosstalk is
+triggered by LTP induction and not by the uncaging process itself
+				-> Pas de crosstalk à v=-70mv!!! Conclusion: Crosstalk causé par LTP induction 
+					et non par la libération du glutamate emprisonné
+			c) LTP induction at one spine therefore lowered the threshold for potentiation at
+nearby spines, while maintaining input specificity
+			d) The changes in uEPSC amplitude and spine volume were highly correlated (r = 0.86, p <
+0.0001) (Fig 1h), consistent with documented relationships between spine volume,
+postsynaptic density (PSD) area, and the number of AMPA receptors in the PSD.
+These observations confirm that spine enlargement is a structural correlate of LTP
+				-> Il existe une correlation entre le volume, l'aire de la PSD et le nombre de
+					récepteurs AMPA dans la PSD
+	
+		
+	--> Verification du crosstalk, nouveau protocole (Crosstalk in unperturbed neurons)
+		To test if crosstalk occurs without sustained postsynaptic depolarization, we
+stimulated NMDA-Rs on individual spines from unperturbed neurons (in nominally 0 mM
+Mg2+).
+				-> Meme stimulis de départ mais changement au niveau de la concentration de Mg2+
+					Idée: On ferme un peu plus les NMDAR
+		--> Résultats:
+			a) Each uncaging pulse during the LTP protocol produced NMDA-R currents (7.9 ± 1.1 pA) that corresponded
+to the opening of ~ 5 NMDA-Rs, comparable to the number of receptors opened by low frequency synaptic stimulation
+				-> Indications sur l'intensité du courant passant par les canaux NMDAR
+	
+		
+	--> Nouveau protocole encore (Crosstalk with synaptically-induced plasticity)
+		Schaffer collateral axons were stimulated (120 pulses, 2 Hz) in low extracellular Mg2+  
+		To test for crosstalk, we provided the subthreshold protocol at a nearby spine (sub spine) two minutes after the
+synaptic LTP protocol
+				-> Changement de stimuli et aussi dans le protocole de test du crosstalk(durée 2mins au lieu de 90s)
+		--> Résultats:
+			a) Similaire à ceux du 1er protocole
+			
+	
+	--> Différentes expériences sur la fenêtre de temps avant la stimulation de l'épine voisine,
+la distance minimale (qui est passée de 3um à 10 um), le sens de la diffusion (dans les 2 sens).Cependant il ne s'explique 
+pas encore comment cela se passe le crosstalk i.e le mechanisme biochimique qu'il y a en dessous mais il parte de l'hypothèse
+qu'il y en a bien 1.
+
+
+	--> Materiels et Méthodes: Résumé de leurs stimulations:
+		a) 30 uncaging pulses at 0.5 Hz in 2 mM Ca2+, 1 mM Mg2+, and 1 μM TTX
+		b) 30 uncaging pulses at 0.5 Hz in 4 mM Ca2+, 0 mM Mg2+, and 1 μM TTX
+		c) 120 synaptic stimuli at 2 Hz in 4 mM Ca2+, 0 mM Mg2+ at 33°
+		d) an uncaging pulse followed by 3 APs at 50 Hz, repeated 60 times at 2 Hz in 2 mM Ca2+ and 1 mM Mg2+
+		
+-------------------------------------------------------------------------------------------------------------
+
+
+--> Article 2008:
+	--> Tests de l'hypothèse pour justifier la diffusion de RAS!!! Une relecture s'impose car pas bien compris les détails
+	
