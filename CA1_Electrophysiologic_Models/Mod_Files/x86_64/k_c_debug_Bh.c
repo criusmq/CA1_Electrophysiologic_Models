@@ -200,7 +200,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
 static int _reset;
-static char *modelname = "Potasium C type current for Traub";
+static char *modelname = "Potasium C type current for Traub/Bhalla ";
 
 static int error;
 static int _ninits = 0;

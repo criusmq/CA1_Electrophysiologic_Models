@@ -1,4 +1,10 @@
-TITLE Sodium NA channel for Traub 
+TITLE Sodium NA channel for Traub/Bhalla 
+COMMENT
+
+	Mazid Abiodoun OSSENI,Simon Hardy ,Nicolas Doyon
+	Laval University, Quebec, Qc
+	
+ENDCOMMENT
 
 NEURON {
 	SUFFIX na_Bh 

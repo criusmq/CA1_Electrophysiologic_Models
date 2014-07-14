@@ -1,4 +1,10 @@
-TITLE Potasium AHP type current for Traub
+TITLE Potasium AHP type current for Traub/Bhalla 
+COMMENT
+
+	Mazid Abiodoun OSSENI,Simon Hardy ,Nicolas Doyon
+	Laval University, Quebec, Qc
+	
+ENDCOMMENT
 
 NEURON { 
 	SUFFIX k_ahp_Bh

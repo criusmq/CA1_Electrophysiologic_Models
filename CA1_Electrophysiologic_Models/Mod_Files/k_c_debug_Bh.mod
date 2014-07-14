@@ -1,4 +1,10 @@
-TITLE Potasium C type current for Traub
+TITLE Potasium C type current for Traub/Bhalla 
+COMMENT
+
+	Mazid Abiodoun OSSENI,Simon Hardy ,Nicolas Doyon
+	Laval University, Quebec, Qc
+	
+ENDCOMMENT
 
 NEURON { 
 	SUFFIX k_c_Bh

@@ -1,4 +1,11 @@
-TITLE Calcium dynamics cai for Traub
+TITLE Calcium dynamics cai for Traub/Bhalla
+COMMENT
+
+	Mazid Abiodoun OSSENI,Simon Hardy ,Nicolas Doyon
+	Laval University, Quebec, Qc
+	
+ENDCOMMENT
+
 
 COMMENT
 

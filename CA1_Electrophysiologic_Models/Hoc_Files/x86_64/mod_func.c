@@ -7,6 +7,7 @@ extern void _K_ahp_debug_Bh_reg(void);
 extern void _ampa_glu_reg(void);
 extern void _ca_conc_debug_reg(void);
 extern void _ca_debug_bh_reg(void);
+extern void _ca_diffusion_test_reg(void);
 extern void _k_a_debug_Bh_reg(void);
 extern void _k_c_debug_Bh_reg(void);
 extern void _kdr_debug_reg(void);
@@ -24,6 +25,7 @@ void modl_reg(){
     fprintf(stderr," ampa_glu.mod");
     fprintf(stderr," ca_conc_debug.mod");
     fprintf(stderr," ca_debug_bh.mod");
+    fprintf(stderr," ca_diffusion_test.mod");
     fprintf(stderr," k_a_debug_Bh.mod");
     fprintf(stderr," k_c_debug_Bh.mod");
     fprintf(stderr," kdr_debug.mod");
@@ -38,6 +40,7 @@ void modl_reg(){
   _ampa_glu_reg();
   _ca_conc_debug_reg();
   _ca_debug_bh_reg();
+  _ca_diffusion_test_reg();
   _k_a_debug_Bh_reg();
   _k_c_debug_Bh_reg();
   _kdr_debug_reg();

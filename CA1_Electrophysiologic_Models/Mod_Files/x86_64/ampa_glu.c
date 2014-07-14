@@ -38,18 +38,17 @@ extern double hoc_Exp(double);
 #define tau1 _p[0]
 #define tau2 _p[1]
 #define e _p[2]
-#define Area _p[3]
-#define i _p[4]
-#define gsyn _p[5]
-#define A _p[6]
-#define B _p[7]
-#define ik _p[8]
-#define ina _p[9]
-#define factor _p[10]
-#define DA _p[11]
-#define DB _p[12]
-#define _g _p[13]
-#define _tsav _p[14]
+#define i _p[3]
+#define gsyn _p[4]
+#define A _p[5]
+#define B _p[6]
+#define ik _p[7]
+#define ina _p[8]
+#define factor _p[9]
+#define DA _p[10]
+#define DB _p[11]
+#define _g _p[12]
+#define _tsav _p[13]
 #define _nd_area  *_ppvar[0]._pval
 #define _ion_ina	*_ppvar[2]._pval
 #define _ion_dinadv	*_ppvar[3]._pval
@@ -129,7 +128,6 @@ extern Memb_func* memb_func;
  "tau1", "ms",
  "tau2", "ms",
  "e", "mV",
- "Area", "cm2",
  "A", "umho",
  "B", "umho",
  "i", "nA",
@@ -173,7 +171,6 @@ static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  "tau1",
  "tau2",
  "e",
- "Area",
  0,
  "i",
  "gsyn",
@@ -195,15 +192,14 @@ static void nrn_alloc(Prop* _prop) {
 	_p = nrn_point_prop_->param;
 	_ppvar = nrn_point_prop_->dparam;
  }else{
- 	_p = nrn_prop_data_alloc(_mechtype, 15, _prop);
+ 	_p = nrn_prop_data_alloc(_mechtype, 14, _prop);
  	/*initialize range parameters*/
  	tau1 = 2;
  	tau2 = 9;
  	e = 0;
- 	Area = 3.32e-05;
   }
  	_prop->param = _p;
- 	_prop->param_size = 15;
+ 	_prop->param_size = 14;
   if (!nrn_point_prop_) {
  	_ppvar = nrn_prop_datum_alloc(_mechtype, 7, _prop);
   }
@@ -256,7 +252,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
 static int _reset;
-static char *modelname = "";
+static char *modelname = "AMPA receptor for Bhalla ";
 
 static int error;
 static int _ninits = 0;
@@ -482,7 +478,7 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  { {
  for (; t < _break; t += dt) {
  error =  state();
- if(error){fprintf(stderr,"at line 78 in file ampa_glu.mod:\n	SOLVE state METHOD cnexp\n"); nrn_complain(_p); abort_run(error);}
+ if(error){fprintf(stderr,"at line 85 in file ampa_glu.mod:\n	SOLVE state METHOD cnexp\n"); nrn_complain(_p); abort_run(error);}
  
 }}
  t = _save;

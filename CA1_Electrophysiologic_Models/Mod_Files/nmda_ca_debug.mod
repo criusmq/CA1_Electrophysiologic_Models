@@ -1,3 +1,11 @@
+TITLE NMDA_CA receptor for Bhalla 
+COMMENT
+
+	Mazid Abiodoun OSSENI,Simon Hardy ,Nicolas Doyon
+	Laval University, Quebec, Qc
+	
+ENDCOMMENT
+
 COMMENT
 Two state kinetic scheme synapse described by rise time tau1,
 decay time constant tau2, and peak conductance gtrig.
@@ -25,12 +33,12 @@ ENDCOMMENT
 NEURON {
 	POINT_PROCESS nmda_ca
 	
-	RANGE tau1, tau2, e, ica, mg
+	RANGE tau1, tau2, e, ica
 	USEION ca WRITE ica
 	NONSPECIFIC_CURRENT i
 	
 	RANGE gsyn, Area
-	GLOBAL total
+	GLOBAL total, mg
 
 }
 

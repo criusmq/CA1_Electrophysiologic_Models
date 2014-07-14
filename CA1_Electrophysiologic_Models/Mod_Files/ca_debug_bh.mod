@@ -1,4 +1,10 @@
-TITLE Calcium CA channel for Traub 
+TITLE Calcium CA channel for Traub/Bhalla
+COMMENT
+
+	Mazid Abiodoun OSSENI,Simon Hardy ,Nicolas Doyon
+	Laval University, Quebec, Qc
+	
+ENDCOMMENT
 
 NEURON {
 	SUFFIX ca_debug_Bh

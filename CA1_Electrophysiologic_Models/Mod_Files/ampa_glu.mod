@@ -1,3 +1,11 @@
+TITLE AMPA receptor for Bhalla 
+COMMENT
+
+	Mazid Abiodoun OSSENI,Simon Hardy ,Nicolas Doyon
+	Laval University, Quebec, Qc
+	
+ENDCOMMENT
+
 COMMENT
 Two state kinetic scheme synapse described by rise time tau1,
 decay time constant tau2, and peak conductance gtrig.
@@ -30,7 +38,7 @@ NEURON {
 	USEION k WRITE ik
 	NONSPECIFIC_CURRENT i
 	
-	RANGE gsyn, Area
+	RANGE gsyn
 	GLOBAL total
 }
 
@@ -41,12 +49,11 @@ UNITS {
 }
 
 PARAMETER {
-	tau1= 2 (ms)
-	tau2 = 9 (ms)
-	gmax = 0.07 (mho/cm2) :valeur provenant du ca1.p
-	g_mox = 0.004 (mho/cm2) :valeur de gmax venant de protog
-	e=0	(mV)
-	Area = 3.32e-5 (cm2)
+	tau1= 2 (ms) :from Bhala files ca1.p
+	tau2 = 9 (ms) :from Bhala files ca1.p
+	gmax = 0.07 (mho/cm2) :from Bhala files ca1.p
+	g_mox = 0.004 (mho/cm2) :from protog
+	e=0	(mV) 
 }
 
 ASSIGNED {
@@ -78,8 +85,8 @@ BREAKPOINT {
 	SOLVE state METHOD cnexp
 	gsyn = B - A
 	i = g_mox*gsyn*(v - e)
-	:ik = (i*1e-6)/Area :e-6 pour convertir en mA
-	:ina = (i*1e-6)/Area :e-6 pour convertir en mA
+	:ik = (i*1e-6)/Area :e-6 to convert in mA
+	:ina = (i*1e-6)/Area :e-6 to convert in mA
 }
 
 DERIVATIVE state {
@@ -90,7 +97,7 @@ DERIVATIVE state {
 NET_RECEIVE(weight (umho)) {
 	A = A + weight*factor
 	B = B + weight*factor
-	:state_discontinuity(A, A + weight*factor)
+	:state_discontinuity(A, A + weight*factor) 
 	:state_discontinuity(B, B + weight*factor)
 	total = total+weight
 }

@@ -1,4 +1,10 @@
-TITLE Potassium K (A) channel for Traub 
+TITLE Potassium K (A) channel for Traub/Bhalla
+COMMENT
+
+	Mazid Abiodoun OSSENI,Simon Hardy ,Nicolas Doyon
+	Laval University, Quebec, Qc
+	
+ENDCOMMENT
 
 NEURON {
 	SUFFIX k_a_Bh

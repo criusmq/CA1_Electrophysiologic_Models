@@ -37,18 +37,17 @@ extern double hoc_Exp(double);
 #define dt nrn_threads->_dt
 #define tau1 _p[0]
 #define tau2 _p[1]
-#define mg _p[2]
-#define i _p[3]
-#define ica _p[4]
-#define gsyn _p[5]
-#define Area _p[6]
-#define A _p[7]
-#define B _p[8]
-#define factor _p[9]
-#define DA _p[10]
-#define DB _p[11]
-#define _g _p[12]
-#define _tsav _p[13]
+#define i _p[2]
+#define ica _p[3]
+#define gsyn _p[4]
+#define Area _p[5]
+#define A _p[6]
+#define B _p[7]
+#define factor _p[8]
+#define DA _p[9]
+#define DB _p[10]
+#define _g _p[11]
+#define _tsav _p[12]
 #define _nd_area  *_ppvar[0]._pval
 #define _ion_ica	*_ppvar[2]._pval
 #define _ion_dicadv	*_ppvar[3]._pval
@@ -119,6 +118,8 @@ extern Memb_func* memb_func;
  double g_mox = 0.0005;
 #define gmax gmax_nmda
  double gmax = 0.02;
+#define mg mg_nmda
+ double mg = 1.2;
 #define total total_nmda
  double total = 0;
  /* some parameters have upper and lower limits */
@@ -128,11 +129,11 @@ extern Memb_func* memb_func;
  static HocParmUnits _hoc_parm_units[] = {
  "gmax_nmda", "mho/cm2",
  "g_mox_nmda", "mho/cm2",
+ "mg_nmda", "mM",
  "eca_nmda", "mV",
  "total_nmda", "umho",
  "tau1", "ms",
  "tau2", "ms",
- "mg", "mM",
  "A", "umho",
  "B", "umho",
  "i", "nA",
@@ -149,6 +150,7 @@ extern Memb_func* memb_func;
  static DoubScal hoc_scdoub[] = {
  "gmax_nmda", &gmax_nmda,
  "g_mox_nmda", &g_mox_nmda,
+ "mg_nmda", &mg_nmda,
  "eca_nmda", &eca_nmda,
  "total_nmda", &total_nmda,
  0,0
@@ -178,7 +180,6 @@ static void _ode_matsol(_NrnThread*, _Memb_list*, int);
 "nmda",
  "tau1",
  "tau2",
- "mg",
  0,
  "i",
  "ica",
@@ -201,14 +202,13 @@ static void nrn_alloc(Prop* _prop) {
 	_p = nrn_point_prop_->param;
 	_ppvar = nrn_point_prop_->dparam;
  }else{
- 	_p = nrn_prop_data_alloc(_mechtype, 14, _prop);
+ 	_p = nrn_prop_data_alloc(_mechtype, 13, _prop);
  	/*initialize range parameters*/
  	tau1 = 20;
  	tau2 = 20;
- 	mg = 1.2;
   }
  	_prop->param = _p;
- 	_prop->param_size = 14;
+ 	_prop->param_size = 13;
   if (!nrn_point_prop_) {
  	_ppvar = nrn_prop_datum_alloc(_mechtype, 5, _prop);
   }
