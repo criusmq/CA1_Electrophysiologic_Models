@@ -65,4 +65,13 @@ qu'il y en a bien 1.
 
 --> Article 2008:
 	--> Tests de l'hypothèse pour justifier la diffusion de RAS!!! Une relecture s'impose car pas bien compris les détails
-	
+	--> Rapport du stagiaire parle des résultats de cet article:
+		--> Description des réseaux de signalisation impliquant RAS
+		
+		--> D'après l'article une activation soutenue de Ras pendant 4-5 minutes et une propagation de Ras sur 10µm
+			à partir du point de départ de la stimulation. Cette stimulation est une série de 30 impulsions de calcium 
+			à une fréquence de 0.5 hertz.
+		
+		--> L’hypothèse que nous avons faite pour expliquer cette activation soutenue observée par le groupe à Svoboda 
+			est qu’il existe une boucle positive impliquant un RasGEF qui est régulé par la PI3K.
+		

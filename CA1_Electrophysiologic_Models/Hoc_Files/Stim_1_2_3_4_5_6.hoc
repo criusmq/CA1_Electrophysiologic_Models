@@ -1,6 +1,7 @@
 load_file("nrngui.hoc")
 load_file("CA1.hoc")
 load_file("synapses_definitions.hoc")
+
 //load_file("stimulation_1.hoc")
 //load_file("stimulation_2.hoc")
 //load_file("stimulation_3.hoc")
@@ -305,3 +306,5 @@ for i=0,11{
 
 access soma
 run()
+
+//load_file("vectors_records.hoc") *marche pas*
