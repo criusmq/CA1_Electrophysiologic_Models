@@ -3,7 +3,7 @@ COMMENT
 
 	Mazid Abiodoun OSSENI,Simon Hardy ,Nicolas Doyon
 	Laval University, Quebec, Qc
-	
+
 ENDCOMMENT
 
 COMMENT
@@ -32,11 +32,11 @@ ENDCOMMENT
 
 NEURON {
 	POINT_PROCESS nmda
-	
+
 	RANGE tau1, tau2, e, ica
 	USEION ca WRITE ica
 	NONSPECIFIC_CURRENT i
-	
+
 	RANGE gsyn, Area
 	GLOBAL total, mg
 
@@ -62,7 +62,7 @@ ASSIGNED {
 	v (mV)
 	i (nA)
 	:ica     (mA/cm2)
-	
+
 	ica (mA)
 	gsyn (umho)
 	factor
@@ -73,7 +73,7 @@ ASSIGNED {
 STATE {
 	A (umho)
 	B (umho)
-	
+
 }
 
 INITIAL {
@@ -93,10 +93,10 @@ INITIAL {
 BREAKPOINT {
 	SOLVE state METHOD cnexp
 	gsyn = B - A
-	
+
 	i = g_mox*gsyn*Mgblock(v)*(v - eca)
 	ica = i*1e-6
-	
+
 	:ica = (i*1e-6)/Area :e-6 pour convertir en mA
 }
 
@@ -117,10 +117,10 @@ FUNCTION Mgblock(v(mV)) {
 	: from Jahr & Stevens, JNS, 1990
 
 	:MG = (1/0.28(/mM)) * ( (1/0.28(/mM)) - (mg*exp(-v * 0.062 (/mV))))
-	
+
 	:Block = 1/eta * (1/eta - [Mg]*exp( -V * gamma))
 	:change the voltage
-	
+
 	Mgblock = 1 / (1 +  ( (mg / 3.57 (mM)) * exp(-v * 0.062 (/mV)) ))
-	
+
 }

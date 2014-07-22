@@ -75,3 +75,17 @@ qu'il y en a bien 1.
 		--> L’hypothèse que nous avons faite pour expliquer cette activation soutenue observée par le groupe à Svoboda 
 			est qu’il existe une boucle positive impliquant un RasGEF qui est régulé par la PI3K.
 		
+		
+
+--> ICA problem:
+	J'ai trouvé une facon de faire (pas la même qu'on avait trouvé Nicholas et moi).
+	Elle consiste à multiplier le i(nonspecific en nA) par 1e-6 (pr ramener en mA pis à multiplier par une conductance
+	exactement comme dans un canal ca normal.
+	ica = g * 1e-6 * i
+	Essaie now
+	
+	Bémol: Pointprocess can't write mA/cm@
+	
+	La solution qu'on avait trouver Nicholas et moi consiste à creer un fichier extérieur pour calculer le courant ica.
+	Essaiyons ca pour voir. Je ne retrouve plus le lien donc je fais un essaie de mémoire
+	
