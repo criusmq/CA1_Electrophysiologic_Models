@@ -37,20 +37,17 @@ extern double hoc_Exp(double);
 #define dt nrn_threads->_dt
 #define tau1 _p[0]
 #define tau2 _p[1]
-#define i _p[2]
-#define ica _p[3]
-#define gsyn _p[4]
-#define Area _p[5]
-#define A _p[6]
-#define B _p[7]
-#define factor _p[8]
-#define DA _p[9]
-#define DB _p[10]
-#define _g _p[11]
-#define _tsav _p[12]
+#define A _p[2]
+#define B _p[3]
+#define i _p[4]
+#define factor _p[5]
+#define DA _p[6]
+#define DB _p[7]
+#define _g _p[8]
+#define _tsav _p[9]
 #define _nd_area  *_ppvar[0]._pval
-#define _ion_ica	*_ppvar[2]._pval
-#define _ion_dicadv	*_ppvar[3]._pval
+#define x	*_ppvar[2]._pval
+#define _p_x	_ppvar[2]._pval
  
 #if MAC
 #if !defined(v)
@@ -64,7 +61,7 @@ extern double hoc_Exp(double);
 #if defined(__cplusplus)
 extern "C" {
 #endif
- static int hoc_nrnpointerindex =  -1;
+ static int hoc_nrnpointerindex =  2;
  /* external NEURON variables */
  /* declaration of user functions */
  static double _hoc_Mgblock();
@@ -112,10 +109,6 @@ extern Memb_func* memb_func;
 #define Mgblock Mgblock_nmda
  extern double Mgblock( double );
  /* declare global and static user variables */
-#define eca eca_nmda
- double eca = 0;
-#define g_mox g_mox_nmda
- double g_mox = 0.0005;
 #define gmax gmax_nmda
  double gmax = 0.02;
 #define mg mg_nmda
@@ -128,18 +121,13 @@ extern Memb_func* memb_func;
 };
  static HocParmUnits _hoc_parm_units[] = {
  "gmax_nmda", "mho/cm2",
- "g_mox_nmda", "mho/cm2",
  "mg_nmda", "mM",
- "eca_nmda", "mV",
  "total_nmda", "umho",
  "tau1", "ms",
  "tau2", "ms",
  "A", "umho",
  "B", "umho",
- "i", "nA",
- "ica", "mA",
- "gsyn", "umho",
- "Area", "cm2",
+ "x", "1",
  0,0
 };
  static double A0 = 0;
@@ -149,9 +137,7 @@ extern Memb_func* memb_func;
  /* connect global user variables to hoc */
  static DoubScal hoc_scdoub[] = {
  "gmax_nmda", &gmax_nmda,
- "g_mox_nmda", &g_mox_nmda,
  "mg_nmda", &mg_nmda,
- "eca_nmda", &eca_nmda,
  "total_nmda", &total_nmda,
  0,0
 };
@@ -173,7 +159,7 @@ static void _ode_map(int, double**, double**, double*, Datum*, double*, int);
 static void _ode_spec(_NrnThread*, _Memb_list*, int);
 static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  
-#define _cvode_ieq _ppvar[4]._i
+#define _cvode_ieq _ppvar[3]._i
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
  "6.2.0",
@@ -181,16 +167,12 @@ static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  "tau1",
  "tau2",
  0,
- "i",
- "ica",
- "gsyn",
- "Area",
  0,
  "A",
  "B",
  0,
+ "x",
  0};
- static Symbol* _ca_sym;
  
 extern Prop* need_memb(Symbol*);
 
@@ -202,21 +184,18 @@ static void nrn_alloc(Prop* _prop) {
 	_p = nrn_point_prop_->param;
 	_ppvar = nrn_point_prop_->dparam;
  }else{
- 	_p = nrn_prop_data_alloc(_mechtype, 13, _prop);
+ 	_p = nrn_prop_data_alloc(_mechtype, 10, _prop);
  	/*initialize range parameters*/
  	tau1 = 20;
  	tau2 = 20;
   }
  	_prop->param = _p;
- 	_prop->param_size = 13;
+ 	_prop->param_size = 10;
   if (!nrn_point_prop_) {
- 	_ppvar = nrn_prop_datum_alloc(_mechtype, 5, _prop);
+ 	_ppvar = nrn_prop_datum_alloc(_mechtype, 4, _prop);
   }
  	_prop->dparam = _ppvar;
  	/*connect ionic variables to this model*/
- prop_ion = need_memb(_ca_sym);
- 	_ppvar[2]._pval = &prop_ion->param[3]; /* ica */
- 	_ppvar[3]._pval = &prop_ion->param[4]; /* _ion_dicadv */
  
 }
  static void _initlists();
@@ -226,7 +205,6 @@ static void nrn_alloc(Prop* _prop) {
  0,0
 };
  static void _net_receive(Point_process*, double*, double);
- static void _update_ion_pointer(Datum*);
  extern Symbol* hoc_lookup(const char*);
 extern void _nrn_thread_reg(int, int, void(*f)(Datum*));
 extern void _nrn_thread_table_reg(int, void(*)(double*, Datum*, Datum*, _NrnThread*, int));
@@ -236,16 +214,13 @@ extern void _cvode_abstol( Symbol**, double*, int);
  void _nmda_debug_reg() {
 	int _vectorized = 0;
   _initlists();
- 	ion_reg("ca", -10000.);
- 	_ca_sym = hoc_lookup("ca_ion");
  	_pointtype = point_register_mech(_mechanism,
 	 nrn_alloc,nrn_cur, nrn_jacob, nrn_state, nrn_init,
 	 hoc_nrnpointerindex, 0,
 	 _hoc_create_pnt, _hoc_destroy_pnt, _member_func);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
-     _nrn_thread_reg(_mechtype, 2, _update_ion_pointer);
-  hoc_register_dparam_size(_mechtype, 5);
+  hoc_register_dparam_size(_mechtype, 4);
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  pnt_receive[_mechtype] = _net_receive;
@@ -273,6 +248,7 @@ static int _ode_spec1(_threadargsproto_);
  {
    DA = - A / tau1 ;
    DB = - B / tau2 ;
+   x = ( B - A ) * Mgblock ( _threadargscomma_ v ) ;
    }
  return _reset;
 }
@@ -286,6 +262,7 @@ static int _ode_spec1(_threadargsproto_);
  {
     A = A + (1. - exp(dt*(( - 1.0 ) / tau1)))*(- ( 0.0 ) / ( ( - 1.0 ) / tau1 ) - A) ;
     B = B + (1. - exp(dt*(( - 1.0 ) / tau2)))*(- ( 0.0 ) / ( ( - 1.0 ) / tau2 ) - B) ;
+   x = ( B - A ) * Mgblock ( _threadargscomma_ v ) ;
    }
   return 0;
 }
@@ -325,7 +302,7 @@ static void _ode_spec(_NrnThread* _nt, _Memb_list* _ml, int _type) {
     _nd = _ml->_nodelist[_iml];
     v = NODEV(_nd);
      _ode_spec1 ();
-  }}
+ }}
  
 static void _ode_map(int _ieq, double** _pv, double** _pvdot, double* _pp, Datum* _ppd, double* _atol, int _type) { 
  	int _i; _p = _pp; _ppvar = _ppd;
@@ -347,11 +324,6 @@ static void _ode_matsol(_NrnThread* _nt, _Memb_list* _ml, int _type) {
     v = NODEV(_nd);
  _ode_matsol1 ();
  }}
- extern void nrn_update_ion_pointer(Symbol*, Datum*, int, int);
- static void _update_ion_pointer(Datum* _ppvar) {
-   nrn_update_ion_pointer(_ca_sym, _ppvar, 2, 3);
-   nrn_update_ion_pointer(_ca_sym, _ppvar, 3, 4);
- }
 
 static void initmodel() {
   int _i; double _save;_ninits++;
@@ -398,16 +370,9 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   }
  v = _v;
  initmodel();
- }}
+}}
 
-static double _nrn_current(double _v){double _current=0.;v=_v;{ {
-   gsyn = B - A ;
-   i = g_mox * gsyn * Mgblock ( _threadargscomma_ v ) * ( v - eca ) ;
-   ica = i * 1e-6 ;
-   }
- _current += ica;
- _current += i;
-
+static double _nrn_current(double _v){double _current=0.;v=_v;{
 } return _current;
 }
 
@@ -427,24 +392,6 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   {
     _nd = _ml->_nodelist[_iml];
     _v = NODEV(_nd);
-  }
- _g = _nrn_current(_v + .001);
- 	{ double _dica;
-  _dica = ica;
- _rhs = _nrn_current(_v);
-  _ion_dicadv += (_dica - ica)/.001 * 1.e2/ (_nd_area);
- 	}
- _g = (_g - _rhs)/.001;
-  _ion_ica += ica * 1.e2/ (_nd_area);
- _g *=  1.e2/(_nd_area);
- _rhs *= 1.e2/(_nd_area);
-#if CACHEVEC
-  if (use_cachevec) {
-	VEC_RHS(_ni[_iml]) -= _rhs;
-  }else
-#endif
-  {
-	NODERHS(_nd) -= _rhs;
   }
  
 }}
@@ -494,11 +441,13 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  { {
  for (; t < _break; t += dt) {
  error =  state();
- if(error){fprintf(stderr,"at line 94 in file nmda_debug.mod:\n	SOLVE state METHOD cnexp\n"); nrn_complain(_p); abort_run(error);}
+ if(error){fprintf(stderr,"at line 84 in file nmda_debug.mod:\n	SOLVE state METHOD cnexp\n"); nrn_complain(_p); abort_run(error);}
  
 }}
  t = _save;
- } }}
+ } {
+   }
+}}
 
 }
 

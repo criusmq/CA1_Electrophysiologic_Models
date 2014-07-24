@@ -14,7 +14,9 @@ extern void _kdr_debug_reg(void);
 extern void _na_debug_reg(void);
 extern void _netstims_reg(void);
 extern void _nmda_ca_conc_debug_reg(void);
+extern void _nmda_ca_current_reg(void);
 extern void _nmda_ca_debug_reg(void);
+extern void _nmda_current_reg(void);
 extern void _nmda_debug_reg(void);
 
 void modl_reg(){
@@ -32,7 +34,9 @@ void modl_reg(){
     fprintf(stderr," na_debug.mod");
     fprintf(stderr," netstims.mod");
     fprintf(stderr," nmda_ca_conc_debug.mod");
+    fprintf(stderr," nmda_ca_current.mod");
     fprintf(stderr," nmda_ca_debug.mod");
+    fprintf(stderr," nmda_current.mod");
     fprintf(stderr," nmda_debug.mod");
     fprintf(stderr, "\n");
   }
@@ -47,6 +51,8 @@ void modl_reg(){
   _na_debug_reg();
   _netstims_reg();
   _nmda_ca_conc_debug_reg();
+  _nmda_ca_current_reg();
   _nmda_ca_debug_reg();
+  _nmda_current_reg();
   _nmda_debug_reg();
 }

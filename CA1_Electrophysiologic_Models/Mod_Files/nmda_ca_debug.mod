@@ -33,17 +33,14 @@ ENDCOMMENT
 NEURON {
 	POINT_PROCESS nmda_ca
 
-	RANGE tau1, tau2, e, ica
-	USEION ca WRITE ica
-	NONSPECIFIC_CURRENT i
-
-	RANGE gsyn, Area
+	RANGE tau1, tau2
 	GLOBAL total, mg
-
+	POINTER y
 }
 
 UNITS {
 	(nA) = (nanoamp)
+	(mA) = (milliamp)
 	(mV) = (millivolt)
 	(umho) = (micromho)
 }
@@ -51,21 +48,16 @@ UNITS {
 PARAMETER {
 	tau1 = 20 (ms)
 	tau2 = 20 (ms)
-	gmax = 0.002 (mho/cm2) :valeur provenant du ca1.p
-	g_mox = 0.0005 (mho/cm2) :valeur de gmax venant de protog
+	gmax = 0.02 (mho/cm2) :valeur provenant du ca1.p
 	mg	= 1.2    (mM)	: external magnesium concentration
-	eca=80	(mV) : Reversal potential
 }
 
 ASSIGNED {
 	v (mV)
 	i (nA)
-	ica (mA)
-	:ica     (mA/cm2)
-	gsyn (umho)
+	y (1)
 	factor
 	total (umho)
-	Area (cm2)
 }
 
 STATE {
@@ -90,25 +82,17 @@ INITIAL {
 
 BREAKPOINT {
 	SOLVE state METHOD cnexp
-	gsyn = B - A
-
-	i = g_mox*gsyn*Mgblock(v)*(v - eca)
-	ica = i*1e-6
-
-	:ica = (i*1e-6)/Area :e-6 pour convertir en mA
-							:0.1* essaie vue que dans bhalla il dit 1/10 de NMDA channel conductance
 }
 
 DERIVATIVE state {
 	A' = -A/tau1
 	B' = -B/tau2
+	y = (B - A)*Mgblock(v)
 }
 
 NET_RECEIVE(weight (umho)) {
 	A = A + weight*factor
 	B = B + weight*factor
-	:state_discontinuity(A, A + weight*factor)
-	:state_discontinuity(B, B + weight*factor)
 	total = total+weight
 }
 

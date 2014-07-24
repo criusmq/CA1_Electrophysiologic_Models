@@ -144,6 +144,8 @@ for i=1,8{
  		insert k_ahp_Bh
  		insert k_c_Bh
  		insert k_a_Bh
+ 		insert nmda_current
+ 		
  		//volume6 = PI*diam/2*diam/2*L*1e-18
  		//var6 = (8.96e-3 / volume6) *1e-6 * area(.5) * 1e-8
 		//apical[i].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[i].diam*1e-18))
@@ -152,6 +154,8 @@ for i=1,8{
  		apical[i].gk_k_ahp_Bh = 0.0008
  		apical[i].gk_k_c_Bh = 0.005
  		apical[i].gk_k_a_Bh = 0.01
+ 		
+ 		
  		}
  	}
  	
@@ -163,6 +167,8 @@ for i=1,8{
  		insert k_dr_Bh
  		insert k_ahp_Bh
  		insert k_c_Bh
+ 		insert nmda_current
+ 		
  		//var2 = 26.404e6 * area(.5) * 1e-8
  		//apical[0].beta_ca_conc_Bh = ( 26.404e12 * (PI*diam/2*diam/2*L*1e-18) * 1e-6)
  		apical[0].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[0].diam*1e-18))
@@ -171,6 +177,8 @@ for i=1,8{
  		apical[0].gk_k_dr_Bh = 0.01
  		apical[0].gk_k_ahp_Bh = 0.0008
  		apical[0].gk_k_c_Bh = 0.02
+ 		
+ 		
  		}
  		
  	apical[1]{
@@ -227,6 +235,8 @@ for i=0,11{
 	 	insert k_c_Bh
 	 	insert k_dr_Bh
 	 	insert k_a_Bh
+	 	insert nmda_current
+	 	
 	 	//volume7 = PI*diam/2*diam/2*L*1e-18
  		//var7 = (8.96e-3 / volume7) *1e-6 * area(.5) * 1e-8
 	 	//lateral[i].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[i].diam*1e-18))
@@ -235,6 +245,8 @@ for i=0,11{
  	 	lateral[i].gk_k_c_Bh = 0.005
  	 	lateral[i].gk_k_dr_Bh = 0.006
  	 	lateral[i].gk_k_a_Bh = 0.01
+ 	 	
+ 	 	
  	 	}
  	 }
  	 
@@ -293,10 +305,15 @@ spine[1]{
 	diam = 0.5
 	insert nmda_ca_conc_Bh
 	insert ca_debug_Bh
+	insert nmda_current
+	insert nmda_ca_current
+	
 	//volume8 = PI*diam/2*diam/2*L*1e-18
  	//var8 = (8.96e-3 / volume8) *1e-6 * area(.5) * 1e-8
 	spine[1].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18))
 	spine[1].gca_ca_debug_Bh = 0.006
+	
+	
 	}
 
 spine[3]{
@@ -304,10 +321,15 @@ spine[3]{
 	diam = 0.5
 	insert nmda_ca_conc_Bh
 	insert ca_debug_Bh
+	insert nmda_current
+	insert nmda_ca_current
+	
 	//volume9 = PI*diam/2*diam/2*L*1e-18
  	//var9 = (8.96e-3 / volume9) *1e-6 * area(.5) * 1e-8
 	spine[3].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[3].diam*1e-18))
 	spine[3].gca_ca_debug_Bh = 0.006
+	
+	
 	}
 	
 spine[5]{
@@ -315,10 +337,15 @@ spine[5]{
 	diam = 0.5
 	insert nmda_ca_conc_Bh
 	insert ca_debug_Bh
+	insert nmda_current
+	insert nmda_ca_current
+	
 	//volume10 = PI*diam/2*diam/2*L*1e-18
  	//var10 = (8.96e-3 / volume10) *1e-6 * area(.5) * 1e-8
 	spine[5].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18))
 	spine[5].gca_ca_debug_Bh = 0.006
+	
+	
 	}
 
 for i=0,5{

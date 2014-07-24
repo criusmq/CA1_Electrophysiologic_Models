@@ -87,5 +87,13 @@ qu'il y en a bien 1.
 	Bémol: Pointprocess can't write mA/cm@
 	
 	La solution qu'on avait trouver Nicholas et moi consiste à creer un fichier extérieur pour calculer le courant ica.
-	Essaiyons ca pour voir. Je ne retrouve plus le lien donc je fais un essaie de mémoire
+	Essayons ca pour voir. Je ne retrouve plus le lien donc je fais un essaie de mémoire
 	
+	Trop compliquer! Marche pas! Je continue de chercher l'autre solution
+	
+	
+	
+--> pour le uncaging peut-etre ca change le tau1 et tau2!!!!!!
+	--> maybe faire plusieurs évenements synaptiques
+	--> maybe refaire un mod file differents pour le uncaging
+--> litterature
