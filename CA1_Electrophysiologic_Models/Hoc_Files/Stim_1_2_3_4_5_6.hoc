@@ -1,5 +1,6 @@
 load_file("nrngui.hoc")
-load_file("CA1.hoc")
+//load_file("CA1.hoc")
+load_file("CA1_diff_test.hoc")
 load_file("synapses_definitions.hoc")
 
 //load_file("stimulation_1.hoc")

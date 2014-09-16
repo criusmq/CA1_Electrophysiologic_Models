@@ -37,21 +37,20 @@ extern double hoc_Exp(double);
 #define t nrn_threads->_t
 #define dt nrn_threads->_dt
 #define ca (_p + 0)
-#define CaBuffer (_p + 4)
-#define Buffer (_p + 8)
-#define ica _p[12]
-#define cai _p[13]
-#define Kd _p[14]
-#define B0 _p[15]
-#define Dca (_p + 16)
-#define DCaBuffer (_p + 20)
-#define DBuffer (_p + 24)
-#define _g _p[28]
+#define CaBuffer (_p + 2)
+#define Buffer (_p + 4)
+#define ica _p[6]
+#define cai _p[7]
+#define Kd _p[8]
+#define B0 _p[9]
+#define Dca (_p + 10)
+#define DCaBuffer (_p + 12)
+#define DBuffer (_p + 14)
+#define _g _p[16]
 #define _ion_cai	*_ppvar[0]._pval
 #define _ion_ica	*_ppvar[1]._pval
-#define _style_ca	*((int*)_ppvar[2]._pvoid)
-#define _ion_dicadv	*_ppvar[3]._pval
-#define diam	*_ppvar[4]._pval
+#define _ion_dicadv	*_ppvar[2]._pval
+#define diam	*_ppvar[3]._pval
  
 #if MAC
 #if !defined(v)
@@ -96,13 +95,13 @@ extern Memb_func* memb_func;
 #define DCa DCa_cadifus
  double DCa = 0.6;
 #define TotalBuffer TotalBuffer_cadifus
- double TotalBuffer = 0.003;
+ double TotalBuffer = 0.5;
 #define k2buf k2buf_cadifus
  double k2buf = 0.1;
 #define k1buf k1buf_cadifus
- double k1buf = 100;
+ double k1buf = 1;
 #define vrat vrat_cadifus
- double vrat[4];
+ double vrat[2];
  /* some parameters have upper and lower limits */
  static HocParmLimits _hoc_parm_limits[] = {
  0,0,0
@@ -112,6 +111,7 @@ extern Memb_func* memb_func;
  "k1buf_cadifus", "/mM-ms",
  "k2buf_cadifus", "/ms",
  "TotalBuffer_cadifus", "mM",
+ "vrat_cadifus", "1",
  "ca_cadifus", "mM",
  "CaBuffer_cadifus", "mM",
  "Buffer_cadifus", "mM",
@@ -131,7 +131,7 @@ extern Memb_func* memb_func;
  0,0
 };
  static DoubVec hoc_vdoub[] = {
- "vrat_cadifus", vrat_cadifus, 4,
+ "vrat_cadifus", vrat_cadifus, 2,
  0,0,0
 };
  static double _sav_indep;
@@ -146,17 +146,16 @@ static void _ode_map(int, double**, double**, double*, Datum*, double*, int);
 static void _ode_spec(_NrnThread*, _Memb_list*, int);
 static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  
-#define _cvode_ieq _ppvar[5]._i
- static void _ode_synonym(int, double**, Datum**);
+#define _cvode_ieq _ppvar[4]._i
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
  "6.2.0",
 "cadifus",
  0,
  0,
- "ca_cadifus[4]",
- "CaBuffer_cadifus[4]",
- "Buffer_cadifus[4]",
+ "ca_cadifus[2]",
+ "CaBuffer_cadifus[2]",
+ "Buffer_cadifus[2]",
  0,
  0};
  static Symbol* _morphology_sym;
@@ -168,23 +167,21 @@ extern Prop* need_memb(Symbol*);
 static void nrn_alloc(Prop* _prop) {
 	Prop *prop_ion;
 	double *_p; Datum *_ppvar;
- 	_p = nrn_prop_data_alloc(_mechtype, 29, _prop);
+ 	_p = nrn_prop_data_alloc(_mechtype, 17, _prop);
  	/*initialize range parameters*/
  	_prop->param = _p;
- 	_prop->param_size = 29;
- 	_ppvar = nrn_prop_datum_alloc(_mechtype, 6, _prop);
+ 	_prop->param_size = 17;
+ 	_ppvar = nrn_prop_datum_alloc(_mechtype, 5, _prop);
  	_prop->dparam = _ppvar;
  	/*connect ionic variables to this model*/
  prop_ion = need_memb(_morphology_sym);
- 	_ppvar[4]._pval = &prop_ion->param[0]; /* diam */
+ 	_ppvar[3]._pval = &prop_ion->param[0]; /* diam */
  prop_ion = need_memb(_ca_sym);
   _type_ica = prop_ion->_type;
- nrn_check_conc_write(_prop, prop_ion, 1);
- nrn_promote(prop_ion, 3, 0);
+ nrn_promote(prop_ion, 1, 0);
  	_ppvar[0]._pval = &prop_ion->param[1]; /* cai */
  	_ppvar[1]._pval = &prop_ion->param[3]; /* ica */
- 	_ppvar[2]._pvoid = (void*)(&(prop_ion->dparam[0]._i)); /* iontype for ca */
- 	_ppvar[3]._pval = &prop_ion->param[4]; /* _ion_dicadv */
+ 	_ppvar[2]._pval = &prop_ion->param[4]; /* _ion_dicadv */
  
 }
  static void _initlists();
@@ -201,7 +198,7 @@ extern void _nrn_thread_table_reg(int, void(*)(double*, Datum*, Datum*, _NrnThre
 extern void hoc_register_tolerance(int, HocStateTolerance*, Symbol***);
 extern void _cvode_abstol( Symbol**, double*, int);
 
- void _ca_diffusion_test_reg() {
+ void _cadifus_reg() {
 	int _vectorized = 0;
   _initlists();
  	ion_reg("ca", -10000.);
@@ -211,21 +208,19 @@ extern void _cvode_abstol( Symbol**, double*, int);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
      _nrn_thread_reg(_mechtype, 2, _update_ion_pointer);
-  hoc_register_dparam_size(_mechtype, 6);
- 	nrn_writes_conc(_mechtype, 0);
+  hoc_register_dparam_size(_mechtype, 5);
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
- 	hoc_register_synonym(_mechtype, _ode_synonym);
  	hoc_register_ldifus1(_difusfunc);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 cadifus /Users/maoss2/NEURON/CA1_cell_test/Stimulation_case_per_case/CA1_Electrophysiologic_Models/CA1_Electrophysiologic_Models/Mod_Files/x86_64/ca_diffusion_test.mod\n");
+ 	ivoc_help("help ?1 cadifus /Users/maoss2/NEURON/CA1_cell_test/Stimulation_case_per_case/CA1_Electrophysiologic_Models/CA1_Electrophysiologic_Models/Mod_Files/x86_64/cadifus.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
  static double FARADAY = 9.64853;
  static double PI = 3.14159;
  static double _zfactors_done ;
- static double _zfrat [ 4 ] ;
+ static double _zfrat [ 2 ] ;
  static double _zdsq , _zdsqvol ;
 static int _reset;
 static char *modelname = "";
@@ -248,16 +243,16 @@ static int factors();
  
 static int _ode_spec1(_threadargsproto_);
 /*static int _ode_matsol1(_threadargsproto_);*/
- static int _slist1[12], _dlist1[12]; static double *_temp1;
+ static int _slist1[6], _dlist1[6]; static double *_temp1;
  static int state();
  
 static int  factors (  ) {
    double _lr , _ldr2 ;
  _lr = 1.0 / 2.0 ;
-   _ldr2 = _lr / ( 4.0 - 1.0 ) / 2.0 ;
+   _ldr2 = _lr / ( 2.0 - 1.0 ) / 2.0 ;
    vrat [ 0 ] = 0.0 ;
    _zfrat [ 0 ] = 2.0 * _lr ;
-   {int  _li ;for ( _li = 0 ; _li <= 4 - 2 ; _li ++ ) {
+   {int  _li ;for ( _li = 0 ; _li <= 2 - 2 ; _li ++ ) {
      vrat [ _li ] = vrat [ _li ] + PI * ( _lr - _ldr2 / 2.0 ) * 2.0 * _ldr2 ;
      _lr = _lr - _ldr2 ;
      _zfrat [ _li + 1 ] = 2.0 * PI * _lr / ( 2.0 * _ldr2 ) ;
@@ -278,20 +273,20 @@ static int state ()
  {
    double b_flux, f_flux, _term; int _i;
  {int _i; double _dt1 = 1.0/dt;
-for(_i=0;_i<12;_i++){
+for(_i=0;_i<6;_i++){
   	_RHS1(_i) = -_dt1*(_p[_slist1[_i]] - _p[_dlist1[_i]]);
 	_MATELM1(_i, _i) = _dt1;
       
 } 
-for (_i=0; _i < 4; _i++) {
+for (_i=0; _i < 2; _i++) {
   	_RHS1(_i + 0) *= ( diam * diam * vrat [ ((int) _i ) ]) ;
 _MATELM1(_i + 0, _i + 0) *= ( diam * diam * vrat [ ((int) _i ) ]);  } 
-for (_i=0; _i < 4; _i++) {
+for (_i=0; _i < 2; _i++) {
+  	_RHS1(_i + 2) *= ( diam * diam * vrat [ ((int) _i ) ]) ;
+_MATELM1(_i + 2, _i + 2) *= ( diam * diam * vrat [ ((int) _i ) ]);  } 
+for (_i=0; _i < 2; _i++) {
   	_RHS1(_i + 4) *= ( diam * diam * vrat [ ((int) _i ) ]) ;
-_MATELM1(_i + 4, _i + 4) *= ( diam * diam * vrat [ ((int) _i ) ]);  } 
-for (_i=0; _i < 4; _i++) {
-  	_RHS1(_i + 8) *= ( diam * diam * vrat [ ((int) _i ) ]) ;
-_MATELM1(_i + 8, _i + 8) *= ( diam * diam * vrat [ ((int) _i ) ]);  } }
+_MATELM1(_i + 4, _i + 4) *= ( diam * diam * vrat [ ((int) _i ) ]);  } }
  /* COMPARTMENT _li , diam * diam * vrat [ ((int) _i ) ] {
      ca CaBuffer Buffer }
    */
@@ -300,55 +295,54 @@ _MATELM1(_i + 8, _i + 8) *= ( diam * diam * vrat [ ((int) _i ) ]);  } }
    */
  /* ~ ca [ 0 ] < < ( - ica * PI * diam / ( 2.0 * FARADAY ) )*/
  f_flux = b_flux = 0.;
- _RHS1( 8 +  0) += (b_flux =   ( - ica * PI * diam / ( 2.0 * FARADAY ) ) );
+ _RHS1( 4 +  0) += (b_flux =   ( - ica * PI * diam / ( 2.0 * FARADAY ) ) );
  /*FLUX*/
-  {int  _li ;for ( _li = 0 ; _li <= 4 - 2 ; _li ++ ) {
+  {int  _li ;for ( _li = 0 ; _li <= 2 - 2 ; _li ++ ) {
      /* ~ ca [ _li ] <-> ca [ _li + 1 ] ( DCa * _zfrat [ _li + 1 ] , DCa * _zfrat [ _li + 1 ] )*/
  f_flux =  DCa * _zfrat [ _li + 1 ] * ca [ _li] ;
  b_flux =  DCa * _zfrat [ _li + 1 ] * ca [ _li + 1] ;
- _RHS1( 8 +  _li) -= (f_flux - b_flux);
- _RHS1( 8 +  _li + 1) += (f_flux - b_flux);
+ _RHS1( 4 +  _li) -= (f_flux - b_flux);
+ _RHS1( 4 +  _li + 1) += (f_flux - b_flux);
  
  _term =  DCa * _zfrat [ _li + 1 ] ;
- _MATELM1( 8 +  _li ,8 +  _li)  += _term;
- _MATELM1( 8 +  _li + 1 ,8 +  _li)  -= _term;
+ _MATELM1( 4 +  _li ,4 +  _li)  += _term;
+ _MATELM1( 4 +  _li + 1 ,4 +  _li)  -= _term;
  _term =  DCa * _zfrat [ _li + 1 ] ;
- _MATELM1( 8 +  _li ,8 +  _li + 1)  -= _term;
- _MATELM1( 8 +  _li + 1 ,8 +  _li + 1)  += _term;
+ _MATELM1( 4 +  _li ,4 +  _li + 1)  -= _term;
+ _MATELM1( 4 +  _li + 1 ,4 +  _li + 1)  += _term;
  /*REACTION*/
   } }
    _zdsq = diam * diam ;
-   {int  _li ;for ( _li = 0 ; _li <= 4 - 1 ; _li ++ ) {
+   {int  _li ;for ( _li = 0 ; _li <= 2 - 1 ; _li ++ ) {
      _zdsqvol = _zdsq * vrat [ _li ] ;
      /* ~ ca [ _li ] + Buffer [ _li ] <-> CaBuffer [ _li ] ( k1buf * _zdsqvol , k2buf * _zdsqvol )*/
  f_flux =  k1buf * _zdsqvol * Buffer [ _li] * ca [ _li] ;
  b_flux =  k2buf * _zdsqvol * CaBuffer [ _li] ;
  _RHS1( 0 +  _li) -= (f_flux - b_flux);
- _RHS1( 8 +  _li) -= (f_flux - b_flux);
- _RHS1( 4 +  _li) += (f_flux - b_flux);
+ _RHS1( 4 +  _li) -= (f_flux - b_flux);
+ _RHS1( 2 +  _li) += (f_flux - b_flux);
  
  _term =  k1buf * _zdsqvol * ca [ _li] ;
  _MATELM1( 0 +  _li ,0 +  _li)  += _term;
- _MATELM1( 8 +  _li ,0 +  _li)  += _term;
- _MATELM1( 4 +  _li ,0 +  _li)  -= _term;
+ _MATELM1( 4 +  _li ,0 +  _li)  += _term;
+ _MATELM1( 2 +  _li ,0 +  _li)  -= _term;
  _term =  k1buf * _zdsqvol * Buffer [ _li] ;
- _MATELM1( 0 +  _li ,8 +  _li)  += _term;
- _MATELM1( 8 +  _li ,8 +  _li)  += _term;
- _MATELM1( 4 +  _li ,8 +  _li)  -= _term;
- _term =  k2buf * _zdsqvol ;
- _MATELM1( 0 +  _li ,4 +  _li)  -= _term;
- _MATELM1( 8 +  _li ,4 +  _li)  -= _term;
+ _MATELM1( 0 +  _li ,4 +  _li)  += _term;
  _MATELM1( 4 +  _li ,4 +  _li)  += _term;
+ _MATELM1( 2 +  _li ,4 +  _li)  -= _term;
+ _term =  k2buf * _zdsqvol ;
+ _MATELM1( 0 +  _li ,2 +  _li)  -= _term;
+ _MATELM1( 4 +  _li ,2 +  _li)  -= _term;
+ _MATELM1( 2 +  _li ,2 +  _li)  += _term;
  /*REACTION*/
   } }
-   cai = ca [ 0 ] ;
      } return _reset;
  }
  
 /*CVODE ode begin*/
  static int _ode_spec1() {_reset=0;{
  double b_flux, f_flux, _term; int _i;
- {int _i; for(_i=0;_i<12;_i++) _p[_dlist1[_i]] = 0.0;}
+ {int _i; for(_i=0;_i<6;_i++) _p[_dlist1[_i]] = 0.0;}
  /* COMPARTMENT _li , diam * diam * vrat [ ((int) _i ) ] {
    ca CaBuffer Buffer }
  */
@@ -359,7 +353,7 @@ _MATELM1(_i + 8, _i + 8) *= ( diam * diam * vrat [ ((int) _i ) ]);  } }
  f_flux = b_flux = 0.;
  Dca [ 0] += (b_flux =   ( - ica * PI * diam / ( 2.0 * FARADAY ) ) );
  /*FLUX*/
-  {int  _li ;for ( _li = 0 ; _li <= 4 - 2 ; _li ++ ) {
+  {int  _li ;for ( _li = 0 ; _li <= 2 - 2 ; _li ++ ) {
    /* ~ ca [ _li ] <-> ca [ _li + 1 ] ( DCa * _zfrat [ _li + 1 ] , DCa * _zfrat [ _li + 1 ] )*/
  f_flux =  DCa * _zfrat [ _li + 1 ] * ca [ _li] ;
  b_flux =  DCa * _zfrat [ _li + 1 ] * ca [ _li + 1] ;
@@ -369,7 +363,7 @@ _MATELM1(_i + 8, _i + 8) *= ( diam * diam * vrat [ ((int) _i ) ]);  } }
  /*REACTION*/
   } }
  _zdsq = diam * diam ;
- {int  _li ;for ( _li = 0 ; _li <= 4 - 1 ; _li ++ ) {
+ {int  _li ;for ( _li = 0 ; _li <= 2 - 1 ; _li ++ ) {
    _zdsqvol = _zdsq * vrat [ _li ] ;
    /* ~ ca [ _li ] + Buffer [ _li ] <-> CaBuffer [ _li ] ( k1buf * _zdsqvol , k2buf * _zdsqvol )*/
  f_flux =  k1buf * _zdsqvol * Buffer [ _li] * ca [ _li] ;
@@ -380,10 +374,9 @@ _MATELM1(_i + 8, _i + 8) *= ( diam * diam * vrat [ ((int) _i ) ]);  } }
  
  /*REACTION*/
   } }
- cai = ca [ 0 ] ;
- for (_i=0; _i < 4; _i++) { _p[_dlist1[_i + 0]] /= ( diam * diam * vrat [ ((int) _i ) ]);}
- for (_i=0; _i < 4; _i++) { _p[_dlist1[_i + 4]] /= ( diam * diam * vrat [ ((int) _i ) ]);}
- for (_i=0; _i < 4; _i++) { _p[_dlist1[_i + 8]] /= ( diam * diam * vrat [ ((int) _i ) ]);}
+ for (_i=0; _i < 2; _i++) { _p[_dlist1[_i + 0]] /= ( diam * diam * vrat [ ((int) _i ) ]);}
+ for (_i=0; _i < 2; _i++) { _p[_dlist1[_i + 2]] /= ( diam * diam * vrat [ ((int) _i ) ]);}
+ for (_i=0; _i < 2; _i++) { _p[_dlist1[_i + 4]] /= ( diam * diam * vrat [ ((int) _i ) ]);}
    } return _reset;
  }
  
@@ -392,20 +385,20 @@ _MATELM1(_i + 8, _i + 8) *= ( diam * diam * vrat [ ((int) _i ) ]);  } }
  double b_flux, f_flux, _term; int _i;
    b_flux = f_flux = 0.;
  {int _i; double _dt1 = 1.0/dt;
-for(_i=0;_i<12;_i++){
+for(_i=0;_i<6;_i++){
   	_RHS1(_i) = _dt1*(_p[_dlist1[_i]]);
 	_MATELM1(_i, _i) = _dt1;
       
 } 
-for (_i=0; _i < 4; _i++) {
+for (_i=0; _i < 2; _i++) {
   	_RHS1(_i + 0) *= ( diam * diam * vrat [ ((int) _i ) ]) ;
 _MATELM1(_i + 0, _i + 0) *= ( diam * diam * vrat [ ((int) _i ) ]);  } 
-for (_i=0; _i < 4; _i++) {
+for (_i=0; _i < 2; _i++) {
+  	_RHS1(_i + 2) *= ( diam * diam * vrat [ ((int) _i ) ]) ;
+_MATELM1(_i + 2, _i + 2) *= ( diam * diam * vrat [ ((int) _i ) ]);  } 
+for (_i=0; _i < 2; _i++) {
   	_RHS1(_i + 4) *= ( diam * diam * vrat [ ((int) _i ) ]) ;
-_MATELM1(_i + 4, _i + 4) *= ( diam * diam * vrat [ ((int) _i ) ]);  } 
-for (_i=0; _i < 4; _i++) {
-  	_RHS1(_i + 8) *= ( diam * diam * vrat [ ((int) _i ) ]) ;
-_MATELM1(_i + 8, _i + 8) *= ( diam * diam * vrat [ ((int) _i ) ]);  } }
+_MATELM1(_i + 4, _i + 4) *= ( diam * diam * vrat [ ((int) _i ) ]);  } }
  /* COMPARTMENT _li , diam * diam * vrat [ ((int) _i ) ] {
  ca CaBuffer Buffer }
  */
@@ -414,41 +407,40 @@ _MATELM1(_i + 8, _i + 8) *= ( diam * diam * vrat [ ((int) _i ) ]);  } }
  */
  /* ~ ca [ 0 ] < < ( - ica * PI * diam / ( 2.0 * FARADAY ) )*/
  /*FLUX*/
-  {int  _li ;for ( _li = 0 ; _li <= 4 - 2 ; _li ++ ) {
+  {int  _li ;for ( _li = 0 ; _li <= 2 - 2 ; _li ++ ) {
  /* ~ ca [ _li ] <-> ca [ _li + 1 ] ( DCa * _zfrat [ _li + 1 ] , DCa * _zfrat [ _li + 1 ] )*/
  _term =  DCa * _zfrat [ _li + 1 ] ;
- _MATELM1( 8 +  _li ,8 +  _li)  += _term;
- _MATELM1( 8 +  _li + 1 ,8 +  _li)  -= _term;
+ _MATELM1( 4 +  _li ,4 +  _li)  += _term;
+ _MATELM1( 4 +  _li + 1 ,4 +  _li)  -= _term;
  _term =  DCa * _zfrat [ _li + 1 ] ;
- _MATELM1( 8 +  _li ,8 +  _li + 1)  -= _term;
- _MATELM1( 8 +  _li + 1 ,8 +  _li + 1)  += _term;
+ _MATELM1( 4 +  _li ,4 +  _li + 1)  -= _term;
+ _MATELM1( 4 +  _li + 1 ,4 +  _li + 1)  += _term;
  /*REACTION*/
   } }
  _zdsq = diam * diam ;
- {int  _li ;for ( _li = 0 ; _li <= 4 - 1 ; _li ++ ) {
+ {int  _li ;for ( _li = 0 ; _li <= 2 - 1 ; _li ++ ) {
  _zdsqvol = _zdsq * vrat [ _li ] ;
  /* ~ ca [ _li ] + Buffer [ _li ] <-> CaBuffer [ _li ] ( k1buf * _zdsqvol , k2buf * _zdsqvol )*/
  _term =  k1buf * _zdsqvol * ca [ _li] ;
  _MATELM1( 0 +  _li ,0 +  _li)  += _term;
- _MATELM1( 8 +  _li ,0 +  _li)  += _term;
- _MATELM1( 4 +  _li ,0 +  _li)  -= _term;
+ _MATELM1( 4 +  _li ,0 +  _li)  += _term;
+ _MATELM1( 2 +  _li ,0 +  _li)  -= _term;
  _term =  k1buf * _zdsqvol * Buffer [ _li] ;
- _MATELM1( 0 +  _li ,8 +  _li)  += _term;
- _MATELM1( 8 +  _li ,8 +  _li)  += _term;
- _MATELM1( 4 +  _li ,8 +  _li)  -= _term;
- _term =  k2buf * _zdsqvol ;
- _MATELM1( 0 +  _li ,4 +  _li)  -= _term;
- _MATELM1( 8 +  _li ,4 +  _li)  -= _term;
+ _MATELM1( 0 +  _li ,4 +  _li)  += _term;
  _MATELM1( 4 +  _li ,4 +  _li)  += _term;
+ _MATELM1( 2 +  _li ,4 +  _li)  -= _term;
+ _term =  k2buf * _zdsqvol ;
+ _MATELM1( 0 +  _li ,2 +  _li)  -= _term;
+ _MATELM1( 4 +  _li ,2 +  _li)  -= _term;
+ _MATELM1( 2 +  _li ,2 +  _li)  += _term;
  /*REACTION*/
   } }
- cai = ca [ 0 ] ;
    } return _reset;
  }
  
 /*CVODE end*/
  
-static int _ode_count(int _type){ return 12;}
+static int _ode_count(int _type){ return 6;}
  
 static void _ode_spec(_NrnThread* _nt, _Memb_list* _ml, int _type) {
    Datum* _thread;
@@ -461,24 +453,17 @@ static void _ode_spec(_NrnThread* _nt, _Memb_list* _ml, int _type) {
     v = NODEV(_nd);
   cai = _ion_cai;
   ica = _ion_ica;
-  cai = _ion_cai;
      _ode_spec1 ();
-  _ion_cai = cai;
  }}
  
 static void _ode_map(int _ieq, double** _pv, double** _pvdot, double* _pp, Datum* _ppd, double* _atol, int _type) { 
  	int _i; _p = _pp; _ppvar = _ppd;
 	_cvode_ieq = _ieq;
-	for (_i=0; _i < 12; ++_i) {
+	for (_i=0; _i < 6; ++_i) {
 		_pv[_i] = _pp + _slist1[_i];  _pvdot[_i] = _pp + _dlist1[_i];
 		_cvode_abstol(_atollist, _atol, _i);
 	}
  }
- static void _ode_synonym(int _cnt, double** _pp, Datum** _ppd) { 
- 	int _i; 
-	for (_i=0; _i < _cnt; ++_i) {_p = _pp[_i]; _ppvar = _ppd[_i];
- _ion_cai =  ca [ 0 ] ;
- }}
  
 static void _ode_matsol(_NrnThread* _nt, _Memb_list* _ml, int _type) {
    Datum* _thread;
@@ -491,14 +476,13 @@ static void _ode_matsol(_NrnThread* _nt, _Memb_list* _ml, int _type) {
     v = NODEV(_nd);
   cai = _ion_cai;
   ica = _ion_ica;
-  cai = _ion_cai;
- _cvode_sparse(&_cvsparseobj1, 12, _dlist1, _p, _ode_matsol1, &_coef1);
+ _cvode_sparse(&_cvsparseobj1, 6, _dlist1, _p, _ode_matsol1, &_coef1);
  }}
  extern void nrn_update_ion_pointer(Symbol*, Datum*, int, int);
  static void _update_ion_pointer(Datum* _ppvar) {
    nrn_update_ion_pointer(_ca_sym, _ppvar, 0, 1);
    nrn_update_ion_pointer(_ca_sym, _ppvar, 1, 3);
-   nrn_update_ion_pointer(_ca_sym, _ppvar, 3, 4);
+   nrn_update_ion_pointer(_ca_sym, _ppvar, 2, 4);
  }
  static void* _difspace1;
 extern double nrn_nernst_coef();
@@ -510,7 +494,7 @@ static double _difcoef1(int _i, double* _p, Datum* _ppvar, double* _pdvol, doubl
    return DCa * diam * diam * vrat [ ((int) _i ) ] ;
 }
  static void _difusfunc(ldifusfunc2_t _f, _NrnThread* _nt) {int _i;
-  for (_i=0; _i < 4; ++_i) (*_f)(_mechtype, _difcoef1, &_difspace1, _i,  0, 16 , _nt);
+  for (_i=0; _i < 2; ++_i) (*_f)(_mechtype, _difcoef1, &_difspace1, _i,  0, 10 , _nt);
  }
 
 static void initmodel() {
@@ -518,9 +502,9 @@ static void initmodel() {
  _save = t;
  t = 0.0;
 {
- for (_i=0; _i<4; _i++) Buffer[_i] = Buffer0;
- for (_i=0; _i<4; _i++) CaBuffer[_i] = CaBuffer0;
- for (_i=0; _i<4; _i++) ca[_i] = ca0;
+ for (_i=0; _i<2; _i++) Buffer[_i] = Buffer0;
+ for (_i=0; _i<2; _i++) CaBuffer[_i] = CaBuffer0;
+ for (_i=0; _i<2; _i++) ca[_i] = ca0;
  {
    if ( _zfactors_done  == 0.0 ) {
      _zfactors_done = 1.0 ;
@@ -528,9 +512,9 @@ static void initmodel() {
      }
    Kd = k1buf / k2buf ;
    B0 = TotalBuffer / ( 1.0 + Kd * cai ) ;
-   {int  _li ;for ( _li = 0 ; _li <= 4 - 1 ; _li ++ ) {
+   {int  _li ;for ( _li = 0 ; _li <= 2 - 1 ; _li ++ ) {
      ca [ _li ] = cai ;
-     Buffer [ _li ] = B0 ;
+     Buffer [ _li ] = TotalBuffer ;
      CaBuffer [ _li ] = TotalBuffer - B0 ;
      } }
    }
@@ -559,10 +543,7 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  v = _v;
   cai = _ion_cai;
   ica = _ion_ica;
-  cai = _ion_cai;
  initmodel();
-  _ion_cai = cai;
-  nrn_wrote_conc(_ca_sym, (&(_ion_cai)) - 1, _style_ca);
 }}
 
 static double _nrn_current(double _v){double _current=0.;v=_v;{
@@ -633,17 +614,15 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
 {
   cai = _ion_cai;
   ica = _ion_ica;
-  cai = _ion_cai;
  { {
  for (; t < _break; t += dt) {
- error = sparse(&_sparseobj1, 12, _slist1, _dlist1, _p, &t, dt, state,&_coef1, _linmat1);
- if(error){fprintf(stderr,"at line 42 in file ca_diffusion_test.mod:\n\n"); nrn_complain(_p); abort_run(error);}
+ error = sparse(&_sparseobj1, 6, _slist1, _dlist1, _p, &t, dt, state,&_coef1, _linmat1);
+ if(error){fprintf(stderr,"at line 46 in file cadifus.mod:\n\n"); nrn_complain(_p); abort_run(error);}
  
 }}
  t = _save;
  } {
    }
-  _ion_cai = cai;
 }}
 
 }
@@ -653,8 +632,8 @@ static void terminal(){}
 static void _initlists() {
  int _i; static int _first = 1;
   if (!_first) return;
- for(_i=0;_i<4;_i++){_slist1[0+_i] = (Buffer + _i) - _p;  _dlist1[0+_i] = (DBuffer + _i) - _p;}
- for(_i=0;_i<4;_i++){_slist1[4+_i] = (CaBuffer + _i) - _p;  _dlist1[4+_i] = (DCaBuffer + _i) - _p;}
- for(_i=0;_i<4;_i++){_slist1[8+_i] = (ca + _i) - _p;  _dlist1[8+_i] = (Dca + _i) - _p;}
+ for(_i=0;_i<2;_i++){_slist1[0+_i] = (Buffer + _i) - _p;  _dlist1[0+_i] = (DBuffer + _i) - _p;}
+ for(_i=0;_i<2;_i++){_slist1[2+_i] = (CaBuffer + _i) - _p;  _dlist1[2+_i] = (DCaBuffer + _i) - _p;}
+ for(_i=0;_i<2;_i++){_slist1[4+_i] = (ca + _i) - _p;  _dlist1[4+_i] = (Dca + _i) - _p;}
 _first = 0;
 }
