@@ -312,8 +312,8 @@ spine[1]{
  	//var8 = (8.96e-3 / volume8) *1e-6 * area(.5) * 1e-8
 	spine[1].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18))
 	spine[1].gca_ca_debug_Bh = 0.006
-	
-	
+
+
 	}
 
 spine[3]{
