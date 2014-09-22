@@ -37,17 +37,16 @@ extern double hoc_Exp(double);
 #define t _nt->_t
 #define dt _nt->_dt
 #define D _p[0]
-#define ica _p[1]
-#define L _p[2]
+#define ca _p[1]
+#define ica _p[2]
 #define cai _p[3]
-#define Dcai _p[4]
+#define Dca _p[4]
 #define v _p[5]
 #define _g _p[6]
-#define _ion_ica	*_ppvar[0]._pval
-#define _ion_cai	*_ppvar[1]._pval
-#define _style_ca	*((int*)_ppvar[2]._pvoid)
-#define _ion_dicadv	*_ppvar[3]._pval
-#define diam	*_ppvar[4]._pval
+#define _ion_cai	*_ppvar[0]._pval
+#define _ion_ica	*_ppvar[1]._pval
+#define _ion_dicadv	*_ppvar[2]._pval
+#define diam	*_ppvar[3]._pval
  
 #if MAC
 #if !defined(v)
@@ -85,7 +84,7 @@ extern Memb_func* memb_func;
 }
  /* connect user functions to hoc names */
  static VoidFunc hoc_intfunc[] = {
- "setdata_cadifl", _hoc_setdata,
+ "setdata_long_dif", _hoc_setdata,
  0, 0
 };
  /* declare global and static user variables */
@@ -94,10 +93,11 @@ extern Memb_func* memb_func;
  0,0,0
 };
  static HocParmUnits _hoc_parm_units[] = {
- "D_cadifl", "um2/ms",
+ "D_long_dif", "um2/ms",
+ "ca_long_dif", "mM",
  0,0
 };
- static double cai0 = 0;
+ static double ca0 = 0;
  static double delta_t = 0.01;
  /* connect global user variables to hoc */
  static DoubScal hoc_scdoub[] = {
@@ -118,14 +118,15 @@ static void _ode_map(int, double**, double**, double*, Datum*, double*, int);
 static void _ode_spec(_NrnThread*, _Memb_list*, int);
 static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  
-#define _cvode_ieq _ppvar[5]._i
+#define _cvode_ieq _ppvar[4]._i
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
  "6.2.0",
-"cadifl",
- "D_cadifl",
+"long_dif",
+ "D_long_dif",
  0,
  0,
+ "ca_long_dif",
  0,
  0};
  static Symbol* _morphology_sym;
@@ -142,19 +143,17 @@ static void nrn_alloc(Prop* _prop) {
  	D = 0.6;
  	_prop->param = _p;
  	_prop->param_size = 7;
- 	_ppvar = nrn_prop_datum_alloc(_mechtype, 6, _prop);
+ 	_ppvar = nrn_prop_datum_alloc(_mechtype, 5, _prop);
  	_prop->dparam = _ppvar;
  	/*connect ionic variables to this model*/
  prop_ion = need_memb(_morphology_sym);
- 	_ppvar[4]._pval = &prop_ion->param[0]; /* diam */
+ 	_ppvar[3]._pval = &prop_ion->param[0]; /* diam */
  prop_ion = need_memb(_ca_sym);
   _type_ica = prop_ion->_type;
- nrn_check_conc_write(_prop, prop_ion, 1);
- nrn_promote(prop_ion, 3, 0);
- 	_ppvar[0]._pval = &prop_ion->param[3]; /* ica */
- 	_ppvar[1]._pval = &prop_ion->param[1]; /* cai */
- 	_ppvar[2]._pvoid = (void*)(&(prop_ion->dparam[0]._i)); /* iontype for ca */
- 	_ppvar[3]._pval = &prop_ion->param[4]; /* _ion_dicadv */
+ nrn_promote(prop_ion, 1, 0);
+ 	_ppvar[0]._pval = &prop_ion->param[1]; /* cai */
+ 	_ppvar[1]._pval = &prop_ion->param[3]; /* ica */
+ 	_ppvar[2]._pval = &prop_ion->param[4]; /* _ion_dicadv */
  
 }
  static void _initlists();
@@ -183,13 +182,12 @@ extern void _cvode_abstol( Symbol**, double*, int);
      _nrn_setdata_reg(_mechtype, _setdata);
      _nrn_thread_reg(_mechtype, 0, _thread_cleanup);
      _nrn_thread_reg(_mechtype, 2, _update_ion_pointer);
-  hoc_register_dparam_size(_mechtype, 6);
- 	nrn_writes_conc(_mechtype, 0);
+  hoc_register_dparam_size(_mechtype, 5);
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  	hoc_register_ldifus1(_difusfunc);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 cadifl /Users/maoss2/NEURON/CA1_cell_test/Stimulation_case_per_case/CA1_Electrophysiologic_Models/CA1_Electrophysiologic_Models/Mod_Files/x86_64/cadifl_test.mod\n");
+ 	ivoc_help("help ?1 long_dif /Users/maoss2/NEURON/CA1_cell_test/Stimulation_case_per_case/CA1_Electrophysiologic_Models/CA1_Electrophysiologic_Models/Mod_Files/x86_64/cadifl_test.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -227,15 +225,15 @@ for(_i=0;_i<1;_i++){
 	_MATELM1(_i, _i) = _dt1;
       
 }  
-_RHS1(0) *= ( PI * diam * diam * L / 4.0) ;
-_MATELM1(0, 0) *= ( PI * diam * diam * L / 4.0);  }
- /* COMPARTMENT PI * diam * diam * L / 4.0 {
-     cai }
+_RHS1(0) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(0, 0) *= ( PI * diam * diam / 4.0);  }
+ /* COMPARTMENT PI * diam * diam / 4.0 {
+     ca }
    */
- /* LONGITUDINAL_DIFFUSION D * PI * diam * diam / 4.0 {
-     cai }
+ /* LONGITUDINAL_DIFFUSION D * diam * diam {
+     ca }
    */
- /* ~ cai < < ( - ica / ( FARADAY ) * PI * diam * ( 1e4 ) )*/
+ /* ~ ca < < ( - ica / ( FARADAY ) * PI * diam * ( 1e4 ) )*/
  f_flux = b_flux = 0.;
  _RHS1( 0) += (b_flux =   ( - ica / ( FARADAY ) * PI * diam * ( 1e4 ) ) );
  /*FLUX*/
@@ -246,17 +244,17 @@ _MATELM1(0, 0) *= ( PI * diam * diam * L / 4.0);  }
  static int _ode_spec1(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {int _reset=0;{
  double b_flux, f_flux, _term; int _i;
  {int _i; for(_i=0;_i<1;_i++) _p[_dlist1[_i]] = 0.0;}
- /* COMPARTMENT PI * diam * diam * L / 4.0 {
-   cai }
+ /* COMPARTMENT PI * diam * diam / 4.0 {
+   ca }
  */
- /* LONGITUDINAL_DIFFUSION D * PI * diam * diam / 4.0 {
-   cai }
+ /* LONGITUDINAL_DIFFUSION D * diam * diam {
+   ca }
  */
- /* ~ cai < < ( - ica / ( FARADAY ) * PI * diam * ( 1e4 ) )*/
+ /* ~ ca < < ( - ica / ( FARADAY ) * PI * diam * ( 1e4 ) )*/
  f_flux = b_flux = 0.;
- Dcai += (b_flux =   ( - ica / ( FARADAY ) * PI * diam * ( 1e4 ) ) );
+ Dca += (b_flux =   ( - ica / ( FARADAY ) * PI * diam * ( 1e4 ) ) );
  /*FLUX*/
-  _p[_dlist1[0]] /= ( PI * diam * diam * L / 4.0);
+  _p[_dlist1[0]] /= ( PI * diam * diam / 4.0);
    } return _reset;
  }
  
@@ -270,15 +268,15 @@ for(_i=0;_i<1;_i++){
 	_MATELM1(_i, _i) = _dt1;
       
 }  
-_RHS1(0) *= ( PI * diam * diam * L / 4.0) ;
-_MATELM1(0, 0) *= ( PI * diam * diam * L / 4.0);  }
- /* COMPARTMENT PI * diam * diam * L / 4.0 {
- cai }
+_RHS1(0) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(0, 0) *= ( PI * diam * diam / 4.0);  }
+ /* COMPARTMENT PI * diam * diam / 4.0 {
+ ca }
  */
- /* LONGITUDINAL_DIFFUSION D * PI * diam * diam / 4.0 {
- cai }
+ /* LONGITUDINAL_DIFFUSION D * diam * diam {
+ ca }
  */
- /* ~ cai < < ( - ica / ( FARADAY ) * PI * diam * ( 1e4 ) )*/
+ /* ~ ca < < ( - ica / ( FARADAY ) * PI * diam * ( 1e4 ) )*/
  /*FLUX*/
     } return _reset;
  }
@@ -296,10 +294,9 @@ static void _ode_spec(_NrnThread* _nt, _Memb_list* _ml, int _type) {
     _p = _ml->_data[_iml]; _ppvar = _ml->_pdata[_iml];
     _nd = _ml->_nodelist[_iml];
     v = NODEV(_nd);
-  ica = _ion_ica;
   cai = _ion_cai;
+  ica = _ion_ica;
      _ode_spec1 (_p, _ppvar, _thread, _nt);
-  _ion_cai = cai;
  }}
  
 static void _ode_map(int _ieq, double** _pv, double** _pvdot, double* _pp, Datum* _ppd, double* _atol, int _type) { 
@@ -310,7 +307,6 @@ static void _ode_map(int _ieq, double** _pv, double** _pvdot, double* _pp, Datum
 		_pv[_i] = _pp + _slist1[_i];  _pvdot[_i] = _pp + _dlist1[_i];
 		_cvode_abstol(_atollist, _atol, _i);
 	}
- 	_pv[0] = &(_ion_cai);
  }
  
 static void _ode_matsol(_NrnThread* _nt, _Memb_list* _ml, int _type) {
@@ -322,8 +318,8 @@ static void _ode_matsol(_NrnThread* _nt, _Memb_list* _ml, int _type) {
     _p = _ml->_data[_iml]; _ppvar = _ml->_pdata[_iml];
     _nd = _ml->_nodelist[_iml];
     v = NODEV(_nd);
-  ica = _ion_ica;
   cai = _ion_cai;
+  ica = _ion_ica;
  _cvode_sparse_thread(&_thread[_cvspth1]._pvoid, 1, _dlist1, _p, _ode_matsol1, _ppvar, _thread, _nt);
  }}
  
@@ -333,25 +329,29 @@ static void _thread_cleanup(Datum* _thread) {
  }
  extern void nrn_update_ion_pointer(Symbol*, Datum*, int, int);
  static void _update_ion_pointer(Datum* _ppvar) {
-   nrn_update_ion_pointer(_ca_sym, _ppvar, 0, 3);
-   nrn_update_ion_pointer(_ca_sym, _ppvar, 1, 1);
-   nrn_update_ion_pointer(_ca_sym, _ppvar, 3, 4);
+   nrn_update_ion_pointer(_ca_sym, _ppvar, 0, 1);
+   nrn_update_ion_pointer(_ca_sym, _ppvar, 1, 3);
+   nrn_update_ion_pointer(_ca_sym, _ppvar, 2, 4);
  }
  static void* _difspace1;
 extern double nrn_nernst_coef();
 static double _difcoef1(int _i, double* _p, Datum* _ppvar, double* _pdvol, double* _pdfcdc, Datum* _thread, _NrnThread* _nt) {
-   *_pdvol =  PI * diam * diam * L / 4.0 ;
+   *_pdvol =  PI * diam * diam / 4.0 ;
  if (_i == 0) {
   *_pdfcdc = nrn_nernst_coef(_type_ica)*( ( - _ion_dicadv  / ( FARADAY ) * PI * diam * ( 1e4 ) ));
  }else{ *_pdfcdc=0.;}
-   return D * PI * diam * diam / 4.0 ;
+   return D * diam * diam ;
 }
  static void _difusfunc(ldifusfunc2_t _f, _NrnThread* _nt) {int _i;
-  (*_f)(_mechtype, _difcoef1, &_difspace1, 0,  -2, 4 , _nt);
+  (*_f)(_mechtype, _difcoef1, &_difspace1, 0,  1, 4 , _nt);
  }
 
 static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {
   int _i; double _save;{
+  ca = ca0;
+ {
+   ca = cai ;
+   }
  
 }
 }
@@ -376,11 +376,9 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
     _v = NODEV(_nd);
   }
  v = _v;
-  ica = _ion_ica;
   cai = _ion_cai;
+  ica = _ion_ica;
  initmodel(_p, _ppvar, _thread, _nt);
-  _ion_cai = cai;
-  nrn_wrote_conc(_ca_sym, (&(_ion_cai)) - 1, _style_ca);
 }}
 
 static double _nrn_current(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt, double _v){double _current=0.;v=_v;{
@@ -455,8 +453,8 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  _break = t + .5*dt; _save = t;
  v=_v;
 {
-  ica = _ion_ica;
   cai = _ion_cai;
+  ica = _ion_ica;
  { {
  for (; t < _break; t += dt) {
   sparse_thread(&_thread[_spth1]._pvoid, 1, _slist1, _dlist1, _p, &t, dt, conc, _linmat1, _ppvar, _thread, _nt);
@@ -465,7 +463,6 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  t = _save;
  } {
    }
-  _ion_cai = cai;
 }}
 
 }
@@ -476,7 +473,7 @@ static void _initlists(){
  double _x; double* _p = &_x;
  int _i; static int _first = 1;
   if (!_first) return;
- _slist1[0] = &(cai) - _p;  _dlist1[0] = &(Dcai) - _p;
+ _slist1[0] = &(ca) - _p;  _dlist1[0] = &(Dca) - _p;
 _first = 0;
 }
 

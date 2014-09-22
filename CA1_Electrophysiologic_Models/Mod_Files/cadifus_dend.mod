@@ -1,7 +1,7 @@
 : Calcium ion accumulation with radial and longitudinal diffusion
 : J'ai pas besoin de la diffusion radiale donc nannuli inutile et compartment aussi
 NEURON {
-	SUFFIX cadifus
+	SUFFIX cadifus_dend
 	USEION ca READ cai, ica WRITE cai
 	RANGE  phi, beta
 }
@@ -18,9 +18,9 @@ UNITS {
 PARAMETER {
 	kf = 1 (/mM-ms)
 	kb = 0.1 (/ms)
-	phi 	= 0.25 (/ms) :(1/4)
-	:phi	= 4 (ms)
-	beta = 17.402 
+	phi 	= 0.075 (/ms) :(1/13.33) :beta_traub
+							:phi	= 13.33 (ms)
+	beta = 17.402  :phi_traub
 	ceiling	= 2	(mM)
 	caiBase = 50e-6 (mM) : the assumed resting level of intracellular calcium
 }
