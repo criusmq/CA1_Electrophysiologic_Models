@@ -273,9 +273,12 @@ for i=1,11{
 	lateral[4] {L=57 insert ca_conc_Bh} //dans suplementary data c'est 57 mis ca1.p 56.6
 	lateral[5] {L=57 insert ca_conc_Bh} //dans suplementary data c'est 57 mis ca1.p 56.6
 	lateral[6] {L=10 insert cadifus_dend}
+	//lateral[6] {L=10 insert ca_conc_Bh}	
 	lateral[7] {L=10 insert cadifus_dend}
+	//lateral[7] {L=10 insert ca_conc_Bh}
 	lateral[8] {L=70 insert ca_conc_Bh}
 	lateral[9] {L=30 insert cadifus_dend}
+	//lateral[9] {L=30 insert ca_conc_Bh}
 	lateral[10] {L=60 insert ca_conc_Bh}
 	lateral[11] {L=60 insert ca_conc_Bh}
 	
@@ -320,8 +323,7 @@ spine[1]{
 	//spine[1].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18))
 	spine[1].gca_ca_debug_Bh = 0.006
 	
-	insert cadifus
-	
+	insert cadifus	
 	}
 spine[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18))
 
@@ -341,7 +343,7 @@ spine[3]{
 	
 	 insert cadifus
 	}
-	spine[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[3].diam*1e-18))
+spine[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[3].diam*1e-18))
 	
 	
 spine[5]{
@@ -366,9 +368,21 @@ for i=0,5{
 	spine[i] {L=0.5}
 	}
 
-	spine[0] {diam=0.1}
-	spine[2] {diam=0.1}
-	spine[4] {diam=0.1}
+	spine[0] {diam=0.1	 
+	insert cadifus
+	}
+spine[0].beta_cadifus = 0
+
+	spine[2] {diam=0.1	 
+	insert cadifus
+	}
+spine[2].beta_cadifus = 0
+
+	spine[4] {diam=0.1	 
+	insert cadifus
+	}
+spine[4].beta_cadifus = 0
+
 //////////////////////////////////////////////
 //Connecter les compartiments
 

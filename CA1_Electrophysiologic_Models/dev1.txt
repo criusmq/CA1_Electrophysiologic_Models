@@ -1,0 +1,45 @@
+a) Creation de la matrice
+
+ G = matrix( data = c(1.4553, 0.01416, 1.50532, 1.36762, 0.446724, 1.31581, 0.154451, 1.35969, 1.35211, 0.944012, 0.861993, 0.78199, 0.177722, 1.08446, 1.01952, 1.09119, 0.102935, 0.0632143, 1.35651, 0.204572, 1.33507, 1.10833, 0.495636, 1.33565, 0.136843, 1.04292, 1.05102, 0.291371, 0.20958, 0.439246, 1.215, 0.263377, 0.320713, 0.0174625, 1.50438, 1.31253, 1.74347, 0.282323, 1.69477, 0.616727, 0.157345, 2.06409, 0.392771, 0.514497, 0.651402), nrow=5, ncol=9, byrow = TRUE, dimnames = list(c("G1", "G2", "G3", "G4", "G5"), c("A", "B", "C", "D", "E", "F", "G", "H", "I")))
+
+b)Calcul des moyennes 
+	G1mean = mean(G[1,])
+	G2mean = mean(G[2,])
+	G3mean = mean(G[3,])
+	G4mean = mean(G[4,])
+	G5mean = mean(G[5,])
+	
+	Gmean = matrix(data = c(G1mean,G1mean,G1mean,G1mean,G1mean,G1mean,G1mean,G1mean,G1mean,G2mean,G2mean,G2mean,G2mean,G2mean,G2mean,G2mean,G2mean,G2mean,G3mean,G3mean,G3mean,G3mean,G3mean,G3mean,G3mean,G3mean,G3mean,G4mean,G4mean,G4mean,G4mean,G4mean,G4mean,G4mean,G4mean,G4mean,G5mean,G5mean,G5mean,G5mean,G5mean,G5mean,G5mean,G5mean,G5mean), nrow=5, ncol=9, byrow = TRUE, dimnames = list(c("G1", "G2", "G3", "G4", "G5"), c("A", "B", "C", "D", "E", "F", "G", "H", "I")))
+
+c) Gprime = G - Gmean
+
+d) Calcul de la matrice de covariance:
+	Cov_matrix = 1/(9-1) * Gprime %*% t(Gprime)
+
+e) Matrice eigen_value
+	eig = eigen(Cov_matrix)
+	eig_matrix = eig$vectors
+
+f) transposée matrice des eigen_vector
+	eig_matrix_transpose = t(eig_matrix)
+	
+g) Gpca = eig_matrix_transpose %*% Gprime
+	Choisir les vecteurs > à 90%
+	V1 = eig_matrix_transpose[,1]
+	V2 = eig_matrix_transpose[,2]
+	Gpca_final = matrix(data = c(Gpca[1,],Gpca[2,]),nrow=2, ncol=9,byrow=TRUE)
+	plot(Gpca_final[1,], Gpca_final[2,])
+	
+	Determiner les echantillons??
+	A-C-F
+	B-H-E
+	D-G-I
+
+
+To find the axes of the ellipse, 
+we must first subtract the mean of each variable from the dataset to center the data around the origin. 
+Then, we compute the covariance matrix of the data, 
+and calculate the eigenvalues and their corresponding eigenvectors of this covariance matrix. 
+Then, we must orthogonalize the set of eigenvectors, and normalize each to become unit vectors.
+Once this is done, each of the mutually orthogonal, unit eigenvectors can be interpreted as an axis of the ellipsoid fitted to the data.
+ The proportion of the variance that each eigenvector represents can be calculated by dividing the eigenvalue corresponding to that eigenvector by the sum of all eigenvalues.

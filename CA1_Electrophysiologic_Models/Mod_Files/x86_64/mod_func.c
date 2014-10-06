@@ -7,9 +7,9 @@ extern void _K_ahp_debug_Bh_reg(void);
 extern void _ampa_glu_reg(void);
 extern void _ca_conc_debug_reg(void);
 extern void _ca_debug_bh_reg(void);
-extern void _cadifl_test_reg(void);
 extern void _cadifus_reg(void);
 extern void _cadifus_dend_reg(void);
+extern void _diffusion_reg(void);
 extern void _k_a_debug_Bh_reg(void);
 extern void _k_c_debug_Bh_reg(void);
 extern void _kdr_debug_reg(void);
@@ -20,7 +20,6 @@ extern void _nmda_ca_current_reg(void);
 extern void _nmda_ca_debug_reg(void);
 extern void _nmda_current_reg(void);
 extern void _nmda_debug_reg(void);
-extern void _reaction_test_reg(void);
 
 void modl_reg(){
   if (!nrn_nobanner_) if (nrnmpi_myid < 1) {
@@ -30,9 +29,9 @@ void modl_reg(){
     fprintf(stderr," ampa_glu.mod");
     fprintf(stderr," ca_conc_debug.mod");
     fprintf(stderr," ca_debug_bh.mod");
-    fprintf(stderr," cadifl_test.mod");
     fprintf(stderr," cadifus.mod");
     fprintf(stderr," cadifus_dend.mod");
+    fprintf(stderr," diffusion.mod");
     fprintf(stderr," k_a_debug_Bh.mod");
     fprintf(stderr," k_c_debug_Bh.mod");
     fprintf(stderr," kdr_debug.mod");
@@ -43,16 +42,15 @@ void modl_reg(){
     fprintf(stderr," nmda_ca_debug.mod");
     fprintf(stderr," nmda_current.mod");
     fprintf(stderr," nmda_debug.mod");
-    fprintf(stderr," reaction_test.mod");
     fprintf(stderr, "\n");
   }
   _K_ahp_debug_Bh_reg();
   _ampa_glu_reg();
   _ca_conc_debug_reg();
   _ca_debug_bh_reg();
-  _cadifl_test_reg();
   _cadifus_reg();
   _cadifus_dend_reg();
+  _diffusion_reg();
   _k_a_debug_Bh_reg();
   _k_c_debug_Bh_reg();
   _kdr_debug_reg();
@@ -63,5 +61,4 @@ void modl_reg(){
   _nmda_ca_debug_reg();
   _nmda_current_reg();
   _nmda_debug_reg();
-  _reaction_test_reg();
 }

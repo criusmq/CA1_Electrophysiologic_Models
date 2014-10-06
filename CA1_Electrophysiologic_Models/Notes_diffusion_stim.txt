@@ -1,0 +1,27 @@
+a) Diffusion Longitudinale sur le CaGef Epine1+COu1+lat6
+	- Diminution progressive de Gef dans spine1 et augmentation progressive dans neck1
+	- Production de CaGef dans neck1 et diminution de la quantité produite dans spine1
+	- Légère production de calcium dans neck1
+	- Diminution de cai dans spine1 (maximum dans stim6 = 0.065 avant; maintenant 0.053
+	
+b) Diffusion Longitudinale sur le Gef Epine1+COu1 +Diffusion lateral de CaGef dans lat6
+			(diffusion lateral de 2 molécules différentes entre les 3 sections)
+	*** NON ZOOM ***
+		- Production de CaGef prolongée dans la stimulation tétanique dans Spine1
+	*** ZOOM ***
+		- A chaque stimulation, au lieu d'avoir de la production de CaGef dans le cou, on
+			a une diminution de la quantité initiale. Ceci pourrait etre expliquer par la
+			diffusion de Gef entre neck1 et spine1 donc on manquerait de substrat pour
+			produire suffisamment de CaGef
+
+c) Diffusion Longitudinale sur le Gef Epine1+COu1+lat6
+	Meme chose qu'en b) SAUF que la production de CaGef est encore plus faible dans neck1
+
+
+
+
+Ces différentes combinaisons permettent d'étudier l'action de longitudinal_diffusion dans
+le modèle.
+Conclusion:
+Ca marche en effet mais il faut mettre ca dans des compartiments voisins et ajuster la 
+vitesse de diffusion

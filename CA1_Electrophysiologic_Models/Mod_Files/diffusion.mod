@@ -1,7 +1,7 @@
 : Calcium ion accumulation with radial and longitudinal diffusion
 : J'ai pas besoin de la diffusion radiale donc nannuli inutile et compartment aussi
 NEURON {
-	SUFFIX cadifus
+	SUFFIX diffusion
 	USEION ca READ cai, ica WRITE cai
 	RANGE  phi, beta
 }
@@ -36,29 +36,21 @@ ASSIGNED {
 
 STATE {
 	ca (mM) <1e-10>
-	cagef (mM)	<1e-10>
-  	gef   (mM) 	<1e-10>
+	CaGef (mM)	
+  	Gef   (mM)
 }
 
 BREAKPOINT { SOLVE state METHOD sparse }
 
 INITIAL {
 	ca = caiBase
-	gef = 0.005
-	cagef = 0
+	Gef = 0.005
+	CaGef = 0
 }
 
-UNITSOFF
+
 KINETIC state {
-	
-	COMPARTMENT PI*diam*diam/4 {ca cagef gef}
-	LONGITUDINAL_DIFFUSION DCa*diam*diam {ca}
-	LONGITUDINAL_DIFFUSION DCaGef*diam*diam {cagef}
-	LONGITUDINAL_DIFFUSION DGef*diam*diam {gef}	
-	
-	~ ca << ( (- beta * ica) - (phi * (cai - caiBase)) )
-	
-	~ ca + gef <-> cagef  (kf, kb)
+
+	~ ca + Gef <-> CaGef  (kf, kb)
 	cai = ca
 }
-UNITSON

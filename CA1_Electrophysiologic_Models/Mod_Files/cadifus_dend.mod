@@ -1,4 +1,4 @@
-: Calcium ion accumulation with radial and longitudinal diffusion
+: CalcimM ion accmMulation with radial and longitudinal diffusion
 : J'ai pas besoin de la diffusion radiale donc nannuli inutile et compartment aussi
 NEURON {
 	SUFFIX cadifus_dend
@@ -16,13 +16,17 @@ UNITS {
 }
 
 PARAMETER {
-	kf = 1 (/mM-ms)
-	kb = 0.1 (/ms)
-	phi 	= 0.075 (/ms) :(1/13.33) :beta_traub
-							:phi	= 13.33 (ms)
-	beta = 17.402  :phi_traub
+	kf = 1 (/mM-ms) :1 mM-1.s-1
+	kb = 0.1 (/ms) :0.1 s-1
+	DCa  = 0.6 (um2/ms)
+	DGef = 0.5 (um2/ms)
+	DCaGef = 0.4 (um2/ms) 
+	:valeurs prises expres pour que la diffusion du calcium soit la plus grande
+	phi 	= 0.075(/ms) :(1/4)
+	:phi	= 13.33 (ms)
+	beta = 17.402 
 	ceiling	= 2	(mM)
-	caiBase = 50e-6 (mM) : the assumed resting level of intracellular calcium
+	caiBase = 50e-6 (mM) : the assmMed resting level of intracellular calcimM
 }
 
 ASSIGNED {
@@ -33,26 +37,29 @@ ASSIGNED {
 
 STATE {
 	ca (mM) <1e-10>
-	CaGef (mM)	
-  	Gef   (mM)
+	cagef (mM)	<1e-10>
+  	gef   (mM) 	<1e-10>
 }
 
 BREAKPOINT { SOLVE state METHOD sparse }
 
 INITIAL {
 	ca = caiBase
-	Gef = 0.5
-	CaGef = 0
+	gef = 0.005
+	cagef = 0
 }
 
+UNITSOFF
 KINETIC state {
 	
-	:COMPARTMENT PI*diam*diam/4 {ca}
-	
-	:LONGITUDINAL_DIFFUSION 0.6*diam*diam {ca}
+	COMPARTMENT PI*diam*diam/4 {ca cagef gef}
+	LONGITUDINAL_DIFFUSION DCa*diam*diam {ca}
+	LONGITUDINAL_DIFFUSION DCaGef*diam*diam {cagef}
+	LONGITUDINAL_DIFFUSION DGef*diam*diam {gef}	
 	
 	~ ca << ( (- beta * ica) - (phi * (cai - caiBase)) )
-	~ ca + Gef <-> CaGef  (kf, kb)
 	
+	~ ca + gef <-> cagef  (kf, kb)
 	cai = ca
 }
+UNITSON
