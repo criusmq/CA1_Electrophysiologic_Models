@@ -95,9 +95,9 @@ extern Memb_func* memb_func;
 };
  /* declare global and static user variables */
 #define DCaGef DCaGef_cadifus_dend
- double DCaGef = 0.4;
+ double DCaGef = 0.9;
 #define DGef DGef_cadifus_dend
- double DGef = 0.5;
+ double DGef = 0.1;
 #define DCa DCa_cadifus_dend
  double DCa = 0.6;
 #define caiBase caiBase_cadifus_dend

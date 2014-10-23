@@ -19,8 +19,8 @@ PARAMETER {
 	kf = 1 (/mM-ms) :1 mM-1.s-1
 	kb = 0.1 (/ms) :0.1 s-1
 	DCa  = 0.6 (um2/ms)
-	DGef = 0.5 (um2/ms)
-	DCaGef = 0.4 (um2/ms) 
+	DGef = 0.1 (um2/ms)
+	DCaGef = 0.9 (um2/ms) 
 	:valeurs prises expres pour que la diffusion du calcium soit la plus grande
 	phi 	= 0.075(/ms) :(1/4)
 	:phi	= 13.33 (ms)

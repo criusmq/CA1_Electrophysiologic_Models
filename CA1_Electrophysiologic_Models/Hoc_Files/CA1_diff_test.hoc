@@ -435,12 +435,16 @@ connect spine[3](0), spine[2](1)
 connect spine[4](0), lateral[9](0.5)
 connect spine[5](0), spine[4](1)
 
+
+//show topology
+/*
 objref s
 s = new Shape()
 s.show(0)
 soma s.color(2)
 topology()
 finitialize()
+*/
 
 /*
 //creation de la sous-section pour l'insertion des point-process
@@ -466,7 +470,7 @@ for i=5,5{
 	
 //Variables pour l'affichage de graphe et de la fenêtre principale d'initialisation
 objectvar save_window_, rvp_
-objectvar scene_vector_[4]
+objectvar scene_vector_[10]
 objectvar ocbox_, ocbox_list_, scene_, scene_list_
 {ocbox_list_ = new List()  scene_list_ = new List()}
 
@@ -497,36 +501,81 @@ xvalue("Real Time","realtime", 0,"", 0, 1 )
 xpanel(9,77)
 }
 
-//Plot graph1
+//plot voltage
+//Plot graph1 
 {
 save_window_ = new Graph(0)
 save_window_.size(0,8000,-80,40)
 scene_vector_[0] = save_window_
-{save_window_.view(0, -80, 8000, 120, 374, 79, 300, 200)}
+{save_window_.view(0, -80, 8000, 120, 100, 80, 300, 200)}
 graphList[0].append(save_window_)
 save_window_.save_name("graphList[0].")
 save_window_.addexpr("v(.5)", 1, 1, 0.8, 0.9, 2)
 save_window_.addvar("spine[1].v( 0.5 )", 2, 1, 0.8, 0.9, 2)
 save_window_.addvar("spine[3].v( 0.5 )", 3, 1, 0.8, 0.9, 2)
-//save_window_.addvar("spine[5].v( 0.5 )", 4, 1, 0.8, 0.9, 2)
-save_window_.addvar("lateral[6].v( 0.1 )", 5, 1, 0.8, 0.9, 2)
+save_window_.addvar("lateral[6].v( 0.5 )", 5, 1, 0.8, 0.9, 2)
 }
 
+//plot calcium concentration
 //Plot graph2
 {
 save_window_ = new Graph(0)
 save_window_.size(0,8000,-80,40)
 scene_vector_[1] = save_window_
-{save_window_.view(0, -80, 8000, 120, 374, 79, 300, 200)}
-graphList[1].append(save_window_)
-save_window_.save_name("graphList[1].")
+{save_window_.view(0, -80, 8000, 120, 300, 80, 300, 200)}
+graphList[0].append(save_window_)
+save_window_.save_name("graphList[0].")
 save_window_.addvar("soma.cai( 0.5 )", 1, 1, 0.8, 0.9, 2)
 save_window_.addvar("spine[1].cai( 0.5 )", 2, 1, 0.8, 0.9, 2)
 save_window_.addvar("spine[3].cai( 0.5 )", 3, 1, 0.8, 0.9, 2)
-//save_window_.addvar("spine[5].cai( 0.5 )", 4, 1, 0.8, 0.9, 2)
-save_window_.addvar("lateral[6].cai( 0.1 )", 5, 1, 0.8, 0.9, 2)
+save_window_.addvar("lateral[6].cai( 0.5 )", 5, 1, 0.8, 0.9, 2)
 }
-//objectvar scene_vector_[2]
+
+
+//plot reaction spine1
+//Plot graph3
+{
+save_window_ = new Graph(0)
+save_window_.size(0,8000,-80,30)
+scene_vector_[2] = save_window_
+{save_window_.view(0, -80, 8000, 120, 500, 80, 300, 200)}
+graphList[0].append(save_window_)
+save_window_.save_name("graphList[0].")
+//save_window_.addvar("soma.cai( 0.5 )", 1, 1, 0.8, 0.9, 2)
+save_window_.addvar("spine[1].ca_cadifus( 0.5 )", 5, 1, 0.8, 0.9, 2)
+save_window_.addvar("spine[1].cagef_cadifus( 0.5 )", 3, 1, 0.8, 0.9, 2)
+save_window_.addvar("spine[1].gef_cadifus( 0.5 )", 2, 1, 0.8, 0.9, 2)
+}
+
+//plot reaction spine0
+//Plot graph4
+{
+save_window_ = new Graph(0)
+save_window_.size(0,8000,-80,30)
+scene_vector_[3] = save_window_
+{save_window_.view(0, -80, 8000, 120, 700, 80, 300, 200)}
+graphList[0].append(save_window_)
+save_window_.save_name("graphList[0].")
+//save_window_.addvar("soma.cai( 0.5 )", 1, 1, 0.8, 0.9, 2)
+save_window_.addvar("spine[0].ca_cadifus( 0.5 )", 5, 1, 0.8, 0.9, 2)
+save_window_.addvar("spine[0].cagef_cadifus( 0.5 )", 3, 1, 0.8, 0.9, 2)
+save_window_.addvar("spine[0].gef_cadifus( 0.5 )", 2, 1, 0.8, 0.9, 2)
+}
+
+//plot reaction lateral6
+//Plot graph5
+{
+save_window_ = new Graph(0)
+save_window_.size(0,8000,-80,30)
+scene_vector_[4] = save_window_
+{save_window_.view(0, -80, 8000, 120, 900, 80, 300, 200)}
+graphList[0].append(save_window_)
+save_window_.save_name("graphList[0].")
+//save_window_.addvar("soma.cai( 0.5 )", 1, 1, 0.8, 0.9, 2)
+save_window_.addvar("lateral[6].ca_cadifus_dend( 0.5 )", 5, 1, 0.8, 0.9, 2)
+save_window_.addvar("lateral[6].cagef_cadifus_dend( 0.5 )", 3, 1, 0.8, 0.9, 2)
+save_window_.addvar("lateral[6].gef_cadifus_dend( 0.5 )", 2, 1, 0.8, 0.9, 2)
+}
 {doNotify()}
 
 

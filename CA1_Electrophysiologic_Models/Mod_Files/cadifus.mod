@@ -20,12 +20,12 @@ PARAMETER {
 	kb = 0.1 (/ms)
 	phi 	= 0.25 (/ms) :(1/13.33) :beta_traub
 							:phi	= 13.33 (ms)
-	beta = 17.402 (cm2/mA-ms-m3) :phi_traub
+	beta = 17.402 	:(cm2/mA-ms-m3) :phi_traub
 	ceiling	= 2	(mM)
 	caiBase = 50e-6 (mM) : the assumed resting level of intracellular calcium
 	DCa  = 0.6 (um2/ms)
-	DGef = 0.5 (um2/ms)
-	DCaGef = 0.4 (um2/ms) 
+	DGef = 0.1 (um2/ms)
+	DCaGef = 0.9 (um2/ms) 
 }
 
 ASSIGNED {
