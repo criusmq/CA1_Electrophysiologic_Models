@@ -1,1 +1,0 @@
-../nmda_ca_current.mod

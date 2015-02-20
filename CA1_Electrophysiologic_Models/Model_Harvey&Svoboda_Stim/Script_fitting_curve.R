@@ -1,5 +1,5 @@
 library(ggplot2)
-DF <- read.table("/Users/maoss2/NEURON/CA1_cell_test/Stimulation_case_per_case/CA1_Electrophysiologic_Models/CA1_Electrophysiologic_Models/Model_Harvey&Svoboda_Stim/spine1_1plot_cai.dat")
+DF <- read.table("/Users/maoss2/NEURON/CA1_cell_test/Stimulation_case_per_case/VirtualCell_Models/RasGTP_model1D_data.dat")
 print( nrow(DF))
 #DF <- DF[79000:nrow(DF),]
 #print( nrow(DF))

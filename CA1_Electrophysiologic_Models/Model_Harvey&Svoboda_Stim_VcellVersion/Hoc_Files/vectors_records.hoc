@@ -1,0 +1,76 @@
+//soma voltage and calcium records
+objref vsoma, caisoma, vsomaFile, caisomaFile
+
+vsoma = new Vector()
+vsoma.record(&v(.5))
+vsomaFile = new File("soma_all_stim.dat")
+vsomaFile.wopen("soma_all_stim.dat")
+vsoma.printf(vsomaFile)
+vsomaFile.close()
+
+caisoma = new Vector()
+caisoma.record(&soma.cai(.5))
+caisomaFile = new File("soma_cai_all_stim.dat")
+caisomaFile.wopen("soma_cai_all_stim.dat")
+
+caisoma.printf(caisomaFile)
+caisomaFile.close()
+
+/******************************************/
+//spine1 voltage and calcium records
+objref vspine1, caispine1, vspine1File, caispine1File
+
+vspine1 = new Vector()
+vspine1.record(&spine[1].v(.5))
+vspine1File = new File("spine[1]_all_stim.dat")
+vspine1File.wopen("spine[1]_all_stim.dat")
+vspine1.printf(vspine1File)
+vspine1File.close()
+
+caispine1 = new Vector()
+caispine1.record(&spine[1].cai(.5))
+caispine1File = new File("spine[1]_cai_all_stim.dat")
+caispine1File.wopen("spine[1]_cai_all_stim.dat")
+
+caispine1.printf(caispine1File)
+caispine1File.close()
+
+
+/******************************************/
+//spine2 voltage and calcium records
+objref vspine2, caispine2, vspine2File, caispine2File
+
+vspine2 = new Vector()
+vspine2.record(&spine[3].v(.5))
+vspine2File = new File("spine[2]_all_stim.dat")
+vspine2File.wopen("spine[2]_all_stim.dat")
+vspine2.printf(vspine2File)
+vspine2File.close()
+
+caispine2 = new Vector()
+caispine2.record(&spine[3].cai(.5))
+caispine2File = new File("spine[2]_cai_all_stim.dat")
+caispine2File.wopen("spine[2]_cai_all_stim.dat")
+
+caispine2.printf(caispine2File)
+caispine2File.close()
+
+
+/******************************************/
+//lateral6 voltage and calcium records
+objref vlateral6, cailateral6, vlateral6File, cailateral6File
+
+vlateral6 = new Vector()
+vlateral6.record(&lateral[6].v(.5))
+vlateral6File = new File("lateral[6]_all_stim.dat")
+vlateral6File.wopen("lateral[6]_all_stim.dat")
+vlateral6.printf(vlateral6File)
+vlateral6File.close()
+
+cailateral6 = new Vector()
+cailateral6.record(&lateral[6].cai(.5))
+cailateral6File = new File("lateral[6]_cai_all_stim.dat")
+cailateral6File.wopen("lateral[6]_cai_all_stim.dat")
+
+cailateral6.printf(cailateral6File)
+cailateral6File.close()

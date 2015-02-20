@@ -1,6 +1,7 @@
 //b) 30 uncaging pulses at 0.5 Hz in 4 mM Ca2+, 0 mM Mg2+, and 1 μM TTX
 load_file("nrngui.hoc")
 load_file("CA1_Harvey_Svoboda_Stim.hoc")
+//load_file("CA1.hoc")
 load_file("synapses_definitions.hoc")
 
 //Evenements pré-synaptiques 

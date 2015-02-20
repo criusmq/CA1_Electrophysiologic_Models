@@ -1,1 +1,0 @@
-../nmda_current.mod

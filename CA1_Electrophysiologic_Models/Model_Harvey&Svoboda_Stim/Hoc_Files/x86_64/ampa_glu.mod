@@ -1,1 +1,0 @@
-../ampa_glu.mod
