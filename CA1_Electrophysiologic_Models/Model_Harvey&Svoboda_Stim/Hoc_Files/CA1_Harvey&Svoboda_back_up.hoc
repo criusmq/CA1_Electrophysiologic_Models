@@ -470,7 +470,7 @@ for i=5,5{
 	
 //Variables pour l'affichage de graphe et de la fenêtre principale d'initialisation
 objectvar save_window_, rvp_
-objectvar scene_vector_[10]
+objectvar scene_vector_[4]
 objectvar ocbox_, ocbox_list_, scene_, scene_list_
 {ocbox_list_ = new List()  scene_list_ = new List()}
 
@@ -538,7 +538,7 @@ save_window_.size(0,600000,-80,40)
 scene_vector_[2] = save_window_
 {save_window_.view(0, -80, 600000, 120, 374, 79, 300, 200)}
 graphList[2].append(save_window_)
-save_window_.save_name("graphList[2].")
+save_window_.save_name("graphList[1].")
 //save_window_.addvar("soma.cai( 0.5 )", 1, 1, 0.8, 0.9, 2)
 save_window_.addvar("spine[1].RasGTP_cadifus( 0.5 )", 2, 1, 0.8, 0.9, 2)
 //save_window_.addvar("spine[3].cai( 0.5 )", 3, 1, 0.8, 0.9, 2)
@@ -553,45 +553,13 @@ save_window_.size(0,600000,-80,40)
 scene_vector_[3] = save_window_
 {save_window_.view(0, -80, 600000, 120, 374, 79, 300, 200)}
 graphList[3].append(save_window_)
-save_window_.save_name("graphList[3].")
+save_window_.save_name("graphList[1].")
 //save_window_.addvar("soma.cai( 0.5 )", 1, 1, 0.8, 0.9, 2)
 save_window_.addvar("spine[1].Gef_activated_cadifus( 0.5 )", 2, 1, 0.8, 0.9, 2)
 //save_window_.addvar("spine[3].cai( 0.5 )", 3, 1, 0.8, 0.9, 2)
 //save_window_.addvar("spine[5].cai( 0.5 )", 4, 1, 0.8, 0.9, 2)
 //save_window_.addvar("lateral[6].cai( 0.1 )", 5, 1, 0.8, 0.9, 2)
 }
-
-/*
-//Plot graph5
-{
-save_window_ = new Graph(1)
-save_window_.size(0,600000,-80,40)
-scene_vector_[4] = save_window_
-{save_window_.view(0, -80, 600000, 120, 374, 79, 300, 200)}
-graphList[4].append(save_window_)
-save_window_.save_name("graphList[4].")
-//save_window_.addvar("soma.cai( 0.5 )", 1, 1, 0.8, 0.9, 2)
-save_window_.addvar("lateral[6].RasGTP_cadifus_dend( 0.5 )", 2, 1, 0.8, 0.9, 2)
-//save_window_.addvar("spine[3].cai( 0.5 )", 3, 1, 0.8, 0.9, 2)
-//save_window_.addvar("spine[5].cai( 0.5 )", 4, 1, 0.8, 0.9, 2)
-//save_window_.addvar("lateral[6].cai( 0.1 )", 5, 1, 0.8, 0.9, 2)
-}
-
-//Plot graph6
-{
-save_window_ = new Graph(1)
-save_window_.size(0,600000,-80,40)
-scene_vector_[5] = save_window_
-{save_window_.view(0, -80, 600000, 120, 374, 79, 300, 200)}
-graphList[5].append(save_window_)
-save_window_.save_name("graphList[5].")
-//save_window_.addvar("soma.cai( 0.5 )", 1, 1, 0.8, 0.9, 2)
-save_window_.addvar("spine[0].RasGTP_cadifus( 0.5 )", 2, 1, 0.8, 0.9, 2)
-//save_window_.addvar("spine[3].cai( 0.5 )", 3, 1, 0.8, 0.9, 2)
-//save_window_.addvar("spine[5].cai( 0.5 )", 4, 1, 0.8, 0.9, 2)
-//save_window_.addvar("lateral[6].cai( 0.1 )", 5, 1, 0.8, 0.9, 2)
-}
-*/
 //objectvar scene_vector_[2]
 {doNotify()}
 
