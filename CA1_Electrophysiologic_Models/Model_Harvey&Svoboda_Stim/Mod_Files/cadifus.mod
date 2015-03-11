@@ -3,6 +3,7 @@ NEURON {
    SUFFIX cadifus
    USEION ca READ cai, ica WRITE cai
    RANGE  phi, beta
+   POINTER Gef_act
 }
 
 UNITS {
@@ -16,7 +17,7 @@ UNITS {
 
 PARAMETER {
 	DRas = 0.65 (um2/ms)
-   phi 	= 0.25(/ms) :(1/4)
+   	phi 	= 0.25(/ms) :(1/4)
 	:phi	= 13.33 (ms)
 	beta = 17.402 
 	ceiling	= 2	(mM)
@@ -31,22 +32,16 @@ PARAMETER {
 	kr_cam4 =  10e-3 (/ms)
 	kf_gef =  2.75 (/mM-ms)
 	kr_gef =  0.008333333e-3(/ms)
-	kf_rasGDP = 0.1 (/mM-ms)
-	kr_rasGDP = 0.003703703703703704e-3 (/ms)
-	:kf_rasGTP = 0.003703703703703704e-3 (/ms)
-	:kr_rasGTP = 0
 }
 
 ASSIGNED {
 	diam (um)
 	ica (mA/cm2)
 	cai (mM)
-	 
+	Gef_act (1)
 }
 
 STATE {
-   : ca[0] is equivalent to cai
-   : ca[] are very small, so specify absolute tolerance
    ca       (mM) <1e-10>
    ca_modif (mM)
   Cam (mM)
@@ -56,8 +51,6 @@ STATE {
   Cam_Ca4 (mM)
   Gef  (mM)
   Gef_activated  (mM)
-  RasGDP (mM)
-  RasGTP (mM)
 }
 
 BREAKPOINT { SOLVE state METHOD sparse }
@@ -73,14 +66,9 @@ INITIAL {
 	Cam_Ca4 = 0
 	Gef = 0.0006
 	Gef_activated = 0
-	RasGDP = 0.0006
-	RasGTP = 0
 	}
 	
 KINETIC state {
-   	COMPARTMENT PI*diam*diam/4 {RasGDP RasGTP}
-	LONGITUDINAL_DIFFUSION DRas*diam*diam {RasGDP}
-	LONGITUDINAL_DIFFUSION DRas*diam*diam {RasGTP}
    ~ ca << ( (- beta * ica) - (phi * (cai - caiBase)) ) 
     cai = ca 
     ca_modif = ca - 0.00045
@@ -89,8 +77,5 @@ KINETIC state {
   ~ ca_modif + Cam_Ca2 <-> Cam_Ca3 (kf_cam3, kr_cam3)
   ~ ca_modif + Cam_Ca3 <-> Cam_Ca4 (kf_cam4, kr_cam4)
   ~ Cam_Ca4 + Gef <-> Gef_activated (kf_gef, kr_gef)
-  ~ RasGDP <-> RasGTP (kf_rasGDP*Gef_activated, kr_rasGDP)
-  :~ RasGTP <-> RasGDP (kf_rasGTP, kr_rasGTP)
-  
-
+  Gef_act = Gef_activated
 }

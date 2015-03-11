@@ -1,0 +1,43 @@
+//a) 30 uncaging pulses at 0.5 Hz in 2 mM Ca2+, 1 mM Mg2+, and 1 μM TTX
+load_file("nrngui.hoc")
+load_file("CA1_Harvey_Svoboda_Stim.hoc")
+load_file("synapses_definitions.hoc")
+
+//Evenements pré-synaptiques tests on 3 differents spine 30 inputs 0.5 Hz
+objref stim_1 , stim_2 , stim_3 
+	stim_1 = new NetStim(.5)
+	stim_1.interval = 2000
+	stim_1.number = 30
+	stim_1.start 	= 0
+	stim_1.noise 	= 0
+	
+	
+objref nc_stim1 , nc_AMPA_stim1 , nc_NMDA_CA_stim1
+
+//1000
+//spine1
+for i=21,21{ 
+	access spine[i-20]{
+		//netcon
+		nc_stim1 = new NetCon(stim_1, sNMDA[i])
+		nc_stim1.weight =  10*gmax_nmda*area(0.5)*1e-8*100*1e6 //weight = uS //weight = uS
+		nc_stim1.delay = 1 
+		
+		nc_AMPA_stim1 = new NetCon(stim_1, sAMPA[i])
+		nc_AMPA_stim1.weight = 10*gmax_ampa*area(0.5)*1e-8*100*1e6 //weight = uS //weight = uS
+		nc_AMPA_stim1.delay = 1 
+		
+		nc_NMDA_CA_stim1 = new NetCon(stim_1, sNMDA_CA[0])
+		nc_NMDA_CA_stim1.weight = 10*gmax_nmda_ca*area(0.5)*1e-8*100*1e6 //weight = uS //weight = uS
+		nc_NMDA_CA_stim1.delay = 1 
+		}
+	}
+	
+
+cao0_ca_ion = 2
+mg_nmda = 1
+mg_nmda_ca = 1
+v_init = 0
+
+access soma
+run()

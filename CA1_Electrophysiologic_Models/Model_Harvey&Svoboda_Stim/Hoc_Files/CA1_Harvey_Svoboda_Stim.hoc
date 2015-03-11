@@ -28,7 +28,7 @@ load_file("nrngui.hoc")
 	*/
 
 forall delete_section()
-create soma,  basal[4], apical[10], lateral[12], spine[6]
+create soma,  basal[4], apical[10], lateral[14], spine[8]
 
 /*Géométries + Canaux ioniques*/
 
@@ -52,9 +52,7 @@ soma {
  	insert k_ahp_Bh
  	insert k_c_Bh
  	insert k_a_Bh
- 	//var0 = 17.402e6 * area(.5) * 1e-8
- 	//soma.beta_cadifus_dend = ( 17.402e12 * (PI*diam/2*diam/2*L*1e-18) * 1e-6)
- 	soma.beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*soma.diam*1e-18))
+	soma.beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*soma.diam*1e-18))
  	soma.gna_na_Bh = 0.03
  	soma.gca_ca_debug_Bh = 0.004
  	soma.gk_k_dr_Bh = 0.025
@@ -72,8 +70,6 @@ basal[0] {
  	insert ca_debug_Bh
  	insert k_ahp_Bh
  	insert k_c_Bh
- 	//volume3 = PI*diam/2*diam/2*L*1e-18
- 	//var3 = 8.96e-3 * 1e-6
  	basal[0].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*basal[0].diam*1e-18))
  	basal[0].gca_ca_debug_Bh = 0.005
  	basal[0].gk_k_ahp_Bh = 0.0008
@@ -88,8 +84,6 @@ basal[1] {
  	insert ca_debug_Bh
  	insert k_ahp_Bh
  	insert k_c_Bh
- 	//volume4 = PI*diam/2*diam/2*L*1e-18
- 	//var4 = (8.96e-3 / volume4) *1e-6 * area(.5) * 1e-8
  	basal[1].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*basal[1].diam*1e-18))
  	basal[1].gca_ca_debug_Bh = 0.007
  	basal[1].gk_k_ahp_Bh = 0.0008
@@ -106,8 +100,6 @@ basal[2] {
  	insert k_dr_Bh
  	insert k_ahp_Bh
  	insert k_c_Bh
- 	//volume5 = PI*diam/2*diam/2*L*1e-18
- 	//var5 = (8.96e-3 / volume5) *1e-6 * area(.5) * 1e-8
  	basal[2].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*basal[2].diam*1e-18))
  	basal[2].gna_na_Bh = 0.02
  	basal[2].gca_ca_debug_Bh = 0.012
@@ -126,8 +118,6 @@ basal[3] {
  	insert k_dr_Bh
  	insert k_ahp_Bh
  	insert k_c_Bh
- 	//var1 = 34.53e6 * area(.5) * 1e-8
-	//basal[3].beta_cadifus_dend = ( 34.53e12 * (PI*diam/2*diam/2*L*1e-18) * 1e-6)
 	basal[3].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*basal[3].diam*1e-18))
  	basal[3].gna_na_Bh = 0.015
  	basal[3].gca_ca_debug_Bh = 0.008
@@ -148,17 +138,12 @@ for i=1,8{
  		insert k_c_Bh
  		insert k_a_Bh
  		insert nmda_current
- 		
- 		//volume6 = PI*diam/2*diam/2*L*1e-18
- 		//var6 = (8.96e-3 / volume6) *1e-6 * area(.5) * 1e-8
-		//apical[i].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*apical[i].diam*1e-18))
- 		apical[i].gca_ca_debug_Bh = 0.007
+  		apical[i].gca_ca_debug_Bh = 0.007
  		apical[i].gk_k_dr_Bh = 0.006
  		apical[i].gk_k_ahp_Bh = 0.0008
  		apical[i].gk_k_c_Bh = 0.005
  		apical[i].gk_k_a_Bh = 0.01
- 		
- 		
+ 
  		}
  	}
  	
@@ -171,16 +156,12 @@ for i=1,8{
  		insert k_ahp_Bh
  		insert k_c_Bh
  		insert nmda_current
- 		
- 		//var2 = 26.404e6 * area(.5) * 1e-8
- 		//apical[0].beta_cadifus_dend = ( 26.404e12 * (PI*diam/2*diam/2*L*1e-18) * 1e-6)
- 		apical[0].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*apical[0].diam*1e-18))
+		apical[0].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*apical[0].diam*1e-18))
  		apical[0].gna_na_Bh = 0.015
  		apical[0].gca_ca_debug_Bh = 0.008
  		apical[0].gk_k_dr_Bh = 0.01
  		apical[0].gk_k_ahp_Bh = 0.0008
  		apical[0].gk_k_c_Bh = 0.02
- 		
  		
  		}
  		
@@ -229,7 +210,7 @@ apical[8].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*apical[8].diam*1e-18))
 	
 //lateral compartiments
 
-for i=0,11{
+for i=0,13{
 	lateral[i]{
 		nseg = 1
 	 	//insert cadifus_dend
@@ -239,11 +220,7 @@ for i=0,11{
 	 	insert k_dr_Bh
 	 	insert k_a_Bh
 	 	insert nmda_current
-	 	
-	 	//volume7 = PI*diam/2*diam/2*L*1e-18
- 		//var7 = (8.96e-3 / volume7) *1e-6 * area(.5) * 1e-8
-	 	//lateral[i].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[i].diam*1e-18))
-	 	lateral[i].gca_ca_debug_Bh = 0.007
+		lateral[i].gca_ca_debug_Bh = 0.007
 	 	lateral[i].gk_k_ahp_Bh = 0.0008
  	 	lateral[i].gk_k_c_Bh = 0.005
  	 	lateral[i].gk_k_dr_Bh = 0.006
@@ -252,13 +229,13 @@ for i=0,11{
  	 	
  	 	}
  	 }
- 	 
+ 
  	lateral[0]{
  	 	insert na_Bh
  		lateral[0].gna_na_Bh = 0.008
  		}
  	
-for i=1,11{
+for i=1,13{
  	lateral[i]{
  		insert na_Bh
  		lateral[i].gna_na_Bh = 0.004
@@ -272,21 +249,20 @@ for i=1,11{
 	lateral[3] {L=80 insert cadifus_dend}
 	lateral[4] {L=57 insert cadifus_dend} //dans suplementary data c'est 57 mis ca1.p 56.6
 	lateral[5] {L=57 insert cadifus_dend} //dans suplementary data c'est 57 mis ca1.p 56.6
-	lateral[6] {L=10 insert cadifus_dend}
-	//lateral[6] {L=10 insert cadifus_dend}	
-	lateral[7] {L=10 insert cadifus_dend}
-	//lateral[7] {L=10 insert cadifus_dend}
-	lateral[8] {L=70 insert cadifus_dend}
-	lateral[9] {L=30 insert cadifus_dend}
-	//lateral[9] {L=30 insert cadifus_dend}
-	lateral[10] {L=60 insert cadifus_dend}
-	lateral[11] {L=60 insert cadifus_dend}
+	lateral[6] {L=3 insert cadifus_dend} // new compartments: old lateral[6] split in 3: L=4;3;3
+	lateral[7] {L=4 insert cadifus_dend}
+	lateral[8] {L=3 insert cadifus_dend}
+	lateral[9] {L=10 insert cadifus_dend}	
+	lateral[10] {L=70 insert cadifus_dend}
+	lateral[11] {L=30 insert cadifus_dend}
+	lateral[12] {L=60 insert cadifus_dend}
+	lateral[13] {L=60 insert cadifus_dend}
 	
 	lateral[0] {diam=2}
 	lateral[1] {diam=1.8}
 	lateral[2] {diam=1.5}
 	lateral[3] {diam=1.5}
-for i=4,11{
+for i=4,13{
 	lateral[i] {diam=1}
 	}
 	
@@ -297,14 +273,13 @@ lateral[3].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[3].diam*1e-18))
 lateral[4].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[4].diam*1e-18))
 lateral[5].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[5].diam*1e-18))
 lateral[6].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[6].diam*1e-18))
-//lateral[6].beta_cadifus_dend  = ( 2e-8 / (FARADAY*1e6*lateral[6].diam*1e-18))
-lateral[7].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[7].diam*1e-18))
-//lateral[7].beta_cadifus_dend  = ( 2e-8 / (FARADAY*1e6*lateral[7].diam*1e-18))
-lateral[8].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[8].diam*1e-18))
-lateral[9].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[9].diam*1e-18))
-//lateral[9].beta_cadifus_dend  = ( 2e-8 / (FARADAY*1e6*lateral[9].diam*1e-18))
-lateral[10].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[10].diam*1e-18))
-lateral[11].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[7].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[6].diam*1e-18))
+lateral[8].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[6].diam*1e-18))
+lateral[9].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[7].diam*1e-18))
+lateral[10].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[8].diam*1e-18))
+lateral[11].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[9].diam*1e-18))
+lateral[12].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[10].diam*1e-18))
+lateral[13].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
 
 
 	
@@ -313,17 +288,12 @@ lateral[11].beta_cadifus_dend = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
 spine[1]{
 	nseg = 1
 	diam = 0.5
-	//insert nmda_ca_conc_Bh
 	insert ca_debug_Bh
 	insert nmda_current
 	insert nmda_ca_current
-	
-	//volume8 = PI*diam/2*diam/2*L*1e-18
- 	//var8 = (8.96e-3 / volume8) *1e-6 * area(.5) * 1e-8
-	//spine[1].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18))
 	spine[1].gca_ca_debug_Bh = 0.06
-	
-	insert cadifus	
+	insert cadifus
+	insert cadifus_ras	
 	}
 spine[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18))
 
@@ -331,40 +301,38 @@ spine[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18))
 spine[3]{
 	nseg = 1
 	diam = 0.5
-	//insert nmda_ca_conc_Bh
 	insert ca_debug_Bh
 	insert nmda_current
 	insert nmda_ca_current
-	
-	//volume9 = PI*diam/2*diam/2*L*1e-18
- 	//var9 = (8.96e-3 / volume9) *1e-6 * area(.5) * 1e-8
-	//spine[3].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[3].diam*1e-18))
 	spine[3].gca_ca_debug_Bh = 0.06
-	
-	 insert cadifus
+	//insert cadifus
 	}
-spine[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[3].diam*1e-18))
+//spine[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[3].diam*1e-18))
 	
 	
 spine[5]{
 	nseg = 1
 	diam = 0.5
-	//insert nmda_ca_conc_Bh
 	insert ca_debug_Bh
 	insert nmda_current
 	insert nmda_ca_current
-	
-	//volume10 = PI*diam/2*diam/2*L*1e-18
- 	//var10 = (8.96e-3 / volume10) *1e-6 * area(.5) * 1e-8
-	//spine[5].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18))
-	spine[5].gca_ca_debug_Bh = 0.06
-	
-	 insert cadifus
+	spine[5].gca_ca_debug_Bh = 0.06	
+	//insert cadifus
 	}
-spine[5].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18))
+//spine[5].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18))
 
+spine[7]{
+	nseg = 1
+	diam = 0.5
+	insert ca_debug_Bh
+	insert nmda_current
+	insert nmda_ca_current
+	spine[7].gca_ca_debug_Bh = 0.06
+	//insert cadifus
+	}
+//spine[7].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18))
 
-for i=0,5{
+for i=0,7{
 	spine[i] {L=0.5}
 	}
 
@@ -382,6 +350,11 @@ spine[2].beta_cadifus = 0
 	insert cadifus
 	}
 spine[4].beta_cadifus = 0
+
+	spine[6] {diam=0.1	 
+	insert cadifus
+	}
+spine[6].beta_cadifus = 0
 
 //////////////////////////////////////////////
 //Connecter les compartiments
@@ -424,16 +397,26 @@ connect lateral[8](0), lateral[7](1)
 connect lateral[9](0), lateral[8](1)
 connect lateral[10](0), lateral[9](1)
 connect lateral[11](0), lateral[10](1)
+connect lateral[12](0), lateral[11](1)
+connect lateral[13](0), lateral[12](1)
+
 
 //spine connection
-connect spine[0](0), lateral[6](0.5)
+
+//new spine
+connect spine[6](0), lateral[6](0.5)
+connect spine[7](0), spine[6](1)
+
+connect spine[0](0), lateral[7](0.5)
 connect spine[1](0), spine[0](1)
 
-connect spine[2](0), lateral[7](0.5)
+connect spine[2](0), lateral[9](0.5)
 connect spine[3](0), spine[2](1)
 
-connect spine[4](0), lateral[9](0.5)
+connect spine[4](0), lateral[11](0.5)
 connect spine[5](0), spine[4](1)
+
+
 
 
 //show topology
@@ -513,7 +496,7 @@ save_window_.save_name("graphList[0].")
 save_window_.addvar("spine[1].v( 0.5 )", 2, 1, 0.8, 0.9, 2)
 //save_window_.addvar("spine[3].v( 0.5 )", 3, 1, 0.8, 0.9, 2)
 //save_window_.addvar("spine[5].v( 0.5 )", 4, 1, 0.8, 0.9, 2)
-//save_window_.addvar("lateral[6].v( 0.1 )", 5, 1, 0.8, 0.9, 2)
+//save_window_.addvar("lateral[7].v( 0.1 )", 5, 1, 0.8, 0.9, 2)
 }
 
 //Plot graph2
@@ -528,7 +511,7 @@ save_window_.save_name("graphList[1].")
 save_window_.addvar("spine[1].cai( 0.5 )", 2, 1, 0.8, 0.9, 2)
 //save_window_.addvar("spine[3].cai( 0.5 )", 3, 1, 0.8, 0.9, 2)
 //save_window_.addvar("spine[5].cai( 0.5 )", 4, 1, 0.8, 0.9, 2)
-//save_window_.addvar("lateral[6].cai( 0.1 )", 5, 1, 0.8, 0.9, 2)
+//save_window_.addvar("lateral[7].cai( 0.1 )", 5, 1, 0.8, 0.9, 2)
 }
 
 //Plot graph3
@@ -540,10 +523,10 @@ scene_vector_[2] = save_window_
 graphList[2].append(save_window_)
 save_window_.save_name("graphList[2].")
 //save_window_.addvar("soma.cai( 0.5 )", 1, 1, 0.8, 0.9, 2)
-save_window_.addvar("spine[1].RasGTP_cadifus( 0.5 )", 2, 1, 0.8, 0.9, 2)
+save_window_.addvar("spine[1].RasGTP_cadifus_ras( 0.5 )", 2, 1, 0.8, 0.9, 2)
 //save_window_.addvar("spine[3].cai( 0.5 )", 3, 1, 0.8, 0.9, 2)
 //save_window_.addvar("spine[5].cai( 0.5 )", 4, 1, 0.8, 0.9, 2)
-//save_window_.addvar("lateral[6].cai( 0.1 )", 5, 1, 0.8, 0.9, 2)
+//save_window_.addvar("lateral[7].cai( 0.1 )", 5, 1, 0.8, 0.9, 2)
 }
 
 //Plot graph4
@@ -558,7 +541,7 @@ save_window_.save_name("graphList[3].")
 save_window_.addvar("spine[1].Gef_activated_cadifus( 0.5 )", 2, 1, 0.8, 0.9, 2)
 //save_window_.addvar("spine[3].cai( 0.5 )", 3, 1, 0.8, 0.9, 2)
 //save_window_.addvar("spine[5].cai( 0.5 )", 4, 1, 0.8, 0.9, 2)
-//save_window_.addvar("lateral[6].cai( 0.1 )", 5, 1, 0.8, 0.9, 2)
+//save_window_.addvar("lateral[7].cai( 0.1 )", 5, 1, 0.8, 0.9, 2)
 }
 
 /*
@@ -589,7 +572,7 @@ save_window_.save_name("graphList[5].")
 save_window_.addvar("spine[0].RasGTP_cadifus( 0.5 )", 2, 1, 0.8, 0.9, 2)
 //save_window_.addvar("spine[3].cai( 0.5 )", 3, 1, 0.8, 0.9, 2)
 //save_window_.addvar("spine[5].cai( 0.5 )", 4, 1, 0.8, 0.9, 2)
-//save_window_.addvar("lateral[6].cai( 0.1 )", 5, 1, 0.8, 0.9, 2)
+//save_window_.addvar("lateral[7].cai( 0.1 )", 5, 1, 0.8, 0.9, 2)
 }
 */
 //objectvar scene_vector_[2]
@@ -617,7 +600,6 @@ input.amp = 1.6
 */
 
 /*running simmulation*/
-//run()
+run()
 
 /*Scenario: enlever les voltages ca channels pis voir comment les synapses agissent*/
-

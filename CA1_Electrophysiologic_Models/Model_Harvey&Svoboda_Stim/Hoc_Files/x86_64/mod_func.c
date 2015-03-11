@@ -9,6 +9,7 @@ extern void _ca_conc_debug_reg(void);
 extern void _ca_debug_bh_reg(void);
 extern void _cadifus_reg(void);
 extern void _cadifus_dend_reg(void);
+extern void _cadifus_ras_reg(void);
 extern void _diffusion_reg(void);
 extern void _k_a_debug_Bh_reg(void);
 extern void _k_c_debug_Bh_reg(void);
@@ -31,6 +32,7 @@ void modl_reg(){
     fprintf(stderr," ca_debug_bh.mod");
     fprintf(stderr," cadifus.mod");
     fprintf(stderr," cadifus_dend.mod");
+    fprintf(stderr," cadifus_ras.mod");
     fprintf(stderr," diffusion.mod");
     fprintf(stderr," k_a_debug_Bh.mod");
     fprintf(stderr," k_c_debug_Bh.mod");
@@ -50,6 +52,7 @@ void modl_reg(){
   _ca_debug_bh_reg();
   _cadifus_reg();
   _cadifus_dend_reg();
+  _cadifus_ras_reg();
   _diffusion_reg();
   _k_a_debug_Bh_reg();
   _k_c_debug_Bh_reg();

@@ -62,3 +62,5 @@ KINETIC state {
 	cai = ca
 }
 UNITSON
+
+~/NEURON/CA1_cell_test/Stimulation_case_per_case/CA1_Electrophysiologic_Models/CA1_Electrophysiologic_Models/Mod_Files/cadifus.mod

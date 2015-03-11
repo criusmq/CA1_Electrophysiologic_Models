@@ -1,5 +1,5 @@
 /* Created by Language version: 6.2.0 */
-/* VECTORIZED */
+/* NOT VECTORIZED */
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -21,20 +21,20 @@ extern int _method3;
 extern double hoc_Exp(double);
 #endif
  
-#define _threadargscomma_ _p, _ppvar, _thread, _nt,
-#define _threadargs_ _p, _ppvar, _thread, _nt
+#define _threadargscomma_ /**/
+#define _threadargs_ /**/
  
-#define _threadargsprotocomma_ double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt,
-#define _threadargsproto_ double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt
+#define _threadargsprotocomma_ /**/
+#define _threadargsproto_ /**/
  	/*SUPPRESS 761*/
 	/*SUPPRESS 762*/
 	/*SUPPRESS 763*/
 	/*SUPPRESS 765*/
 	 extern double *getarg();
- /* Thread safe. No static _p or _ppvar. */
+ static double *_p; static Datum *_ppvar;
  
-#define t _nt->_t
-#define dt _nt->_dt
+#define t nrn_threads->_t
+#define dt nrn_threads->_dt
 #define phi _p[0]
 #define beta _p[1]
 #define ca _p[2]
@@ -46,27 +46,24 @@ extern double hoc_Exp(double);
 #define Cam_Ca4 _p[8]
 #define Gef _p[9]
 #define Gef_activated _p[10]
-#define RasGDP _p[11]
-#define RasGTP _p[12]
-#define ica _p[13]
-#define cai _p[14]
-#define Dca _p[15]
-#define Dca_modif _p[16]
-#define DCam _p[17]
-#define DCam_Ca _p[18]
-#define DCam_Ca2 _p[19]
-#define DCam_Ca3 _p[20]
-#define DCam_Ca4 _p[21]
-#define DGef _p[22]
-#define DGef_activated _p[23]
-#define DRasGDP _p[24]
-#define DRasGTP _p[25]
-#define v _p[26]
-#define _g _p[27]
+#define ica _p[11]
+#define cai _p[12]
+#define Dca _p[13]
+#define Dca_modif _p[14]
+#define DCam _p[15]
+#define DCam_Ca _p[16]
+#define DCam_Ca2 _p[17]
+#define DCam_Ca3 _p[18]
+#define DCam_Ca4 _p[19]
+#define DGef _p[20]
+#define DGef_activated _p[21]
+#define _g _p[22]
 #define _ion_cai	*_ppvar[0]._pval
 #define _ion_ica	*_ppvar[1]._pval
 #define _style_ca	*((int*)_ppvar[2]._pvoid)
-#define diam	*_ppvar[3]._pval
+#define Gef_act	*_ppvar[3]._pval
+#define _p_Gef_act	_ppvar[3]._pval
+#define diam	*_ppvar[4]._pval
  
 #if MAC
 #if !defined(v)
@@ -80,9 +77,7 @@ extern double hoc_Exp(double);
 #if defined(__cplusplus)
 extern "C" {
 #endif
- static int hoc_nrnpointerindex =  -1;
- static Datum* _extcall_thread;
- static Prop* _extcall_prop;
+ static int hoc_nrnpointerindex =  3;
  /* external NEURON variables */
  /* declaration of user functions */
  static int _mechtype;
@@ -94,7 +89,7 @@ extern void nrn_promote(Prop*, int, int);
 extern Memb_func* memb_func;
  extern void _nrn_setdata_reg(int, void(*)(Prop*));
  static void _setdata(Prop* _prop) {
- _extcall_prop = _prop;
+ _p = _prop->param; _ppvar = _prop->dparam;
  }
  static void _hoc_setdata() {
  Prop *_prop, *hoc_getdata_range(int);
@@ -114,10 +109,6 @@ extern Memb_func* memb_func;
  double caiBase = 5e-05;
 #define ceiling ceiling_cadifus
  double ceiling = 2;
-#define kr_rasGDP kr_rasGDP_cadifus
- double kr_rasGDP = 3.7037e-06;
-#define kf_rasGDP kf_rasGDP_cadifus
- double kf_rasGDP = 0.1;
 #define kr_gef kr_gef_cadifus
  double kr_gef = 8.33333e-06;
 #define kf_gef kf_gef_cadifus
@@ -156,8 +147,6 @@ extern Memb_func* memb_func;
  "kr_cam4_cadifus", "/ms",
  "kf_gef_cadifus", "/mM-ms",
  "kr_gef_cadifus", "/ms",
- "kf_rasGDP_cadifus", "/mM-ms",
- "kr_rasGDP_cadifus", "/ms",
  "phi_cadifus", "/ms",
  "ca_cadifus", "mM",
  "ca_modif_cadifus", "mM",
@@ -168,8 +157,7 @@ extern Memb_func* memb_func;
  "Cam_Ca4_cadifus", "mM",
  "Gef_cadifus", "mM",
  "Gef_activated_cadifus", "mM",
- "RasGDP_cadifus", "mM",
- "RasGTP_cadifus", "mM",
+ "Gef_act_cadifus", "1",
  0,0
 };
  static double Cam_Ca40 = 0;
@@ -179,11 +167,10 @@ extern Memb_func* memb_func;
  static double Cam0 = 0;
  static double Gef_activated0 = 0;
  static double Gef0 = 0;
- static double RasGTP0 = 0;
- static double RasGDP0 = 0;
  static double ca_modif0 = 0;
  static double ca0 = 0;
  static double delta_t = 0.01;
+ static double v = 0;
  /* connect global user variables to hoc */
  static DoubScal hoc_scdoub[] = {
  "DRas_cadifus", &DRas_cadifus,
@@ -199,8 +186,6 @@ extern Memb_func* memb_func;
  "kr_cam4_cadifus", &kr_cam4_cadifus,
  "kf_gef_cadifus", &kf_gef_cadifus,
  "kr_gef_cadifus", &kr_gef_cadifus,
- "kf_rasGDP_cadifus", &kf_rasGDP_cadifus,
- "kr_rasGDP_cadifus", &kr_rasGDP_cadifus,
  0,0
 };
  static DoubVec hoc_vdoub[] = {
@@ -218,7 +203,7 @@ static void _ode_map(int, double**, double**, double*, Datum*, double*, int);
 static void _ode_spec(_NrnThread*, _Memb_list*, int);
 static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  
-#define _cvode_ieq _ppvar[4]._i
+#define _cvode_ieq _ppvar[5]._i
  static void _ode_synonym(int, double**, Datum**);
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
@@ -237,9 +222,8 @@ static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  "Cam_Ca4_cadifus",
  "Gef_cadifus",
  "Gef_activated_cadifus",
- "RasGDP_cadifus",
- "RasGTP_cadifus",
  0,
+ "Gef_act_cadifus",
  0};
  static Symbol* _morphology_sym;
  static Symbol* _ca_sym;
@@ -249,17 +233,17 @@ extern Prop* need_memb(Symbol*);
 static void nrn_alloc(Prop* _prop) {
 	Prop *prop_ion;
 	double *_p; Datum *_ppvar;
- 	_p = nrn_prop_data_alloc(_mechtype, 28, _prop);
+ 	_p = nrn_prop_data_alloc(_mechtype, 23, _prop);
  	/*initialize range parameters*/
  	phi = 0.25;
  	beta = 17.402;
  	_prop->param = _p;
- 	_prop->param_size = 28;
- 	_ppvar = nrn_prop_datum_alloc(_mechtype, 5, _prop);
+ 	_prop->param_size = 23;
+ 	_ppvar = nrn_prop_datum_alloc(_mechtype, 6, _prop);
  	_prop->dparam = _ppvar;
  	/*connect ionic variables to this model*/
  prop_ion = need_memb(_morphology_sym);
- 	_ppvar[3]._pval = &prop_ion->param[0]; /* diam */
+ 	_ppvar[4]._pval = &prop_ion->param[0]; /* diam */
  prop_ion = need_memb(_ca_sym);
  nrn_check_conc_write(_prop, prop_ion, 1);
  nrn_promote(prop_ion, 3, 0);
@@ -275,7 +259,6 @@ static void nrn_alloc(Prop* _prop) {
  "ca_cadifus", 1e-10,
  0,0
 };
- static void _thread_cleanup(Datum*);
  static void _update_ion_pointer(Datum*);
  extern Symbol* hoc_lookup(const char*);
 extern void _nrn_thread_reg(int, int, void(*f)(Datum*));
@@ -284,18 +267,16 @@ extern void hoc_register_tolerance(int, HocStateTolerance*, Symbol***);
 extern void _cvode_abstol( Symbol**, double*, int);
 
  void _cadifus_reg() {
-	int _vectorized = 1;
+	int _vectorized = 0;
   _initlists();
  	ion_reg("ca", -10000.);
  	_morphology_sym = hoc_lookup("morphology");
  	_ca_sym = hoc_lookup("ca_ion");
- 	register_mech(_mechanism, nrn_alloc,nrn_cur, nrn_jacob, nrn_state, nrn_init, hoc_nrnpointerindex, 3);
-  _extcall_thread = (Datum*)ecalloc(2, sizeof(Datum));
+ 	register_mech(_mechanism, nrn_alloc,nrn_cur, nrn_jacob, nrn_state, nrn_init, hoc_nrnpointerindex, 0);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
-     _nrn_thread_reg(_mechtype, 0, _thread_cleanup);
      _nrn_thread_reg(_mechtype, 2, _update_ion_pointer);
-  hoc_register_dparam_size(_mechtype, 5);
+  hoc_register_dparam_size(_mechtype, 6);
  	nrn_writes_conc(_mechtype, 0);
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
@@ -314,34 +295,35 @@ static int error;
 static int _ninits = 0;
 static int _match_recurse=1;
 static void _modl_cleanup(){ _match_recurse=1;}
- extern double *_nrn_thread_getelm();
+ extern double *_getelm();
  
-#define _MATELM1(_row,_col) *(_nrn_thread_getelm(_so, _row + 1, _col + 1))
+#define _MATELM1(_row,_col)	*(_getelm(_row + 1, _col + 1))
  
-#define _RHS1(_arg) _rhs[_arg+1]
-  
+#define _RHS1(_arg) _coef1[_arg + 1]
+ static double *_coef1;
+ 
 #define _linmat1  0
- static int _spth1 = 1;
- static int _cvspth1 = 0;
+ static void* _sparseobj1;
+ static void* _cvsparseobj1;
  
 static int _ode_spec1(_threadargsproto_);
 /*static int _ode_matsol1(_threadargsproto_);*/
- static int _slist1[11], _dlist1[11]; static double *_temp1;
+ static int _slist1[9], _dlist1[9]; static double *_temp1;
  static int state();
  
-static int state (void* _so, double* _rhs, double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt)
- {int _reset=0;
+static int state ()
+ {_reset=0;
  {
    double b_flux, f_flux, _term; int _i;
  {int _i; double _dt1 = 1.0/dt;
-for(_i=0;_i<11;_i++){
+for(_i=0;_i<9;_i++){
   	_RHS1(_i) = -_dt1*(_p[_slist1[_i]] - _p[_dlist1[_i]]);
 	_MATELM1(_i, _i) = _dt1;
       
 } }
  /* ~ ca < < ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) )*/
  f_flux = b_flux = 0.;
- _RHS1( 10) += (b_flux =   ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) ) );
+ _RHS1( 8) += (b_flux =   ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) ) );
  /*FLUX*/
   cai = ca ;
    ca_modif = ca - 0.00045 ;
@@ -349,80 +331,80 @@ for(_i=0;_i<11;_i++){
  f_flux =  kf_cam1 * Cam * ca_modif ;
  b_flux =  kr_cam1 * Cam_Ca ;
  _RHS1( 4) -= (f_flux - b_flux);
- _RHS1( 9) -= (f_flux - b_flux);
+ _RHS1( 7) -= (f_flux - b_flux);
  _RHS1( 3) += (f_flux - b_flux);
  
  _term =  kf_cam1 * ca_modif ;
  _MATELM1( 4 ,4)  += _term;
- _MATELM1( 9 ,4)  += _term;
+ _MATELM1( 7 ,4)  += _term;
  _MATELM1( 3 ,4)  -= _term;
  _term =  kf_cam1 * Cam ;
- _MATELM1( 4 ,9)  += _term;
- _MATELM1( 9 ,9)  += _term;
- _MATELM1( 3 ,9)  -= _term;
+ _MATELM1( 4 ,7)  += _term;
+ _MATELM1( 7 ,7)  += _term;
+ _MATELM1( 3 ,7)  -= _term;
  _term =  kr_cam1 ;
  _MATELM1( 4 ,3)  -= _term;
- _MATELM1( 9 ,3)  -= _term;
+ _MATELM1( 7 ,3)  -= _term;
  _MATELM1( 3 ,3)  += _term;
  /*REACTION*/
   /* ~ ca_modif + Cam_Ca <-> Cam_Ca2 ( kf_cam2 , kr_cam2 )*/
  f_flux =  kf_cam2 * Cam_Ca * ca_modif ;
  b_flux =  kr_cam2 * Cam_Ca2 ;
  _RHS1( 3) -= (f_flux - b_flux);
- _RHS1( 9) -= (f_flux - b_flux);
+ _RHS1( 7) -= (f_flux - b_flux);
  _RHS1( 2) += (f_flux - b_flux);
  
  _term =  kf_cam2 * ca_modif ;
  _MATELM1( 3 ,3)  += _term;
- _MATELM1( 9 ,3)  += _term;
+ _MATELM1( 7 ,3)  += _term;
  _MATELM1( 2 ,3)  -= _term;
  _term =  kf_cam2 * Cam_Ca ;
- _MATELM1( 3 ,9)  += _term;
- _MATELM1( 9 ,9)  += _term;
- _MATELM1( 2 ,9)  -= _term;
+ _MATELM1( 3 ,7)  += _term;
+ _MATELM1( 7 ,7)  += _term;
+ _MATELM1( 2 ,7)  -= _term;
  _term =  kr_cam2 ;
  _MATELM1( 3 ,2)  -= _term;
- _MATELM1( 9 ,2)  -= _term;
+ _MATELM1( 7 ,2)  -= _term;
  _MATELM1( 2 ,2)  += _term;
  /*REACTION*/
   /* ~ ca_modif + Cam_Ca2 <-> Cam_Ca3 ( kf_cam3 , kr_cam3 )*/
  f_flux =  kf_cam3 * Cam_Ca2 * ca_modif ;
  b_flux =  kr_cam3 * Cam_Ca3 ;
  _RHS1( 2) -= (f_flux - b_flux);
- _RHS1( 9) -= (f_flux - b_flux);
+ _RHS1( 7) -= (f_flux - b_flux);
  _RHS1( 1) += (f_flux - b_flux);
  
  _term =  kf_cam3 * ca_modif ;
  _MATELM1( 2 ,2)  += _term;
- _MATELM1( 9 ,2)  += _term;
+ _MATELM1( 7 ,2)  += _term;
  _MATELM1( 1 ,2)  -= _term;
  _term =  kf_cam3 * Cam_Ca2 ;
- _MATELM1( 2 ,9)  += _term;
- _MATELM1( 9 ,9)  += _term;
- _MATELM1( 1 ,9)  -= _term;
+ _MATELM1( 2 ,7)  += _term;
+ _MATELM1( 7 ,7)  += _term;
+ _MATELM1( 1 ,7)  -= _term;
  _term =  kr_cam3 ;
  _MATELM1( 2 ,1)  -= _term;
- _MATELM1( 9 ,1)  -= _term;
+ _MATELM1( 7 ,1)  -= _term;
  _MATELM1( 1 ,1)  += _term;
  /*REACTION*/
   /* ~ ca_modif + Cam_Ca3 <-> Cam_Ca4 ( kf_cam4 , kr_cam4 )*/
  f_flux =  kf_cam4 * Cam_Ca3 * ca_modif ;
  b_flux =  kr_cam4 * Cam_Ca4 ;
  _RHS1( 1) -= (f_flux - b_flux);
- _RHS1( 9) -= (f_flux - b_flux);
+ _RHS1( 7) -= (f_flux - b_flux);
  _RHS1( 0) += (f_flux - b_flux);
  
  _term =  kf_cam4 * ca_modif ;
  _MATELM1( 1 ,1)  += _term;
- _MATELM1( 9 ,1)  += _term;
+ _MATELM1( 7 ,1)  += _term;
  _MATELM1( 0 ,1)  -= _term;
  _term =  kf_cam4 * Cam_Ca3 ;
- _MATELM1( 1 ,9)  += _term;
- _MATELM1( 9 ,9)  += _term;
- _MATELM1( 0 ,9)  -= _term;
+ _MATELM1( 1 ,7)  += _term;
+ _MATELM1( 7 ,7)  += _term;
+ _MATELM1( 0 ,7)  -= _term;
  _term =  kr_cam4 ;
  _MATELM1( 1 ,0)  -= _term;
- _MATELM1( 9 ,0)  -= _term;
+ _MATELM1( 7 ,0)  -= _term;
  _MATELM1( 0 ,0)  += _term;
  /*REACTION*/
   /* ~ Cam_Ca4 + Gef <-> Gef_activated ( kf_gef , kr_gef )*/
@@ -445,26 +427,14 @@ for(_i=0;_i<11;_i++){
  _MATELM1( 0 ,5)  -= _term;
  _MATELM1( 5 ,5)  += _term;
  /*REACTION*/
-  /* ~ RasGDP <-> RasGTP ( kf_rasGDP * Gef_activated , kr_rasGDP )*/
- f_flux =  kf_rasGDP * Gef_activated * RasGDP ;
- b_flux =  kr_rasGDP * RasGTP ;
- _RHS1( 8) -= (f_flux - b_flux);
- _RHS1( 7) += (f_flux - b_flux);
- 
- _term =  kf_rasGDP * Gef_activated ;
- _MATELM1( 8 ,8)  += _term;
- _MATELM1( 7 ,8)  -= _term;
- _term =  kr_rasGDP ;
- _MATELM1( 8 ,7)  -= _term;
- _MATELM1( 7 ,7)  += _term;
- /*REACTION*/
-    } return _reset;
+  Gef_act = Gef_activated ;
+     } return _reset;
  }
  
 /*CVODE ode begin*/
- static int _ode_spec1(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {int _reset=0;{
+ static int _ode_spec1() {_reset=0;{
  double b_flux, f_flux, _term; int _i;
- {int _i; for(_i=0;_i<11;_i++) _p[_dlist1[_i]] = 0.0;}
+ {int _i; for(_i=0;_i<9;_i++) _p[_dlist1[_i]] = 0.0;}
  /* ~ ca < < ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) )*/
  f_flux = b_flux = 0.;
  Dca += (b_flux =   ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) ) );
@@ -511,22 +481,16 @@ for(_i=0;_i<11;_i++){
  DGef_activated += (f_flux - b_flux);
  
  /*REACTION*/
-  /* ~ RasGDP <-> RasGTP ( kf_rasGDP * Gef_activated , kr_rasGDP )*/
- f_flux =  kf_rasGDP * Gef_activated * RasGDP ;
- b_flux =  kr_rasGDP * RasGTP ;
- DRasGDP -= (f_flux - b_flux);
- DRasGTP += (f_flux - b_flux);
- 
- /*REACTION*/
-    } return _reset;
+  Gef_act = Gef_activated ;
+   } return _reset;
  }
  
 /*CVODE matsol*/
- static int _ode_matsol1(void* _so, double* _rhs, double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {int _reset=0;{
+ static int _ode_matsol1() {_reset=0;{
  double b_flux, f_flux, _term; int _i;
    b_flux = f_flux = 0.;
  {int _i; double _dt1 = 1.0/dt;
-for(_i=0;_i<11;_i++){
+for(_i=0;_i<9;_i++){
   	_RHS1(_i) = _dt1*(_p[_dlist1[_i]]);
 	_MATELM1(_i, _i) = _dt1;
       
@@ -538,57 +502,57 @@ for(_i=0;_i<11;_i++){
  /* ~ ca_modif + Cam <-> Cam_Ca ( kf_cam1 , kr_cam1 )*/
  _term =  kf_cam1 * ca_modif ;
  _MATELM1( 4 ,4)  += _term;
- _MATELM1( 9 ,4)  += _term;
+ _MATELM1( 7 ,4)  += _term;
  _MATELM1( 3 ,4)  -= _term;
  _term =  kf_cam1 * Cam ;
- _MATELM1( 4 ,9)  += _term;
- _MATELM1( 9 ,9)  += _term;
- _MATELM1( 3 ,9)  -= _term;
+ _MATELM1( 4 ,7)  += _term;
+ _MATELM1( 7 ,7)  += _term;
+ _MATELM1( 3 ,7)  -= _term;
  _term =  kr_cam1 ;
  _MATELM1( 4 ,3)  -= _term;
- _MATELM1( 9 ,3)  -= _term;
+ _MATELM1( 7 ,3)  -= _term;
  _MATELM1( 3 ,3)  += _term;
  /*REACTION*/
   /* ~ ca_modif + Cam_Ca <-> Cam_Ca2 ( kf_cam2 , kr_cam2 )*/
  _term =  kf_cam2 * ca_modif ;
  _MATELM1( 3 ,3)  += _term;
- _MATELM1( 9 ,3)  += _term;
+ _MATELM1( 7 ,3)  += _term;
  _MATELM1( 2 ,3)  -= _term;
  _term =  kf_cam2 * Cam_Ca ;
- _MATELM1( 3 ,9)  += _term;
- _MATELM1( 9 ,9)  += _term;
- _MATELM1( 2 ,9)  -= _term;
+ _MATELM1( 3 ,7)  += _term;
+ _MATELM1( 7 ,7)  += _term;
+ _MATELM1( 2 ,7)  -= _term;
  _term =  kr_cam2 ;
  _MATELM1( 3 ,2)  -= _term;
- _MATELM1( 9 ,2)  -= _term;
+ _MATELM1( 7 ,2)  -= _term;
  _MATELM1( 2 ,2)  += _term;
  /*REACTION*/
   /* ~ ca_modif + Cam_Ca2 <-> Cam_Ca3 ( kf_cam3 , kr_cam3 )*/
  _term =  kf_cam3 * ca_modif ;
  _MATELM1( 2 ,2)  += _term;
- _MATELM1( 9 ,2)  += _term;
+ _MATELM1( 7 ,2)  += _term;
  _MATELM1( 1 ,2)  -= _term;
  _term =  kf_cam3 * Cam_Ca2 ;
- _MATELM1( 2 ,9)  += _term;
- _MATELM1( 9 ,9)  += _term;
- _MATELM1( 1 ,9)  -= _term;
+ _MATELM1( 2 ,7)  += _term;
+ _MATELM1( 7 ,7)  += _term;
+ _MATELM1( 1 ,7)  -= _term;
  _term =  kr_cam3 ;
  _MATELM1( 2 ,1)  -= _term;
- _MATELM1( 9 ,1)  -= _term;
+ _MATELM1( 7 ,1)  -= _term;
  _MATELM1( 1 ,1)  += _term;
  /*REACTION*/
   /* ~ ca_modif + Cam_Ca3 <-> Cam_Ca4 ( kf_cam4 , kr_cam4 )*/
  _term =  kf_cam4 * ca_modif ;
  _MATELM1( 1 ,1)  += _term;
- _MATELM1( 9 ,1)  += _term;
+ _MATELM1( 7 ,1)  += _term;
  _MATELM1( 0 ,1)  -= _term;
  _term =  kf_cam4 * Cam_Ca3 ;
- _MATELM1( 1 ,9)  += _term;
- _MATELM1( 9 ,9)  += _term;
- _MATELM1( 0 ,9)  -= _term;
+ _MATELM1( 1 ,7)  += _term;
+ _MATELM1( 7 ,7)  += _term;
+ _MATELM1( 0 ,7)  -= _term;
  _term =  kr_cam4 ;
  _MATELM1( 1 ,0)  -= _term;
- _MATELM1( 9 ,0)  -= _term;
+ _MATELM1( 7 ,0)  -= _term;
  _MATELM1( 0 ,0)  += _term;
  /*REACTION*/
   /* ~ Cam_Ca4 + Gef <-> Gef_activated ( kf_gef , kr_gef )*/
@@ -605,23 +569,16 @@ for(_i=0;_i<11;_i++){
  _MATELM1( 0 ,5)  -= _term;
  _MATELM1( 5 ,5)  += _term;
  /*REACTION*/
-  /* ~ RasGDP <-> RasGTP ( kf_rasGDP * Gef_activated , kr_rasGDP )*/
- _term =  kf_rasGDP * Gef_activated ;
- _MATELM1( 8 ,8)  += _term;
- _MATELM1( 7 ,8)  -= _term;
- _term =  kr_rasGDP ;
- _MATELM1( 8 ,7)  -= _term;
- _MATELM1( 7 ,7)  += _term;
- /*REACTION*/
-    } return _reset;
+  Gef_act = Gef_activated ;
+   } return _reset;
  }
  
 /*CVODE end*/
  
-static int _ode_count(int _type){ return 11;}
+static int _ode_count(int _type){ return 9;}
  
 static void _ode_spec(_NrnThread* _nt, _Memb_list* _ml, int _type) {
-   double* _p; Datum* _ppvar; Datum* _thread;
+   Datum* _thread;
    Node* _nd; double _v; int _iml, _cntml;
   _cntml = _ml->_nodecount;
   _thread = _ml->_thread;
@@ -632,28 +589,26 @@ static void _ode_spec(_NrnThread* _nt, _Memb_list* _ml, int _type) {
   cai = _ion_cai;
   ica = _ion_ica;
   cai = _ion_cai;
-     _ode_spec1 (_p, _ppvar, _thread, _nt);
+     _ode_spec1 ();
   _ion_cai = cai;
  }}
  
 static void _ode_map(int _ieq, double** _pv, double** _pvdot, double* _pp, Datum* _ppd, double* _atol, int _type) { 
-	double* _p; Datum* _ppvar;
  	int _i; _p = _pp; _ppvar = _ppd;
 	_cvode_ieq = _ieq;
-	for (_i=0; _i < 11; ++_i) {
+	for (_i=0; _i < 9; ++_i) {
 		_pv[_i] = _pp + _slist1[_i];  _pvdot[_i] = _pp + _dlist1[_i];
 		_cvode_abstol(_atollist, _atol, _i);
 	}
  }
  static void _ode_synonym(int _cnt, double** _pp, Datum** _ppd) { 
-	double* _p; Datum* _ppvar;
  	int _i; 
 	for (_i=0; _i < _cnt; ++_i) {_p = _pp[_i]; _ppvar = _ppd[_i];
  _ion_cai =  ca ;
  }}
  
 static void _ode_matsol(_NrnThread* _nt, _Memb_list* _ml, int _type) {
-   double* _p; Datum* _ppvar; Datum* _thread;
+   Datum* _thread;
    Node* _nd; double _v; int _iml, _cntml;
   _cntml = _ml->_nodecount;
   _thread = _ml->_thread;
@@ -664,21 +619,19 @@ static void _ode_matsol(_NrnThread* _nt, _Memb_list* _ml, int _type) {
   cai = _ion_cai;
   ica = _ion_ica;
   cai = _ion_cai;
- _cvode_sparse_thread(&_thread[_cvspth1]._pvoid, 11, _dlist1, _p, _ode_matsol1, _ppvar, _thread, _nt);
+ _cvode_sparse(&_cvsparseobj1, 9, _dlist1, _p, _ode_matsol1, &_coef1);
  }}
- 
-static void _thread_cleanup(Datum* _thread) {
-   _nrn_destroy_sparseobj_thread(_thread[_cvspth1]._pvoid);
-   _nrn_destroy_sparseobj_thread(_thread[_spth1]._pvoid);
- }
  extern void nrn_update_ion_pointer(Symbol*, Datum*, int, int);
  static void _update_ion_pointer(Datum* _ppvar) {
    nrn_update_ion_pointer(_ca_sym, _ppvar, 0, 1);
    nrn_update_ion_pointer(_ca_sym, _ppvar, 1, 3);
  }
 
-static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {
-  int _i; double _save;{
+static void initmodel() {
+  int _i; double _save;_ninits++;
+ _save = t;
+ t = 0.0;
+{
   Cam_Ca4 = Cam_Ca40;
   Cam_Ca3 = Cam_Ca30;
   Cam_Ca2 = Cam_Ca20;
@@ -686,8 +639,6 @@ static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt
   Cam = Cam0;
   Gef_activated = Gef_activated0;
   Gef = Gef0;
-  RasGTP = RasGTP0;
-  RasGDP = RasGDP0;
   ca_modif = ca_modif0;
   ca = ca0;
  {
@@ -700,21 +651,18 @@ static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt
    Cam_Ca4 = 0.0 ;
    Gef = 0.0006 ;
    Gef_activated = 0.0 ;
-   RasGDP = 0.0006 ;
-   RasGTP = 0.0 ;
    }
- 
+  _sav_indep = t; t = _save;
+
 }
 }
 
 static void nrn_init(_NrnThread* _nt, _Memb_list* _ml, int _type){
-double* _p; Datum* _ppvar; Datum* _thread;
 Node *_nd; double _v; int* _ni; int _iml, _cntml;
 #if CACHEVEC
     _ni = _ml->_nodeindices;
 #endif
 _cntml = _ml->_nodecount;
-_thread = _ml->_thread;
 for (_iml = 0; _iml < _cntml; ++_iml) {
  _p = _ml->_data[_iml]; _ppvar = _ml->_pdata[_iml];
 #if CACHEVEC
@@ -730,23 +678,21 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   cai = _ion_cai;
   ica = _ion_ica;
   cai = _ion_cai;
- initmodel(_p, _ppvar, _thread, _nt);
+ initmodel();
   _ion_cai = cai;
   nrn_wrote_conc(_ca_sym, (&(_ion_cai)) - 1, _style_ca);
 }}
 
-static double _nrn_current(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt, double _v){double _current=0.;v=_v;{
+static double _nrn_current(double _v){double _current=0.;v=_v;{
 } return _current;
 }
 
-static void nrn_cur(_NrnThread* _nt, _Memb_list* _ml, int _type) {
-double* _p; Datum* _ppvar; Datum* _thread;
+static void nrn_cur(_NrnThread* _nt, _Memb_list* _ml, int _type){
 Node *_nd; int* _ni; double _rhs, _v; int _iml, _cntml;
 #if CACHEVEC
     _ni = _ml->_nodeindices;
 #endif
 _cntml = _ml->_nodecount;
-_thread = _ml->_thread;
 for (_iml = 0; _iml < _cntml; ++_iml) {
  _p = _ml->_data[_iml]; _ppvar = _ml->_pdata[_iml];
 #if CACHEVEC
@@ -761,14 +707,12 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  
 }}
 
-static void nrn_jacob(_NrnThread* _nt, _Memb_list* _ml, int _type) {
-double* _p; Datum* _ppvar; Datum* _thread;
+static void nrn_jacob(_NrnThread* _nt, _Memb_list* _ml, int _type){
 Node *_nd; int* _ni; int _iml, _cntml;
 #if CACHEVEC
     _ni = _ml->_nodeindices;
 #endif
 _cntml = _ml->_nodecount;
-_thread = _ml->_thread;
 for (_iml = 0; _iml < _cntml; ++_iml) {
  _p = _ml->_data[_iml];
 #if CACHEVEC
@@ -783,15 +727,13 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  
 }}
 
-static void nrn_state(_NrnThread* _nt, _Memb_list* _ml, int _type) {
+static void nrn_state(_NrnThread* _nt, _Memb_list* _ml, int _type){
  double _break, _save;
-double* _p; Datum* _ppvar; Datum* _thread;
 Node *_nd; double _v; int* _ni; int _iml, _cntml;
 #if CACHEVEC
     _ni = _ml->_nodeindices;
 #endif
 _cntml = _ml->_nodecount;
-_thread = _ml->_thread;
 for (_iml = 0; _iml < _cntml; ++_iml) {
  _p = _ml->_data[_iml]; _ppvar = _ml->_pdata[_iml];
  _nd = _ml->_nodelist[_iml];
@@ -812,8 +754,9 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   cai = _ion_cai;
  { {
  for (; t < _break; t += dt) {
-  sparse_thread(&_thread[_spth1]._pvoid, 11, _slist1, _dlist1, _p, &t, dt, state, _linmat1, _ppvar, _thread, _nt);
-  
+ error = sparse(&_sparseobj1, 9, _slist1, _dlist1, _p, &t, dt, state,&_coef1, _linmat1);
+ if(error){fprintf(stderr,"at line 55 in file cadifus.mod:\n\n"); nrn_complain(_p); abort_run(error);}
+ 
 }}
  t = _save;
  } {
@@ -825,8 +768,7 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
 
 static void terminal(){}
 
-static void _initlists(){
- double _x; double* _p = &_x;
+static void _initlists() {
  int _i; static int _first = 1;
   if (!_first) return;
  _slist1[0] = &(Cam_Ca4) - _p;  _dlist1[0] = &(DCam_Ca4) - _p;
@@ -836,13 +778,7 @@ static void _initlists(){
  _slist1[4] = &(Cam) - _p;  _dlist1[4] = &(DCam) - _p;
  _slist1[5] = &(Gef_activated) - _p;  _dlist1[5] = &(DGef_activated) - _p;
  _slist1[6] = &(Gef) - _p;  _dlist1[6] = &(DGef) - _p;
- _slist1[7] = &(RasGTP) - _p;  _dlist1[7] = &(DRasGTP) - _p;
- _slist1[8] = &(RasGDP) - _p;  _dlist1[8] = &(DRasGDP) - _p;
- _slist1[9] = &(ca_modif) - _p;  _dlist1[9] = &(Dca_modif) - _p;
- _slist1[10] = &(ca) - _p;  _dlist1[10] = &(Dca) - _p;
+ _slist1[7] = &(ca_modif) - _p;  _dlist1[7] = &(Dca_modif) - _p;
+ _slist1[8] = &(ca) - _p;  _dlist1[8] = &(Dca) - _p;
 _first = 0;
 }
-
-#if defined(__cplusplus)
-} /* extern "C" */
-#endif
