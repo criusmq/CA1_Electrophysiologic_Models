@@ -28,7 +28,7 @@ load_file("nrngui.hoc")
 	*/
 
 forall delete_section()
-create soma,  basal[4], apical[10], lateral[14], spine[8]
+create soma,  basal[4], apical[10], lateral[30], spine[8]
 
 /*Géométries + Canaux ioniques*/
 
@@ -246,7 +246,7 @@ apical[8].kf_rasGDP_cadifus = 0
 	
 //lateral compartiments
 
-for i=0,13{
+for i=0,29{
 	lateral[i]{
 		nseg = 1
 		insert ca_debug_Bh
@@ -270,7 +270,7 @@ for i=0,13{
  		lateral[0].gna_na_Bh = 0.008
  		}
  	
-for i=1,13{
+for i=1,29{
  	lateral[i]{
  		insert na_Bh
  		lateral[i].gna_na_Bh = 0.004
@@ -290,28 +290,44 @@ for i=1,13{
 
 	lateral[5] {L=57 insert cadifus} //dans suplementary data c'est 57 mis ca1.p 56.6
 
-	lateral[6] {L=3 insert cadifus} // new compartments: old lateral[6] split in 3: L=4;3;3
+	lateral[6] {L=1 insert cadifus} //lateral[6] devient les 3 suivants
+	lateral[7] {L=1 insert cadifus} 
+	lateral[8] {L=1 insert cadifus} 
 	
-	lateral[7] {L=4 insert cadifus}
+	lateral[9] {L=1 insert cadifus} 
+	lateral[10] {L=1 insert cadifus} // connect to spine [1] new compartments: old lateral[6] split in 3: L=4;3;3
+	lateral[11] {L=1 insert cadifus} //connect to spine [7] new one
+	lateral[12] {L=1 insert cadifus}
 	
-	lateral[8] {L=3 insert cadifus}
+	lateral[13] {L=1 insert cadifus}
+	lateral[14] {L=1 insert cadifus}
+	lateral[15] {L=1 insert cadifus}
 	
-	lateral[9] {L=10 insert cadifus}	
+	lateral[16] {L=1 insert cadifus}	
+	lateral[17] {L=1 insert cadifus}
+	lateral[18] {L=1 insert cadifus}
+	lateral[19] {L=1 insert cadifus}
+	lateral[20] {L=1 insert cadifus} // connect to spine [3] former bhalla 2nd spine
+	lateral[21] {L=1 insert cadifus}
+	lateral[22] {L=1 insert cadifus}
+	lateral[23] {L=1 insert cadifus}
+	lateral[24] {L=1 insert cadifus}
+	lateral[25] {L=1 insert cadifus}
 	
-	lateral[10] {L=70 insert cadifus}
+	lateral[26] {L=70 insert cadifus}
 	
-	lateral[11] {L=30 insert cadifus}
+	lateral[27] {L=30 insert cadifus}
 	
-	lateral[12] {L=60 insert cadifus}
+	lateral[28] {L=60 insert cadifus}
 	
-	lateral[13] {L=60 insert cadifus}
+	lateral[29] {L=60 insert cadifus}
 
 	
 	lateral[0] {diam=2}
 	lateral[1] {diam=1.8}
 	lateral[2] {diam=1.5}
 	lateral[3] {diam=1.5}
-for i=4,13{
+for i=4,29{
 	lateral[i] {diam=1}
 	}
 	
@@ -357,7 +373,55 @@ lateral[12].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
 lateral[13].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
 	lateral[13].phi_cadifus = 0.075
 	lateral[13].kf_rasGDP_cadifus = 0
-	
+lateral[14].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[14].phi_cadifus = 0.075
+	lateral[14].kf_rasGDP_cadifus = 0
+lateral[15].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[15].phi_cadifus = 0.075
+	lateral[15].kf_rasGDP_cadifus = 0
+lateral[16].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[16].phi_cadifus = 0.075
+	lateral[16].kf_rasGDP_cadifus = 0
+lateral[17].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[17].phi_cadifus = 0.075
+	lateral[17].kf_rasGDP_cadifus = 0
+lateral[18].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[18].phi_cadifus = 0.075
+	lateral[18].kf_rasGDP_cadifus = 0
+lateral[19].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[19].phi_cadifus = 0.075
+	lateral[19].kf_rasGDP_cadifus = 0
+lateral[20].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[20].phi_cadifus = 0.075
+	lateral[20].kf_rasGDP_cadifus = 0
+lateral[21].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[21].phi_cadifus = 0.075
+	lateral[21].kf_rasGDP_cadifus = 0
+lateral[22].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[22].phi_cadifus = 0.075
+	lateral[22].kf_rasGDP_cadifus = 0
+lateral[23].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[23].phi_cadifus = 0.075
+	lateral[23].kf_rasGDP_cadifus = 0
+lateral[24].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[24].phi_cadifus = 0.075
+	lateral[24].kf_rasGDP_cadifus = 0
+lateral[25].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[25].phi_cadifus = 0.075
+	lateral[25].kf_rasGDP_cadifus = 0
+lateral[26].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[26].phi_cadifus = 0.075
+	lateral[26].kf_rasGDP_cadifus = 0
+lateral[27].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[27].phi_cadifus = 0.075
+	lateral[27].kf_rasGDP_cadifus = 0
+lateral[28].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[28].phi_cadifus = 0.075
+	lateral[28].kf_rasGDP_cadifus = 0
+lateral[29].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[29].phi_cadifus = 0.075
+	lateral[29].kf_rasGDP_cadifus = 0
+
 	
 // spine
 spine[1]{
@@ -473,20 +537,36 @@ connect lateral[10](0), lateral[9](1)
 connect lateral[11](0), lateral[10](1)
 connect lateral[12](0), lateral[11](1)
 connect lateral[13](0), lateral[12](1)
+connect lateral[14](0), lateral[13](1)
+connect lateral[15](0), lateral[14](1)
+connect lateral[16](0), lateral[15](1)
+connect lateral[17](0), lateral[16](1)
+connect lateral[18](0), lateral[17](1)
+connect lateral[19](0), lateral[18](1)
+connect lateral[20](0), lateral[19](1)
+connect lateral[21](0), lateral[20](1)
+connect lateral[22](0), lateral[21](1)
+connect lateral[23](0), lateral[22](1)
+connect lateral[24](0), lateral[23](1)
+connect lateral[25](0), lateral[24](1)
+connect lateral[26](0), lateral[25](1)
+connect lateral[27](0), lateral[26](1)
+connect lateral[28](0), lateral[27](1)
+connect lateral[29](0), lateral[28](1)
 
 //spine connection
 
 //new spine
-connect spine[6](0), lateral[6](0.5)
+connect spine[6](0), lateral[11](0.5)
 connect spine[7](0), spine[6](1)
 
-connect spine[0](0), lateral[7](0.5)
+connect spine[0](0), lateral[10](0.5)
 connect spine[1](0), spine[0](1)
 
-connect spine[2](0), lateral[9](0.5)
+connect spine[2](0), lateral[20](0.5)
 connect spine[3](0), spine[2](1)
 
-connect spine[4](0), lateral[11](0.5)
+connect spine[4](0), lateral[18](0.5)
 connect spine[5](0), spine[4](1)
 
 
@@ -560,7 +640,7 @@ scene_vector_[2] = save_window_
 {save_window_.view(0, -80, 600000, 120, 373, 0, 300.48, 200.32)}
 graphList[0].append(save_window_)
 save_window_.save_name("graphList[0].")
-save_window_.addvar("spine[1].v( 0.5 )", 2, 1, 0.8, 0.9, 2)
+save_window_.addvar("spine[1].RasGTPi( 0.5 )", 2, 1, 0.8, 0.9, 2)
 }
 {
 save_window_ = new Graph(0)
@@ -569,7 +649,7 @@ scene_vector_[3] = save_window_
 {save_window_.view(0, -80, 600000, 120, 697, 0, 300.48, 200.32)}
 graphList[1].append(save_window_)
 save_window_.save_name("graphList[1].")
-save_window_.addvar("spine[1].cai( 0.5 )", 2, 1, 0.8, 0.9, 2)
+save_window_.addvar("spine[7].RasGTPi( 0.5 )", 2, 1, 0.8, 0.9, 2)
 }
 {
 save_window_ = new Graph(0)
@@ -578,7 +658,7 @@ scene_vector_[4] = save_window_
 {save_window_.view(0, 0, 600000, 1, 1018, 1, 300.48, 200.32)}
 graphList[2].append(save_window_)
 save_window_.save_name("graphList[2].")
-save_window_.addvar("spine[1].RasGTPi( 0.5 )", 2, 1, 0.8, 0.9, 2)
+save_window_.addvar("lateral[10].RasGTPi( 0.5 )", 2, 1, 0.8, 0.9, 2)
 }
 {
 save_window_ = new Graph(0)
@@ -587,7 +667,7 @@ scene_vector_[5] = save_window_
 {save_window_.view(0, 0, 600000, 1, 373, 267, 300.48, 200.32)}
 graphList[2].append(save_window_)
 save_window_.save_name("graphList[2].")
-save_window_.addvar("spine[0].cai( 0.5 )", 3, 1, 0.8, 0.9, 2)
+save_window_.addvar("lateral[11].RasGTPi( 0.5 )", 3, 1, 0.8, 0.9, 2)
 }
 {
 save_window_ = new Graph(0)
@@ -596,7 +676,7 @@ scene_vector_[6] = save_window_
 {save_window_.view(0, 0, 600000, 1, 701, 267, 300.48, 200.32)}
 graphList[2].append(save_window_)
 save_window_.save_name("graphList[2].")
-save_window_.addvar("spine[0].RasGTPi( 0.5 )", 3, 1, 0.8, 0.9, 2)
+save_window_.addvar("lateral[15].RasGTPi( 0.5 )", 3, 1, 0.8, 0.9, 2)
 }
 {
 save_window_ = new Graph(0)
@@ -605,7 +685,7 @@ scene_vector_[7] = save_window_
 {save_window_.view(0, 0, 600000, 1, 682, 530, 300.48, 200.32)}
 graphList[2].append(save_window_)
 save_window_.save_name("graphList[2].")
-save_window_.addvar("lateral[6].RasGTPi( 0.5 )", 4, 1, 0.8, 0.9, 2)
+save_window_.addvar("lateral[18].RasGTPi( 0.5 )", 4, 1, 0.8, 0.9, 2)
 }
 {
 save_window_ = new Graph(0)
@@ -614,7 +694,7 @@ scene_vector_[8] = save_window_
 {save_window_.view(0, 0, 600000, 1, 1027, 270, 300.48, 200.32)}
 graphList[2].append(save_window_)
 save_window_.save_name("graphList[2].")
-save_window_.addvar("lateral[6].cai( 0.5 )", 4, 1, 0.8, 0.9, 2)
+save_window_.addvar("lateral[20].RasGTPi( 0.5 )", 4, 1, 0.8, 0.9, 2)
 }
 {
 save_window_ = new Graph(0)
@@ -623,7 +703,7 @@ scene_vector_[9] = save_window_
 {save_window_.view(0, 0, 600000, 1, 16, 524, 300.48, 200.32)}
 graphList[2].append(save_window_)
 save_window_.save_name("graphList[2].")
-save_window_.addexpr("lateral[7].RasGTPi( 0.5 )", 1, 1, 0.8, 0.9, 2)
+save_window_.addexpr("lateral[23].RasGTPi( 0.5 )", 1, 1, 0.8, 0.9, 2)
 }
 {
 save_window_ = new Graph(0)
@@ -632,7 +712,7 @@ scene_vector_[10] = save_window_
 {save_window_.view(0, 0, 600000, 1, 358, 533, 300.48, 200.32)}
 graphList[2].append(save_window_)
 save_window_.save_name("graphList[2].")
-save_window_.addvar("spine[7].RasGTPi( 0.5 )", 1, 1, 0.8, 0.9, 2)
+save_window_.addvar("spine[3].RasGTPi( 0.5 )", 1, 1, 0.8, 0.9, 2)
 }
 objectvar scene_vector_[1]
 {doNotify()}

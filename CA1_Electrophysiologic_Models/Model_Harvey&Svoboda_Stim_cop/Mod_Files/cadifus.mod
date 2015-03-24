@@ -8,7 +8,10 @@ NEURON {
    USEION ca READ cai, ica WRITE cai
    USEION RasGTP READ RasGTPi WRITE RasGTPi VALENCE 1
    USEION RasGDP READ RasGDPi WRITE RasGDPi VALENCE 1
+   USEION Raf READ Rafi WRITE Rafi VALENCE 1
+   USEION RafP READ RafPi WRITE RafPi VALENCE 1
    RANGE  phi, beta, kf_rasGDP
+   :RANGE tempRaf, tempRafP 
 }
 
 UNITS {
@@ -21,10 +24,10 @@ UNITS {
 }
 
 PARAMETER {
-	DRas = 0.65 (um2/ms)
-	:DRas = 1000 (um2/ms)
-   phi 	= 0.25(/ms) :(1/4)
-	:phi	= 13.33 (ms)
+	DRas = 0.65e-3 (um2/ms)
+	DRaf = 6e-3 (um2/ms)
+	DKinases = 1e-3 (um2/ms)
+   	phi 	= 0.25(/ms) :(1/4) phi	= 13.33 (ms)
 	beta = 17.402  
 	ceiling	= 2	(mM)
 	caiBase = 50e-6 (mM)
@@ -40,6 +43,21 @@ PARAMETER {
 	kr_gef =  0.008333333e-3(/ms)
 	kf_rasGDP = 0.1 (/mM-ms) : for spine, 0 for dendrite
 	kr_rasGDP = 0.003703703703703704e-3 (/ms)
+	kcat_raf = 0.07624e-3 (/ms)
+	km_raf = 0.072e-3 (mM)
+	kcat_rafP = 1e-3 (/ms)
+	km_rafP = 0.0167e-3 (mM)
+	kcat_mek = 0.105e-3 (/ms)
+	km_mek = 0.159091e-3 (mM) :the same for the phosphorylation of MekP to MekPP
+	kcat_mekP = 6e-3 (/ms)
+	km_mekP = 15.6566e-3 (mM) :the same for the dephosphorylation of MekPP to MekP
+	kcat_mapk = 0.15e-3 (/ms)
+	km_mapk = 0.0462963e-3 (mM) :the same for the phosphorylation of MapkP to MapkPP
+	kcat_mapkP = 1e-3 (/ms) 
+	km_mapkP = 0.0666667e-3 (mM) :the same for the dephosphorylation of MapkPP to MapkP
+	:k_MM = 0 : for the backward for every Michaelis-Menten equation
+	:tempRaf = 0
+	:tempRafP = 0
 }
 
 ASSIGNED {
@@ -47,6 +65,7 @@ ASSIGNED {
 	L (um)
 	ica (mA/cm2)
 	cai (mM)
+	
 }
 
 STATE {
@@ -61,6 +80,17 @@ STATE {
   Gef_activated  (mM)
   RasGDPi (mM)
   RasGTPi (mM)
+  Rafi (mM)
+  RafPi (mM)
+  RafPhosphatase (mM)
+  Mek (mM)
+  MekP (mM)
+  MekPP (mM)
+  MekPhosphatase (mM)
+  Mapk (mM)
+  MapkP (mM)
+  MapkPP (mM)
+  MapkPhosphatase (mM)
 }
 
 BREAKPOINT { SOLVE state METHOD sparse }
@@ -78,12 +108,36 @@ INITIAL {
 	Gef_activated = 0
 	RasGDPi = 0.0012
 	RasGTPi = 0
+	Rafi = 0.2e-3
+  	RafPi = 0
+  	RafPhosphatase = 0.00375e-3 :new value from VCell simulation 0.0025 or 0.005 can work too
+  								:but the middle is better
+  	Mek = 0.18e-3
+  	MekP = 0 
+ 	MekPP = 0 
+  	MekPhosphatase = 0.112e-3
+  	Mapk = 0.36e-3
+  	MapkP = 0
+  	MapkPP = 0
+  	MapkPhosphatase = 0.001e-3
 	}
+
+:Definitions of the temporary variables for the Michaelis-Mentens rates calculation
+LOCAL tempRaf, tempRafP , tempMek, tempMekP, tempMekPP1, tempMekPP2, tempMapk, tempMapkP, tempMapkPP1, tempMapkPP2
 	
 KINETIC state {
-   	COMPARTMENT PI*(diam/2)^2 {RasGDPi RasGTPi}
-	LONGITUDINAL_DIFFUSION DRas*PI*(diam/2)^2 {RasGDPi}
-	LONGITUDINAL_DIFFUSION DRas*PI*(diam/2)^2 {RasGTPi}
+   	COMPARTMENT PI*diam {RasGDPi RasGTPi}
+   	COMPARTMENT PI*diam*diam {Rafi RafPi Mek MekP MekPP Mapk MapkP MapkPP}
+	LONGITUDINAL_DIFFUSION DRas*diam {RasGDPi} :diffusion surfacique
+	LONGITUDINAL_DIFFUSION DRas*diam {RasGTPi}
+	LONGITUDINAL_DIFFUSION DRaf*diam*diam {Rafi} :diffusion volumique
+	LONGITUDINAL_DIFFUSION DRaf*diam*diam {RafPi}
+	LONGITUDINAL_DIFFUSION DKinases*diam*diam {Mek} :diffusion volumique
+	LONGITUDINAL_DIFFUSION DKinases*diam*diam {MekP}
+	LONGITUDINAL_DIFFUSION DKinases*diam*diam {MekPP}
+	LONGITUDINAL_DIFFUSION DKinases*diam*diam {Mapk} :diffusion volumique
+	LONGITUDINAL_DIFFUSION DKinases*diam*diam {MapkP}
+	LONGITUDINAL_DIFFUSION DKinases*diam*diam {MapkPP}
    ~ ca << ( (- beta * ica)- (phi * (cai - caiBase)) ) 
     cai = ca 
     ca_modif = ca - 0.00045
@@ -94,7 +148,24 @@ KINETIC state {
   ~ Cam_Ca4 + Gef <-> Gef_activated (kf_gef, kr_gef)
   ~ RasGDPi <-> RasGTPi (kf_rasGDP*Gef_activated, kr_rasGDP)
   
-  :~ RasGTP <-> RasGDP (kf_rasGTP, kr_rasGTP)
+  tempRaf = (kcat_raf * RasGTPi)/(Rafi + km_raf)
+  tempRafP = (kcat_rafP * RafPhosphatase)/(RafPi + km_rafP)
+  ~ Rafi <-> RafPi (tempRaf, tempRafP)
   
+  tempMek = (kcat_mek * RafPi)/(Mek + km_mek)
+  tempMekP = (kcat_mek * MekPhosphatase)/(MekP + km_mek)
+  ~ Mek <-> MekP (tempMek, tempMekP)
+  
+  tempMekPP1 = (kcat_mek * RafPi)/(MekP + km_mek)
+  tempMekPP2 = (kcat_mek * MekPhosphatase)/(MekPP + km_mek)
+  ~ MekP <-> MekPP (tempMekPP1, tempMekPP2)
+  
+  tempMapk = (kcat_mapk * MekPP)/(Mapk + km_mapk)
+  tempMapkP = (kcat_mapk * MapkPhosphatase)/(MapkP + km_mapk)
+  ~ Mapk <-> MapkP (tempMapk, tempMapkP)
+  
+  tempMapkPP1 = (kcat_mapk * MekPP)/(MapkP + km_mapk)
+  tempMapkPP2 = (kcat_mapk * MapkPhosphatase)/(MapkPP + km_mapk)
+  ~ MapkP <-> MapkPP (tempMapkPP1, tempMapkPP2)
 
 }

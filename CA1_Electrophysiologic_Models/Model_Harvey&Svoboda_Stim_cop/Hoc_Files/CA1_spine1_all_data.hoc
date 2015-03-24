@@ -28,7 +28,7 @@ load_file("nrngui.hoc")
 	*/
 
 forall delete_section()
-create soma,  basal[4], apical[10], lateral[12], spine[6]
+create soma,  basal[4], apical[10], lateral[30], spine[8]
 
 /*Géométries + Canaux ioniques*/
 
@@ -52,8 +52,6 @@ soma {
  	insert k_ahp_Bh
  	insert k_c_Bh
  	insert k_a_Bh
- 	//var0 = 17.402e6 * area(.5) * 1e-8
- 	//soma.beta_cadifus = ( 17.402e12 * (PI*diam/2*diam/2*L*1e-18) * 1e-6)
  	soma.beta_cadifus = ( 2e-8 / (FARADAY*1e6*soma.diam*1e-18))
  	soma.gna_na_Bh = 0.03
  	soma.gca_ca_debug_Bh = 0.004
@@ -74,8 +72,6 @@ basal[0] {
  	insert ca_debug_Bh
  	insert k_ahp_Bh
  	insert k_c_Bh
- 	//volume3 = PI*diam/2*diam/2*L*1e-18
- 	//var3 = 8.96e-3 * 1e-6
  	basal[0].beta_cadifus = ( 2e-8 / (FARADAY*1e6*basal[0].diam*1e-18))
  	basal[0].gca_ca_debug_Bh = 0.005
  	basal[0].gk_k_ahp_Bh = 0.0008
@@ -92,8 +88,6 @@ basal[1] {
  	insert ca_debug_Bh
  	insert k_ahp_Bh
  	insert k_c_Bh
- 	//volume4 = PI*diam/2*diam/2*L*1e-18
- 	//var4 = (8.96e-3 / volume4) *1e-6 * area(.5) * 1e-8
  	basal[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*basal[1].diam*1e-18))
  	basal[1].gca_ca_debug_Bh = 0.007
  	basal[1].gk_k_ahp_Bh = 0.0008
@@ -112,8 +106,6 @@ basal[2] {
  	insert k_dr_Bh
  	insert k_ahp_Bh
  	insert k_c_Bh
- 	//volume5 = PI*diam/2*diam/2*L*1e-18
- 	//var5 = (8.96e-3 / volume5) *1e-6 * area(.5) * 1e-8
  	basal[2].beta_cadifus = ( 2e-8 / (FARADAY*1e6*basal[2].diam*1e-18))
  	basal[2].gna_na_Bh = 0.02
  	basal[2].gca_ca_debug_Bh = 0.012
@@ -134,8 +126,6 @@ basal[3] {
  	insert k_dr_Bh
  	insert k_ahp_Bh
  	insert k_c_Bh
- 	//var1 = 34.53e6 * area(.5) * 1e-8
-	//basal[3].beta_cadifus = ( 34.53e12 * (PI*diam/2*diam/2*L*1e-18) * 1e-6)
 	basal[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*basal[3].diam*1e-18))
  	basal[3].gna_na_Bh = 0.015
  	basal[3].gca_ca_debug_Bh = 0.008
@@ -256,20 +246,15 @@ apical[8].kf_rasGDP_cadifus = 0
 	
 //lateral compartiments
 
-for i=0,11{
+for i=0,29{
 	lateral[i]{
 		nseg = 1
-	 	//insert cadifus
 		insert ca_debug_Bh
 	 	insert k_ahp_Bh
 	 	insert k_c_Bh
 	 	insert k_dr_Bh
 	 	insert k_a_Bh
 	 	insert nmda_current
-	 	
-	 	//volume7 = PI*diam/2*diam/2*L*1e-18
- 		//var7 = (8.96e-3 / volume7) *1e-6 * area(.5) * 1e-8
-	 	//lateral[i].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[i].diam*1e-18))
 	 	lateral[i].gca_ca_debug_Bh = 0.007
 	 	lateral[i].gk_k_ahp_Bh = 0.0008
  	 	lateral[i].gk_k_c_Bh = 0.005
@@ -285,7 +270,7 @@ for i=0,11{
  		lateral[0].gna_na_Bh = 0.008
  		}
  	
-for i=1,11{
+for i=1,29{
  	lateral[i]{
  		insert na_Bh
  		lateral[i].gna_na_Bh = 0.004
@@ -305,24 +290,44 @@ for i=1,11{
 
 	lateral[5] {L=57 insert cadifus} //dans suplementary data c'est 57 mis ca1.p 56.6
 
-	lateral[6] {L=10 insert cadifus}
-	//lateral[6] {nseg = 10}
+	lateral[6] {L=1 insert cadifus} //lateral[6] devient les 3 suivants
+	lateral[7] {L=1 insert cadifus} 
+	lateral[8] {L=1 insert cadifus} 
 	
-	lateral[7] {L=10 insert cadifus}
-
-	lateral[8] {L=70 insert cadifus}
-
-	lateral[9] {L=30 insert cadifus}
-
-	lateral[10] {L=60 insert cadifus}
-	lateral[11] {L=60 insert cadifus}
+	lateral[9] {L=1 insert cadifus} 
+	lateral[10] {L=1 insert cadifus} // connect to spine [1] new compartments: old lateral[6] split in 3: L=4;3;3
+	lateral[11] {L=1 insert cadifus} //connect to spine [7] new one
+	lateral[12] {L=1 insert cadifus}
+	
+	lateral[13] {L=1 insert cadifus}
+	lateral[14] {L=1 insert cadifus}
+	lateral[15] {L=1 insert cadifus}
+	
+	lateral[16] {L=1 insert cadifus}	
+	lateral[17] {L=1 insert cadifus}
+	lateral[18] {L=1 insert cadifus}
+	lateral[19] {L=1 insert cadifus}
+	lateral[20] {L=1 insert cadifus} // connect to spine [3] former bhalla 2nd spine
+	lateral[21] {L=1 insert cadifus}
+	lateral[22] {L=1 insert cadifus}
+	lateral[23] {L=1 insert cadifus}
+	lateral[24] {L=1 insert cadifus}
+	lateral[25] {L=1 insert cadifus}
+	
+	lateral[26] {L=70 insert cadifus}
+	
+	lateral[27] {L=30 insert cadifus}
+	
+	lateral[28] {L=60 insert cadifus}
+	
+	lateral[29] {L=60 insert cadifus}
 
 	
 	lateral[0] {diam=2}
 	lateral[1] {diam=1.8}
 	lateral[2] {diam=1.5}
 	lateral[3] {diam=1.5}
-for i=4,11{
+for i=4,29{
 	lateral[i] {diam=1}
 	}
 	
@@ -354,7 +359,6 @@ lateral[8].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[8].diam*1e-18))
 	lateral[8].phi_cadifus = 0.075
  	lateral[8].kf_rasGDP_cadifus = 0
 lateral[9].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[9].diam*1e-18))
-//lateral[9].beta_cadifus  = ( 2e-8 / (FARADAY*1e6*lateral[9].diam*1e-18))
 	lateral[9].phi_cadifus = 0.075
  	lateral[9].kf_rasGDP_cadifus = 0
 lateral[10].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[10].diam*1e-18))
@@ -363,23 +367,70 @@ lateral[10].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[10].diam*1e-18))
 lateral[11].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
 	lateral[11].phi_cadifus = 0.075
 	lateral[11].kf_rasGDP_cadifus = 0
+lateral[12].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[12].phi_cadifus = 0.075
+	lateral[12].kf_rasGDP_cadifus = 0
+lateral[13].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[13].phi_cadifus = 0.075
+	lateral[13].kf_rasGDP_cadifus = 0
+lateral[14].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[14].phi_cadifus = 0.075
+	lateral[14].kf_rasGDP_cadifus = 0
+lateral[15].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[15].phi_cadifus = 0.075
+	lateral[15].kf_rasGDP_cadifus = 0
+lateral[16].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[16].phi_cadifus = 0.075
+	lateral[16].kf_rasGDP_cadifus = 0
+lateral[17].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[17].phi_cadifus = 0.075
+	lateral[17].kf_rasGDP_cadifus = 0
+lateral[18].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[18].phi_cadifus = 0.075
+	lateral[18].kf_rasGDP_cadifus = 0
+lateral[19].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[19].phi_cadifus = 0.075
+	lateral[19].kf_rasGDP_cadifus = 0
+lateral[20].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[20].phi_cadifus = 0.075
+	lateral[20].kf_rasGDP_cadifus = 0
+lateral[21].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[21].phi_cadifus = 0.075
+	lateral[21].kf_rasGDP_cadifus = 0
+lateral[22].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[22].phi_cadifus = 0.075
+	lateral[22].kf_rasGDP_cadifus = 0
+lateral[23].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[23].phi_cadifus = 0.075
+	lateral[23].kf_rasGDP_cadifus = 0
+lateral[24].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[24].phi_cadifus = 0.075
+	lateral[24].kf_rasGDP_cadifus = 0
+lateral[25].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[25].phi_cadifus = 0.075
+	lateral[25].kf_rasGDP_cadifus = 0
+lateral[26].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[26].phi_cadifus = 0.075
+	lateral[26].kf_rasGDP_cadifus = 0
+lateral[27].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[27].phi_cadifus = 0.075
+	lateral[27].kf_rasGDP_cadifus = 0
+lateral[28].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[28].phi_cadifus = 0.075
+	lateral[28].kf_rasGDP_cadifus = 0
+lateral[29].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[29].phi_cadifus = 0.075
+	lateral[29].kf_rasGDP_cadifus = 0
 
-	
 	
 // spine
 spine[1]{
 	nseg = 1
 	diam = 0.5
-	//insert nmda_ca_conc_Bh
 	insert ca_debug_Bh
 	insert nmda_current
 	insert nmda_ca_current
-	
-	//volume8 = PI*diam/2*diam/2*L*1e-18
- 	//var8 = (8.96e-3 / volume8) *1e-6 * area(.5) * 1e-8
-	//spine[1].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18))
 	spine[1].gca_ca_debug_Bh = 0.06
-	
 	insert cadifus	
 	}
 spine[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18))
@@ -388,16 +439,10 @@ spine[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18))
 spine[3]{
 	nseg = 1
 	diam = 0.5
-	//insert nmda_ca_conc_Bh
 	insert ca_debug_Bh
 	insert nmda_current
 	insert nmda_ca_current
-	
-	//volume9 = PI*diam/2*diam/2*L*1e-18
- 	//var9 = (8.96e-3 / volume9) *1e-6 * area(.5) * 1e-8
-	//spine[3].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[3].diam*1e-18))
-	spine[3].gca_ca_debug_Bh = 0.06
-	
+	spine[3].gca_ca_debug_Bh = 0.06	
 	 insert cadifus
 	}
 spine[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[3].diam*1e-18))
@@ -406,22 +451,26 @@ spine[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[3].diam*1e-18))
 spine[5]{
 	nseg = 1
 	diam = 0.5
-	//insert nmda_ca_conc_Bh
 	insert ca_debug_Bh
 	insert nmda_current
 	insert nmda_ca_current
-	
-	//volume10 = PI*diam/2*diam/2*L*1e-18
- 	//var10 = (8.96e-3 / volume10) *1e-6 * area(.5) * 1e-8
-	//spine[5].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18))
 	spine[5].gca_ca_debug_Bh = 0.06
-	
-	 insert cadifus
+	insert cadifus
 	}
 spine[5].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18))
 
+spine[7]{
+	nseg = 1
+	diam = 0.5
+	insert ca_debug_Bh
+	insert nmda_current
+	insert nmda_ca_current
+	spine[7].gca_ca_debug_Bh = 0.06
+	insert cadifus
+	}
+spine[7].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18))
 
-for i=0,5{
+for i=0,7{
 	spine[i] {L=0.5}
 	}
 
@@ -439,6 +488,11 @@ spine[2].beta_cadifus = 0
 	insert cadifus
 	}
 spine[4].beta_cadifus = 0
+
+	spine[6] {diam=0.1	 
+	insert cadifus
+	}
+spine[6].beta_cadifus = 0
 
 //////////////////////////////////////////////
 //Connecter les compartiments
@@ -481,15 +535,38 @@ connect lateral[8](0), lateral[7](1)
 connect lateral[9](0), lateral[8](1)
 connect lateral[10](0), lateral[9](1)
 connect lateral[11](0), lateral[10](1)
+connect lateral[12](0), lateral[11](1)
+connect lateral[13](0), lateral[12](1)
+connect lateral[14](0), lateral[13](1)
+connect lateral[15](0), lateral[14](1)
+connect lateral[16](0), lateral[15](1)
+connect lateral[17](0), lateral[16](1)
+connect lateral[18](0), lateral[17](1)
+connect lateral[19](0), lateral[18](1)
+connect lateral[20](0), lateral[19](1)
+connect lateral[21](0), lateral[20](1)
+connect lateral[22](0), lateral[21](1)
+connect lateral[23](0), lateral[22](1)
+connect lateral[24](0), lateral[23](1)
+connect lateral[25](0), lateral[24](1)
+connect lateral[26](0), lateral[25](1)
+connect lateral[27](0), lateral[26](1)
+connect lateral[28](0), lateral[27](1)
+connect lateral[29](0), lateral[28](1)
 
 //spine connection
-connect spine[0](0), lateral[6](0.5)
+
+//new spine
+connect spine[6](0), lateral[11](0.5)
+connect spine[7](0), spine[6](1)
+
+connect spine[0](0), lateral[10](0.5)
 connect spine[1](0), spine[0](1)
 
-connect spine[2](0), lateral[7](0.5)
+connect spine[2](0), lateral[20](0.5)
 connect spine[3](0), spine[2](1)
 
-connect spine[4](0), lateral[9](0.5)
+connect spine[4](0), lateral[18](0.5)
 connect spine[5](0), spine[4](1)
 
 
@@ -527,7 +604,7 @@ for i=5,5{
 	
 //Variables pour l'affichage de graphe et de la fenêtre principale d'initialisation
 objectvar save_window_, rvp_
-objectvar scene_vector_[10]
+objectvar scene_vector_[11]
 objectvar ocbox_, ocbox_list_, scene_, scene_list_
 {ocbox_list_ = new List()  scene_list_ = new List()}
 {pwman_place(0,0,0)}
@@ -542,7 +619,7 @@ xvalue("Continue til","runStopAt", 1,"{continuerun(runStopAt) stoprun=1}", 1, 1 
 runStopIn = 1
 xvalue("Continue for","runStopIn", 1,"{continuerun(t + runStopIn) stoprun=1}", 1, 1 )
 xbutton("Single Step","steprun()")
-t = 1264.78
+t = 0
 xvalue("t","t", 2 )
 tstop = 600000
 xvalue("Tstop","tstop", 1,"tstop_changed()", 0, 1 )
@@ -552,9 +629,9 @@ steps_per_ms = 40
 xvalue("Points plotted/ms","steps_per_ms", 1,"setdt()", 0, 1 )
 screen_update_invl = 0.5
 xvalue("Scrn update invl","screen_update_invl", 1,"", 0, 1 )
-realtime = 6.01
+realtime = 0
 xvalue("Real Time","realtime", 0,"", 0, 1 )
-xpanel(9,77)
+xpanel(10,101)
 }
 {
 save_window_ = new Graph(0)
@@ -563,7 +640,7 @@ scene_vector_[2] = save_window_
 {save_window_.view(0, -80, 600000, 120, 373, 0, 300.48, 200.32)}
 graphList[0].append(save_window_)
 save_window_.save_name("graphList[0].")
-save_window_.addvar("spine[1].v( 0.5 )", 2, 1, 0.8, 0.9, 2)
+save_window_.addvar("spine[1].RasGTPi( 0.5 )", 2, 1, 0.8, 0.9, 2)
 }
 {
 save_window_ = new Graph(0)
@@ -572,52 +649,43 @@ scene_vector_[3] = save_window_
 {save_window_.view(0, -80, 600000, 120, 697, 0, 300.48, 200.32)}
 graphList[1].append(save_window_)
 save_window_.save_name("graphList[1].")
-save_window_.addvar("spine[1].cai( 0.5 )", 2, 1, 0.8, 0.9, 2)
+save_window_.addvar("spine[1].RafPi( 0.5 )", 3, 1, 0.8, 0.9, 2)
+}
+{
+save_window_ = new Graph(0)
+save_window_.size(0,600000,0,1)
+scene_vector_[4] = save_window_
+{save_window_.view(0, 0, 600000, 1, 1018, 1, 300.48, 200.32)}
+graphList[2].append(save_window_)
+save_window_.save_name("graphList[2].")
+save_window_.addvar("spine[1].MekP_cadifus( 0.5 )", 4, 1, 0.8, 0.9, 2)
 }
 {
 save_window_ = new Graph(0)
 save_window_.size(0,600000,0,1)
 scene_vector_[5] = save_window_
-{save_window_.view(0, 0, 600000, 1, 1018, 1, 300.48, 200.32)}
+{save_window_.view(0, 0, 600000, 1, 373, 267, 300.48, 200.32)}
 graphList[2].append(save_window_)
 save_window_.save_name("graphList[2].")
-save_window_.addvar("spine[1].RasGTPi( 0.5 )", 2, 1, 0.8, 0.9, 2)
+save_window_.addvar("spine[1].MekPP_cadifus( 0.5 )", 5, 1, 0.8, 0.9, 2)
 }
 {
 save_window_ = new Graph(0)
 save_window_.size(0,600000,0,1)
 scene_vector_[6] = save_window_
-{save_window_.view(0, 0, 600000, 1, 373, 267, 300.48, 200.32)}
-graphList[2].append(save_window_)
-save_window_.save_name("graphList[2].")
-save_window_.addvar("spine[0].cai( 0.5 )", 3, 1, 0.8, 0.9, 2)
-}
-{
-save_window_ = new Graph(0)
-save_window_.size(0,600000,0,1)
-scene_vector_[7] = save_window_
 {save_window_.view(0, 0, 600000, 1, 701, 267, 300.48, 200.32)}
 graphList[2].append(save_window_)
 save_window_.save_name("graphList[2].")
-save_window_.addvar("spine[0].RasGTPi( 0.5 )", 3, 1, 0.8, 0.9, 2)
+save_window_.addvar("spine[1].MapkP_cadifus( 0.5 )", 6, 1, 0.8, 0.9, 2)
 }
 {
 save_window_ = new Graph(0)
 save_window_.size(0,600000,0,1)
 scene_vector_[8] = save_window_
-{save_window_.view(0, 0, 600000, 1, 682, 530, 300.48, 200.32)}
-graphList[2].append(save_window_)
-save_window_.save_name("graphList[2].")
-save_window_.addvar("lateral[6].RasGTPi( 0.5 )", 4, 1, 0.8, 0.9, 2)
-}
-{
-save_window_ = new Graph(0)
-save_window_.size(0,600000,0,1)
-scene_vector_[9] = save_window_
 {save_window_.view(0, 0, 600000, 1, 1027, 270, 300.48, 200.32)}
 graphList[2].append(save_window_)
 save_window_.save_name("graphList[2].")
-save_window_.addvar("lateral[6].cai( 0.5 )", 4, 1, 0.8, 0.9, 2)
+save_window_.addvar("spine[1].MapkPP_cadifus( 0.5 )", 7, 1, 0.8, 0.9, 2)
 }
 objectvar scene_vector_[1]
 {doNotify()}
