@@ -24,9 +24,9 @@ UNITS {
 }
 
 PARAMETER {
-	DRas = 0.65e-3 (um2/ms)
-	DRaf = 6e-3 (um2/ms)
-	DKinases = 1e-3 (um2/ms)
+	DRas = 0.65e-3 (um2/ms) :old values 0.65e-3 25% of reduction 1st, then 50% then 75%
+	DRaf = 6e-3 (um2/ms) :old values 6e-3
+	DKinases = 1e-3 (um2/ms) :old values 1e-3
    	phi 	= 0.25(/ms) :(1/4) phi	= 13.33 (ms)
 	beta = 17.402  
 	ceiling	= 2	(mM)
@@ -127,17 +127,17 @@ LOCAL tempRaf, tempRafP , tempMek, tempMekP, tempMekPP1, tempMekPP2, tempMapk, t
 	
 KINETIC state {
    	COMPARTMENT PI*diam {RasGDPi RasGTPi}
-   	COMPARTMENT PI*diam*diam {Rafi RafPi Mek MekP MekPP Mapk MapkP MapkPP}
+   	COMPARTMENT PI*diam*diam/4 {Rafi RafPi Mek MekP MekPP Mapk MapkP MapkPP}
 	LONGITUDINAL_DIFFUSION DRas*diam {RasGDPi} :diffusion surfacique
 	LONGITUDINAL_DIFFUSION DRas*diam {RasGTPi}
-	LONGITUDINAL_DIFFUSION DRaf*diam*diam {Rafi} :diffusion volumique
-	LONGITUDINAL_DIFFUSION DRaf*diam*diam {RafPi}
-	LONGITUDINAL_DIFFUSION DKinases*diam*diam {Mek} :diffusion volumique
-	LONGITUDINAL_DIFFUSION DKinases*diam*diam {MekP}
-	LONGITUDINAL_DIFFUSION DKinases*diam*diam {MekPP}
-	LONGITUDINAL_DIFFUSION DKinases*diam*diam {Mapk} :diffusion volumique
-	LONGITUDINAL_DIFFUSION DKinases*diam*diam {MapkP}
-	LONGITUDINAL_DIFFUSION DKinases*diam*diam {MapkPP}
+	LONGITUDINAL_DIFFUSION DRaf*PI*diam*diam/4 {Rafi} :diffusion volumique
+	LONGITUDINAL_DIFFUSION DRaf*PI*diam*diam/4 {RafPi}
+	LONGITUDINAL_DIFFUSION DKinases*PI*diam*diam/4 {Mek} :diffusion volumique
+	LONGITUDINAL_DIFFUSION DKinases*PI*diam*diam/4 {MekP}
+	LONGITUDINAL_DIFFUSION DKinases*PI*diam*diam/4 {MekPP}
+	LONGITUDINAL_DIFFUSION DKinases*PI*diam*diam/4 {Mapk} :diffusion volumique
+	LONGITUDINAL_DIFFUSION DKinases*PI*diam*diam/4 {MapkP}
+	LONGITUDINAL_DIFFUSION DKinases*PI*diam*diam/4 {MapkPP}
    ~ ca << ( (- beta * ica)- (phi * (cai - caiBase)) ) 
     cai = ca 
     ca_modif = ca - 0.00045

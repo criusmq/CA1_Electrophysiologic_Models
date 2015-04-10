@@ -12,6 +12,7 @@ extern void _diffusion_reg(void);
 extern void _k_a_debug_Bh_reg(void);
 extern void _k_c_debug_Bh_reg(void);
 extern void _kdr_debug_reg(void);
+extern void _kv4_2_reg(void);
 extern void _na_debug_reg(void);
 extern void _netstims_reg(void);
 extern void _nmda_ca_conc_debug_reg(void);
@@ -33,6 +34,7 @@ void modl_reg(){
     fprintf(stderr," k_a_debug_Bh.mod");
     fprintf(stderr," k_c_debug_Bh.mod");
     fprintf(stderr," kdr_debug.mod");
+    fprintf(stderr," kv4_2.mod");
     fprintf(stderr," na_debug.mod");
     fprintf(stderr," netstims.mod");
     fprintf(stderr," nmda_ca_conc_debug.mod");
@@ -51,6 +53,7 @@ void modl_reg(){
   _k_a_debug_Bh_reg();
   _k_c_debug_Bh_reg();
   _kdr_debug_reg();
+  _kv4_2_reg();
   _na_debug_reg();
   _netstims_reg();
   _nmda_ca_conc_debug_reg();

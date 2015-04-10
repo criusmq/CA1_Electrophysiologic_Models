@@ -48,24 +48,46 @@ extern double hoc_Exp(double);
 #define Cam_Ca4 _p[9]
 #define Gef _p[10]
 #define Gef_activated _p[11]
-#define L _p[12]
-#define ica _p[13]
-#define cai _p[14]
-#define Dca _p[15]
-#define Dca_modif _p[16]
-#define DCam _p[17]
-#define DCam_Ca _p[18]
-#define DCam_Ca2 _p[19]
-#define DCam_Ca3 _p[20]
-#define DCam_Ca4 _p[21]
-#define DGef _p[22]
-#define DGef_activated _p[23]
-#define RasGDPi _p[24]
-#define DRasGDPi _p[25]
-#define RasGTPi _p[26]
-#define DRasGTPi _p[27]
-#define v _p[28]
-#define _g _p[29]
+#define RafPhosphatase _p[12]
+#define Mek _p[13]
+#define MekP _p[14]
+#define MekPP _p[15]
+#define MekPhosphatase _p[16]
+#define Mapk _p[17]
+#define MapkP _p[18]
+#define MapkPP _p[19]
+#define MapkPhosphatase _p[20]
+#define L _p[21]
+#define ica _p[22]
+#define cai _p[23]
+#define Dca _p[24]
+#define Dca_modif _p[25]
+#define DCam _p[26]
+#define DCam_Ca _p[27]
+#define DCam_Ca2 _p[28]
+#define DCam_Ca3 _p[29]
+#define DCam_Ca4 _p[30]
+#define DGef _p[31]
+#define DGef_activated _p[32]
+#define RasGDPi _p[33]
+#define DRasGDPi _p[34]
+#define RasGTPi _p[35]
+#define DRasGTPi _p[36]
+#define Rafi _p[37]
+#define DRafi _p[38]
+#define RafPi _p[39]
+#define DRafPi _p[40]
+#define DRafPhosphatase _p[41]
+#define DMek _p[42]
+#define DMekP _p[43]
+#define DMekPP _p[44]
+#define DMekPhosphatase _p[45]
+#define DMapk _p[46]
+#define DMapkP _p[47]
+#define DMapkPP _p[48]
+#define DMapkPhosphatase _p[49]
+#define v _p[50]
+#define _g _p[51]
 #define _ion_cai	*_ppvar[0]._pval
 #define _ion_ica	*_ppvar[1]._pval
 #define _style_ca	*((int*)_ppvar[2]._pvoid)
@@ -76,7 +98,13 @@ extern double hoc_Exp(double);
 #define _ion_RasGDPi	*_ppvar[7]._pval
 #define _style_RasGDP	*((int*)_ppvar[8]._pvoid)
 #define _ion_diRasGDPdv	*_ppvar[9]._pval
-#define diam	*_ppvar[10]._pval
+#define _ion_Rafi	*_ppvar[10]._pval
+#define _style_Raf	*((int*)_ppvar[11]._pvoid)
+#define _ion_diRafdv	*_ppvar[12]._pval
+#define _ion_RafPi	*_ppvar[13]._pval
+#define _style_RafP	*((int*)_ppvar[14]._pvoid)
+#define _ion_diRafPdv	*_ppvar[15]._pval
+#define diam	*_ppvar[16]._pval
  
 #if MAC
 #if !defined(v)
@@ -117,13 +145,51 @@ extern Memb_func* memb_func;
  "setdata_cadifus", _hoc_setdata,
  0, 0
 };
+ #define _ztempRaf _thread[2]._pval[0]
+ #define _ztempRafP _thread[2]._pval[1]
+ #define _ztempMek _thread[2]._pval[2]
+ #define _ztempMekP _thread[2]._pval[3]
+ #define _ztempMekPP1 _thread[2]._pval[4]
+ #define _ztempMekPP2 _thread[2]._pval[5]
+ #define _ztempMapk _thread[2]._pval[6]
+ #define _ztempMapkP _thread[2]._pval[7]
+ #define _ztempMapkPP1 _thread[2]._pval[8]
+ #define _ztempMapkPP2 _thread[2]._pval[9]
  /* declare global and static user variables */
+#define DKinases DKinases_cadifus
+ double DKinases = 0.001;
+#define DRaf DRaf_cadifus
+ double DRaf = 0.006;
 #define DRas DRas_cadifus
- double DRas = 0.65;
+ double DRas = 0.00065;
 #define caiBase caiBase_cadifus
  double caiBase = 5e-05;
 #define ceiling ceiling_cadifus
  double ceiling = 2;
+#define km_mapkP km_mapkP_cadifus
+ double km_mapkP = 6.66667e-05;
+#define kcat_mapkP kcat_mapkP_cadifus
+ double kcat_mapkP = 0.001;
+#define km_mapk km_mapk_cadifus
+ double km_mapk = 4.62963e-05;
+#define kcat_mapk kcat_mapk_cadifus
+ double kcat_mapk = 0.00015;
+#define km_mekP km_mekP_cadifus
+ double km_mekP = 0.0156566;
+#define kcat_mekP kcat_mekP_cadifus
+ double kcat_mekP = 0.006;
+#define km_mek km_mek_cadifus
+ double km_mek = 0.000159091;
+#define kcat_mek kcat_mek_cadifus
+ double kcat_mek = 0.000105;
+#define km_rafP km_rafP_cadifus
+ double km_rafP = 1.67e-05;
+#define kcat_rafP kcat_rafP_cadifus
+ double kcat_rafP = 0.001;
+#define km_raf km_raf_cadifus
+ double km_raf = 7.2e-05;
+#define kcat_raf kcat_raf_cadifus
+ double kcat_raf = 7.624e-05;
 #define kr_rasGDP kr_rasGDP_cadifus
  double kr_rasGDP = 3.7037e-06;
 #define kr_gef kr_gef_cadifus
@@ -152,6 +218,8 @@ extern Memb_func* memb_func;
 };
  static HocParmUnits _hoc_parm_units[] = {
  "DRas_cadifus", "um2/ms",
+ "DRaf_cadifus", "um2/ms",
+ "DKinases_cadifus", "um2/ms",
  "ceiling_cadifus", "mM",
  "caiBase_cadifus", "mM",
  "kf_cam1_cadifus", "/mM-ms",
@@ -165,6 +233,18 @@ extern Memb_func* memb_func;
  "kf_gef_cadifus", "/mM-ms",
  "kr_gef_cadifus", "/ms",
  "kr_rasGDP_cadifus", "/ms",
+ "kcat_raf_cadifus", "/ms",
+ "km_raf_cadifus", "mM",
+ "kcat_rafP_cadifus", "/ms",
+ "km_rafP_cadifus", "mM",
+ "kcat_mek_cadifus", "/ms",
+ "km_mek_cadifus", "mM",
+ "kcat_mekP_cadifus", "/ms",
+ "km_mekP_cadifus", "mM",
+ "kcat_mapk_cadifus", "/ms",
+ "km_mapk_cadifus", "mM",
+ "kcat_mapkP_cadifus", "/ms",
+ "km_mapkP_cadifus", "mM",
  "phi_cadifus", "/ms",
  "kf_rasGDP_cadifus", "/mM-ms",
  "ca_cadifus", "mM",
@@ -176,6 +256,15 @@ extern Memb_func* memb_func;
  "Cam_Ca4_cadifus", "mM",
  "Gef_cadifus", "mM",
  "Gef_activated_cadifus", "mM",
+ "RafPhosphatase_cadifus", "mM",
+ "Mek_cadifus", "mM",
+ "MekP_cadifus", "mM",
+ "MekPP_cadifus", "mM",
+ "MekPhosphatase_cadifus", "mM",
+ "Mapk_cadifus", "mM",
+ "MapkP_cadifus", "mM",
+ "MapkPP_cadifus", "mM",
+ "MapkPhosphatase_cadifus", "mM",
  0,0
 };
  static double Cam_Ca40 = 0;
@@ -185,6 +274,17 @@ extern Memb_func* memb_func;
  static double Cam0 = 0;
  static double Gef_activated0 = 0;
  static double Gef0 = 0;
+ static double MapkPhosphatase0 = 0;
+ static double MapkPP0 = 0;
+ static double MapkP0 = 0;
+ static double Mapk0 = 0;
+ static double MekPhosphatase0 = 0;
+ static double MekPP0 = 0;
+ static double MekP0 = 0;
+ static double Mek0 = 0;
+ static double RafPhosphatase0 = 0;
+ static double RafPi0 = 0;
+ static double Rafi0 = 0;
  static double RasGTPi0 = 0;
  static double RasGDPi0 = 0;
  static double ca_modif0 = 0;
@@ -193,6 +293,8 @@ extern Memb_func* memb_func;
  /* connect global user variables to hoc */
  static DoubScal hoc_scdoub[] = {
  "DRas_cadifus", &DRas_cadifus,
+ "DRaf_cadifus", &DRaf_cadifus,
+ "DKinases_cadifus", &DKinases_cadifus,
  "ceiling_cadifus", &ceiling_cadifus,
  "caiBase_cadifus", &caiBase_cadifus,
  "kf_cam1_cadifus", &kf_cam1_cadifus,
@@ -206,6 +308,18 @@ extern Memb_func* memb_func;
  "kf_gef_cadifus", &kf_gef_cadifus,
  "kr_gef_cadifus", &kr_gef_cadifus,
  "kr_rasGDP_cadifus", &kr_rasGDP_cadifus,
+ "kcat_raf_cadifus", &kcat_raf_cadifus,
+ "km_raf_cadifus", &km_raf_cadifus,
+ "kcat_rafP_cadifus", &kcat_rafP_cadifus,
+ "km_rafP_cadifus", &km_rafP_cadifus,
+ "kcat_mek_cadifus", &kcat_mek_cadifus,
+ "km_mek_cadifus", &km_mek_cadifus,
+ "kcat_mekP_cadifus", &kcat_mekP_cadifus,
+ "km_mekP_cadifus", &km_mekP_cadifus,
+ "kcat_mapk_cadifus", &kcat_mapk_cadifus,
+ "km_mapk_cadifus", &km_mapk_cadifus,
+ "kcat_mapkP_cadifus", &kcat_mapkP_cadifus,
+ "km_mapkP_cadifus", &km_mapkP_cadifus,
  0,0
 };
  static DoubVec hoc_vdoub[] = {
@@ -223,7 +337,7 @@ static void _ode_map(int, double**, double**, double*, Datum*, double*, int);
 static void _ode_spec(_NrnThread*, _Memb_list*, int);
 static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  
-#define _cvode_ieq _ppvar[11]._i
+#define _cvode_ieq _ppvar[17]._i
  static void _ode_synonym(int, double**, Datum**);
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
@@ -243,6 +357,15 @@ static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  "Cam_Ca4_cadifus",
  "Gef_cadifus",
  "Gef_activated_cadifus",
+ "RafPhosphatase_cadifus",
+ "Mek_cadifus",
+ "MekP_cadifus",
+ "MekPP_cadifus",
+ "MekPhosphatase_cadifus",
+ "Mapk_cadifus",
+ "MapkP_cadifus",
+ "MapkPP_cadifus",
+ "MapkPhosphatase_cadifus",
  0,
  0};
  static Symbol* _morphology_sym;
@@ -252,24 +375,28 @@ static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  static int _type_iRasGTP;
  static Symbol* _RasGDP_sym;
  static int _type_iRasGDP;
+ static Symbol* _Raf_sym;
+ static int _type_iRaf;
+ static Symbol* _RafP_sym;
+ static int _type_iRafP;
  
 extern Prop* need_memb(Symbol*);
 
 static void nrn_alloc(Prop* _prop) {
 	Prop *prop_ion;
 	double *_p; Datum *_ppvar;
- 	_p = nrn_prop_data_alloc(_mechtype, 30, _prop);
+ 	_p = nrn_prop_data_alloc(_mechtype, 52, _prop);
  	/*initialize range parameters*/
  	phi = 0.25;
  	beta = 17.402;
  	kf_rasGDP = 0.1;
  	_prop->param = _p;
- 	_prop->param_size = 30;
- 	_ppvar = nrn_prop_datum_alloc(_mechtype, 12, _prop);
+ 	_prop->param_size = 52;
+ 	_ppvar = nrn_prop_datum_alloc(_mechtype, 18, _prop);
  	_prop->dparam = _ppvar;
  	/*connect ionic variables to this model*/
  prop_ion = need_memb(_morphology_sym);
- 	_ppvar[10]._pval = &prop_ion->param[0]; /* diam */
+ 	_ppvar[16]._pval = &prop_ion->param[0]; /* diam */
  prop_ion = need_memb(_ca_sym);
   _type_ica = prop_ion->_type;
  nrn_check_conc_write(_prop, prop_ion, 1);
@@ -292,6 +419,20 @@ static void nrn_alloc(Prop* _prop) {
  	_ppvar[7]._pval = &prop_ion->param[1]; /* RasGDPi */
  	_ppvar[8]._pvoid = (void*)(&(prop_ion->dparam[0]._i)); /* iontype for RasGDP */
  	_ppvar[9]._pval = &prop_ion->param[4]; /* _ion_diRasGDPdv */
+ prop_ion = need_memb(_Raf_sym);
+  _type_iRaf = prop_ion->_type;
+ nrn_check_conc_write(_prop, prop_ion, 1);
+ nrn_promote(prop_ion, 3, 0);
+ 	_ppvar[10]._pval = &prop_ion->param[1]; /* Rafi */
+ 	_ppvar[11]._pvoid = (void*)(&(prop_ion->dparam[0]._i)); /* iontype for Raf */
+ 	_ppvar[12]._pval = &prop_ion->param[4]; /* _ion_diRafdv */
+ prop_ion = need_memb(_RafP_sym);
+  _type_iRafP = prop_ion->_type;
+ nrn_check_conc_write(_prop, prop_ion, 1);
+ nrn_promote(prop_ion, 3, 0);
+ 	_ppvar[13]._pval = &prop_ion->param[1]; /* RafPi */
+ 	_ppvar[14]._pvoid = (void*)(&(prop_ion->dparam[0]._i)); /* iontype for RafP */
+ 	_ppvar[15]._pval = &prop_ion->param[4]; /* _ion_diRafPdv */
  
 }
  static void _initlists();
@@ -301,6 +442,7 @@ static void nrn_alloc(Prop* _prop) {
  "ca_cadifus", 1e-10,
  0,0
 };
+ static void _thread_mem_init(Datum*);
  static void _thread_cleanup(Datum*);
  static void _update_ion_pointer(Datum*);
  extern Symbol* hoc_lookup(const char*);
@@ -315,17 +457,23 @@ extern void _cvode_abstol( Symbol**, double*, int);
  	ion_reg("ca", -10000.);
  	ion_reg("RasGTP", 1.0);
  	ion_reg("RasGDP", 1.0);
+ 	ion_reg("Raf", 1.0);
+ 	ion_reg("RafP", 1.0);
  	_morphology_sym = hoc_lookup("morphology");
  	_ca_sym = hoc_lookup("ca_ion");
  	_RasGTP_sym = hoc_lookup("RasGTP_ion");
  	_RasGDP_sym = hoc_lookup("RasGDP_ion");
- 	register_mech(_mechanism, nrn_alloc,nrn_cur, nrn_jacob, nrn_state, nrn_init, hoc_nrnpointerindex, 3);
-  _extcall_thread = (Datum*)ecalloc(2, sizeof(Datum));
+ 	_Raf_sym = hoc_lookup("Raf_ion");
+ 	_RafP_sym = hoc_lookup("RafP_ion");
+ 	register_mech(_mechanism, nrn_alloc,nrn_cur, nrn_jacob, nrn_state, nrn_init, hoc_nrnpointerindex, 4);
+  _extcall_thread = (Datum*)ecalloc(3, sizeof(Datum));
+  _thread_mem_init(_extcall_thread);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
+     _nrn_thread_reg(_mechtype, 1, _thread_mem_init);
      _nrn_thread_reg(_mechtype, 0, _thread_cleanup);
      _nrn_thread_reg(_mechtype, 2, _update_ion_pointer);
-  hoc_register_dparam_size(_mechtype, 12);
+  hoc_register_dparam_size(_mechtype, 18);
  	nrn_writes_conc(_mechtype, 0);
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
@@ -338,6 +486,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  }
  static double FARADAY = 9.64853;
  static double PI = 3.14159;
+ /*Top LOCAL _ztempRaf , _ztempRafP , _ztempMek , _ztempMekP , _ztempMekPP1 , _ztempMekPP2 , _ztempMapk , _ztempMapkP , _ztempMapkPP1 , _ztempMapkPP2 */
 static int _reset;
 static char *modelname = "";
 
@@ -357,7 +506,7 @@ static void _modl_cleanup(){ _match_recurse=1;}
  
 static int _ode_spec1(_threadargsproto_);
 /*static int _ode_matsol1(_threadargsproto_);*/
- static int _slist1[11], _dlist1[11]; static double *_temp1;
+ static int _slist1[19], _dlist1[19]; static double *_temp1;
  static int state();
  
 static int state (void* _so, double* _rhs, double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt)
@@ -365,27 +514,70 @@ static int state (void* _so, double* _rhs, double* _p, Datum* _ppvar, Datum* _th
  {
    double b_flux, f_flux, _term; int _i;
  {int _i; double _dt1 = 1.0/dt;
-for(_i=0;_i<11;_i++){
+for(_i=0;_i<19;_i++){
   	_RHS1(_i) = -_dt1*(_p[_slist1[_i]] - _p[_dlist1[_i]]);
 	_MATELM1(_i, _i) = _dt1;
       
 }  
-_RHS1(7) *= ( PI * pow( ( diam / 2.0 ) , 2.0 )) ;
-_MATELM1(7, 7) *= ( PI * pow( ( diam / 2.0 ) , 2.0 )); 
-_RHS1(8) *= ( PI * pow( ( diam / 2.0 ) , 2.0 )) ;
-_MATELM1(8, 8) *= ( PI * pow( ( diam / 2.0 ) , 2.0 ));  }
- /* COMPARTMENT PI * pow( ( diam / 2.0 ) , 2.0 ) {
+_RHS1(7) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(7, 7) *= ( PI * diam * diam / 4.0); 
+_RHS1(8) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(8, 8) *= ( PI * diam * diam / 4.0); 
+_RHS1(9) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(9, 9) *= ( PI * diam * diam / 4.0); 
+_RHS1(10) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(10, 10) *= ( PI * diam * diam / 4.0); 
+_RHS1(11) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(11, 11) *= ( PI * diam * diam / 4.0); 
+_RHS1(12) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(12, 12) *= ( PI * diam * diam / 4.0); 
+_RHS1(13) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(13, 13) *= ( PI * diam * diam / 4.0); 
+_RHS1(14) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(14, 14) *= ( PI * diam * diam / 4.0); 
+_RHS1(15) *= ( PI * diam) ;
+_MATELM1(15, 15) *= ( PI * diam); 
+_RHS1(16) *= ( PI * diam) ;
+_MATELM1(16, 16) *= ( PI * diam);  }
+ /* COMPARTMENT PI * diam {
      RasGDPi RasGTPi }
    */
- /* LONGITUDINAL_DIFFUSION DRas * PI * pow( ( diam / 2.0 ) , 2.0 ) {
+ /* COMPARTMENT PI * diam * diam / 4.0 {
+     Rafi RafPi Mek MekP MekPP Mapk MapkP MapkPP }
+   */
+ /* LONGITUDINAL_DIFFUSION DRas * diam {
      RasGDPi }
    */
- /* LONGITUDINAL_DIFFUSION DRas * PI * pow( ( diam / 2.0 ) , 2.0 ) {
+ /* LONGITUDINAL_DIFFUSION DRas * diam {
      RasGTPi }
+   */
+ /* LONGITUDINAL_DIFFUSION DRaf * PI * diam * diam / 4.0 {
+     Rafi }
+   */
+ /* LONGITUDINAL_DIFFUSION DRaf * PI * diam * diam / 4.0 {
+     RafPi }
+   */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+     Mek }
+   */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+     MekP }
+   */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+     MekPP }
+   */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+     Mapk }
+   */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+     MapkP }
+   */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+     MapkPP }
    */
  /* ~ ca < < ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) )*/
  f_flux = b_flux = 0.;
- _RHS1( 10) += (b_flux =   ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) ) );
+ _RHS1( 18) += (b_flux =   ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) ) );
  /*FLUX*/
   cai = ca ;
    ca_modif = ca - 0.00045 ;
@@ -393,80 +585,80 @@ _MATELM1(8, 8) *= ( PI * pow( ( diam / 2.0 ) , 2.0 ));  }
  f_flux =  kf_cam1 * Cam * ca_modif ;
  b_flux =  kr_cam1 * Cam_Ca ;
  _RHS1( 4) -= (f_flux - b_flux);
- _RHS1( 9) -= (f_flux - b_flux);
+ _RHS1( 17) -= (f_flux - b_flux);
  _RHS1( 3) += (f_flux - b_flux);
  
  _term =  kf_cam1 * ca_modif ;
  _MATELM1( 4 ,4)  += _term;
- _MATELM1( 9 ,4)  += _term;
+ _MATELM1( 17 ,4)  += _term;
  _MATELM1( 3 ,4)  -= _term;
  _term =  kf_cam1 * Cam ;
- _MATELM1( 4 ,9)  += _term;
- _MATELM1( 9 ,9)  += _term;
- _MATELM1( 3 ,9)  -= _term;
+ _MATELM1( 4 ,17)  += _term;
+ _MATELM1( 17 ,17)  += _term;
+ _MATELM1( 3 ,17)  -= _term;
  _term =  kr_cam1 ;
  _MATELM1( 4 ,3)  -= _term;
- _MATELM1( 9 ,3)  -= _term;
+ _MATELM1( 17 ,3)  -= _term;
  _MATELM1( 3 ,3)  += _term;
  /*REACTION*/
   /* ~ ca_modif + Cam_Ca <-> Cam_Ca2 ( kf_cam2 , kr_cam2 )*/
  f_flux =  kf_cam2 * Cam_Ca * ca_modif ;
  b_flux =  kr_cam2 * Cam_Ca2 ;
  _RHS1( 3) -= (f_flux - b_flux);
- _RHS1( 9) -= (f_flux - b_flux);
+ _RHS1( 17) -= (f_flux - b_flux);
  _RHS1( 2) += (f_flux - b_flux);
  
  _term =  kf_cam2 * ca_modif ;
  _MATELM1( 3 ,3)  += _term;
- _MATELM1( 9 ,3)  += _term;
+ _MATELM1( 17 ,3)  += _term;
  _MATELM1( 2 ,3)  -= _term;
  _term =  kf_cam2 * Cam_Ca ;
- _MATELM1( 3 ,9)  += _term;
- _MATELM1( 9 ,9)  += _term;
- _MATELM1( 2 ,9)  -= _term;
+ _MATELM1( 3 ,17)  += _term;
+ _MATELM1( 17 ,17)  += _term;
+ _MATELM1( 2 ,17)  -= _term;
  _term =  kr_cam2 ;
  _MATELM1( 3 ,2)  -= _term;
- _MATELM1( 9 ,2)  -= _term;
+ _MATELM1( 17 ,2)  -= _term;
  _MATELM1( 2 ,2)  += _term;
  /*REACTION*/
   /* ~ ca_modif + Cam_Ca2 <-> Cam_Ca3 ( kf_cam3 , kr_cam3 )*/
  f_flux =  kf_cam3 * Cam_Ca2 * ca_modif ;
  b_flux =  kr_cam3 * Cam_Ca3 ;
  _RHS1( 2) -= (f_flux - b_flux);
- _RHS1( 9) -= (f_flux - b_flux);
+ _RHS1( 17) -= (f_flux - b_flux);
  _RHS1( 1) += (f_flux - b_flux);
  
  _term =  kf_cam3 * ca_modif ;
  _MATELM1( 2 ,2)  += _term;
- _MATELM1( 9 ,2)  += _term;
+ _MATELM1( 17 ,2)  += _term;
  _MATELM1( 1 ,2)  -= _term;
  _term =  kf_cam3 * Cam_Ca2 ;
- _MATELM1( 2 ,9)  += _term;
- _MATELM1( 9 ,9)  += _term;
- _MATELM1( 1 ,9)  -= _term;
+ _MATELM1( 2 ,17)  += _term;
+ _MATELM1( 17 ,17)  += _term;
+ _MATELM1( 1 ,17)  -= _term;
  _term =  kr_cam3 ;
  _MATELM1( 2 ,1)  -= _term;
- _MATELM1( 9 ,1)  -= _term;
+ _MATELM1( 17 ,1)  -= _term;
  _MATELM1( 1 ,1)  += _term;
  /*REACTION*/
   /* ~ ca_modif + Cam_Ca3 <-> Cam_Ca4 ( kf_cam4 , kr_cam4 )*/
  f_flux =  kf_cam4 * Cam_Ca3 * ca_modif ;
  b_flux =  kr_cam4 * Cam_Ca4 ;
  _RHS1( 1) -= (f_flux - b_flux);
- _RHS1( 9) -= (f_flux - b_flux);
+ _RHS1( 17) -= (f_flux - b_flux);
  _RHS1( 0) += (f_flux - b_flux);
  
  _term =  kf_cam4 * ca_modif ;
  _MATELM1( 1 ,1)  += _term;
- _MATELM1( 9 ,1)  += _term;
+ _MATELM1( 17 ,1)  += _term;
  _MATELM1( 0 ,1)  -= _term;
  _term =  kf_cam4 * Cam_Ca3 ;
- _MATELM1( 1 ,9)  += _term;
- _MATELM1( 9 ,9)  += _term;
- _MATELM1( 0 ,9)  -= _term;
+ _MATELM1( 1 ,17)  += _term;
+ _MATELM1( 17 ,17)  += _term;
+ _MATELM1( 0 ,17)  -= _term;
  _term =  kr_cam4 ;
  _MATELM1( 1 ,0)  -= _term;
- _MATELM1( 9 ,0)  -= _term;
+ _MATELM1( 17 ,0)  -= _term;
  _MATELM1( 0 ,0)  += _term;
  /*REACTION*/
   /* ~ Cam_Ca4 + Gef <-> Gef_activated ( kf_gef , kr_gef )*/
@@ -492,15 +684,90 @@ _MATELM1(8, 8) *= ( PI * pow( ( diam / 2.0 ) , 2.0 ));  }
   /* ~ RasGDPi <-> RasGTPi ( kf_rasGDP * Gef_activated , kr_rasGDP )*/
  f_flux =  kf_rasGDP * Gef_activated * RasGDPi ;
  b_flux =  kr_rasGDP * RasGTPi ;
- _RHS1( 7) -= (f_flux - b_flux);
- _RHS1( 8) += (f_flux - b_flux);
+ _RHS1( 15) -= (f_flux - b_flux);
+ _RHS1( 16) += (f_flux - b_flux);
  
  _term =  kf_rasGDP * Gef_activated ;
- _MATELM1( 7 ,7)  += _term;
- _MATELM1( 8 ,7)  -= _term;
+ _MATELM1( 15 ,15)  += _term;
+ _MATELM1( 16 ,15)  -= _term;
  _term =  kr_rasGDP ;
- _MATELM1( 7 ,8)  -= _term;
+ _MATELM1( 15 ,16)  -= _term;
+ _MATELM1( 16 ,16)  += _term;
+ /*REACTION*/
+  _ztempRaf = ( kcat_raf * RasGTPi ) / ( Rafi + km_raf ) ;
+   _ztempRafP = ( kcat_rafP * RafPhosphatase ) / ( RafPi + km_rafP ) ;
+   /* ~ Rafi <-> RafPi ( _ztempRaf , _ztempRafP )*/
+ f_flux =  _ztempRaf * Rafi ;
+ b_flux =  _ztempRafP * RafPi ;
+ _RHS1( 14) -= (f_flux - b_flux);
+ _RHS1( 13) += (f_flux - b_flux);
+ 
+ _term =  _ztempRaf ;
+ _MATELM1( 14 ,14)  += _term;
+ _MATELM1( 13 ,14)  -= _term;
+ _term =  _ztempRafP ;
+ _MATELM1( 14 ,13)  -= _term;
+ _MATELM1( 13 ,13)  += _term;
+ /*REACTION*/
+  _ztempMek = ( kcat_mek * RafPi ) / ( Mek + km_mek ) ;
+   _ztempMekP = ( kcat_mek * MekPhosphatase ) / ( MekP + km_mek ) ;
+   /* ~ Mek <-> MekP ( _ztempMek , _ztempMekP )*/
+ f_flux =  _ztempMek * Mek ;
+ b_flux =  _ztempMekP * MekP ;
+ _RHS1( 12) -= (f_flux - b_flux);
+ _RHS1( 11) += (f_flux - b_flux);
+ 
+ _term =  _ztempMek ;
+ _MATELM1( 12 ,12)  += _term;
+ _MATELM1( 11 ,12)  -= _term;
+ _term =  _ztempMekP ;
+ _MATELM1( 12 ,11)  -= _term;
+ _MATELM1( 11 ,11)  += _term;
+ /*REACTION*/
+  _ztempMekPP1 = ( kcat_mek * RafPi ) / ( MekP + km_mek ) ;
+   _ztempMekPP2 = ( kcat_mek * MekPhosphatase ) / ( MekPP + km_mek ) ;
+   /* ~ MekP <-> MekPP ( _ztempMekPP1 , _ztempMekPP2 )*/
+ f_flux =  _ztempMekPP1 * MekP ;
+ b_flux =  _ztempMekPP2 * MekPP ;
+ _RHS1( 11) -= (f_flux - b_flux);
+ _RHS1( 10) += (f_flux - b_flux);
+ 
+ _term =  _ztempMekPP1 ;
+ _MATELM1( 11 ,11)  += _term;
+ _MATELM1( 10 ,11)  -= _term;
+ _term =  _ztempMekPP2 ;
+ _MATELM1( 11 ,10)  -= _term;
+ _MATELM1( 10 ,10)  += _term;
+ /*REACTION*/
+  _ztempMapk = ( kcat_mapk * MekPP ) / ( Mapk + km_mapk ) ;
+   _ztempMapkP = ( kcat_mapk * MapkPhosphatase ) / ( MapkP + km_mapk ) ;
+   /* ~ Mapk <-> MapkP ( _ztempMapk , _ztempMapkP )*/
+ f_flux =  _ztempMapk * Mapk ;
+ b_flux =  _ztempMapkP * MapkP ;
+ _RHS1( 9) -= (f_flux - b_flux);
+ _RHS1( 8) += (f_flux - b_flux);
+ 
+ _term =  _ztempMapk ;
+ _MATELM1( 9 ,9)  += _term;
+ _MATELM1( 8 ,9)  -= _term;
+ _term =  _ztempMapkP ;
+ _MATELM1( 9 ,8)  -= _term;
  _MATELM1( 8 ,8)  += _term;
+ /*REACTION*/
+  _ztempMapkPP1 = ( kcat_mapk * MekPP ) / ( MapkP + km_mapk ) ;
+   _ztempMapkPP2 = ( kcat_mapk * MapkPhosphatase ) / ( MapkPP + km_mapk ) ;
+   /* ~ MapkP <-> MapkPP ( _ztempMapkPP1 , _ztempMapkPP2 )*/
+ f_flux =  _ztempMapkPP1 * MapkP ;
+ b_flux =  _ztempMapkPP2 * MapkPP ;
+ _RHS1( 8) -= (f_flux - b_flux);
+ _RHS1( 7) += (f_flux - b_flux);
+ 
+ _term =  _ztempMapkPP1 ;
+ _MATELM1( 8 ,8)  += _term;
+ _MATELM1( 7 ,8)  -= _term;
+ _term =  _ztempMapkPP2 ;
+ _MATELM1( 8 ,7)  -= _term;
+ _MATELM1( 7 ,7)  += _term;
  /*REACTION*/
     } return _reset;
  }
@@ -508,15 +775,42 @@ _MATELM1(8, 8) *= ( PI * pow( ( diam / 2.0 ) , 2.0 ));  }
 /*CVODE ode begin*/
  static int _ode_spec1(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {int _reset=0;{
  double b_flux, f_flux, _term; int _i;
- {int _i; for(_i=0;_i<11;_i++) _p[_dlist1[_i]] = 0.0;}
- /* COMPARTMENT PI * pow( ( diam / 2.0 ) , 2.0 ) {
+ {int _i; for(_i=0;_i<19;_i++) _p[_dlist1[_i]] = 0.0;}
+ /* COMPARTMENT PI * diam {
    RasGDPi RasGTPi }
  */
- /* LONGITUDINAL_DIFFUSION DRas * PI * pow( ( diam / 2.0 ) , 2.0 ) {
+ /* COMPARTMENT PI * diam * diam / 4.0 {
+   Rafi RafPi Mek MekP MekPP Mapk MapkP MapkPP }
+ */
+ /* LONGITUDINAL_DIFFUSION DRas * diam {
    RasGDPi }
  */
- /* LONGITUDINAL_DIFFUSION DRas * PI * pow( ( diam / 2.0 ) , 2.0 ) {
+ /* LONGITUDINAL_DIFFUSION DRas * diam {
    RasGTPi }
+ */
+ /* LONGITUDINAL_DIFFUSION DRaf * PI * diam * diam / 4.0 {
+   Rafi }
+ */
+ /* LONGITUDINAL_DIFFUSION DRaf * PI * diam * diam / 4.0 {
+   RafPi }
+ */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+   Mek }
+ */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+   MekP }
+ */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+   MekPP }
+ */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+   Mapk }
+ */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+   MapkP }
+ */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+   MapkPP }
  */
  /* ~ ca < < ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) )*/
  f_flux = b_flux = 0.;
@@ -571,8 +865,61 @@ _MATELM1(8, 8) *= ( PI * pow( ( diam / 2.0 ) , 2.0 ));  }
  DRasGTPi += (f_flux - b_flux);
  
  /*REACTION*/
-  _p[_dlist1[7]] /= ( PI * pow( ( diam / 2.0 ) , 2.0 ));
- _p[_dlist1[8]] /= ( PI * pow( ( diam / 2.0 ) , 2.0 ));
+  _ztempRaf = ( kcat_raf * RasGTPi ) / ( Rafi + km_raf ) ;
+ _ztempRafP = ( kcat_rafP * RafPhosphatase ) / ( RafPi + km_rafP ) ;
+ /* ~ Rafi <-> RafPi ( _ztempRaf , _ztempRafP )*/
+ f_flux =  _ztempRaf * Rafi ;
+ b_flux =  _ztempRafP * RafPi ;
+ DRafi -= (f_flux - b_flux);
+ DRafPi += (f_flux - b_flux);
+ 
+ /*REACTION*/
+  _ztempMek = ( kcat_mek * RafPi ) / ( Mek + km_mek ) ;
+ _ztempMekP = ( kcat_mek * MekPhosphatase ) / ( MekP + km_mek ) ;
+ /* ~ Mek <-> MekP ( _ztempMek , _ztempMekP )*/
+ f_flux =  _ztempMek * Mek ;
+ b_flux =  _ztempMekP * MekP ;
+ DMek -= (f_flux - b_flux);
+ DMekP += (f_flux - b_flux);
+ 
+ /*REACTION*/
+  _ztempMekPP1 = ( kcat_mek * RafPi ) / ( MekP + km_mek ) ;
+ _ztempMekPP2 = ( kcat_mek * MekPhosphatase ) / ( MekPP + km_mek ) ;
+ /* ~ MekP <-> MekPP ( _ztempMekPP1 , _ztempMekPP2 )*/
+ f_flux =  _ztempMekPP1 * MekP ;
+ b_flux =  _ztempMekPP2 * MekPP ;
+ DMekP -= (f_flux - b_flux);
+ DMekPP += (f_flux - b_flux);
+ 
+ /*REACTION*/
+  _ztempMapk = ( kcat_mapk * MekPP ) / ( Mapk + km_mapk ) ;
+ _ztempMapkP = ( kcat_mapk * MapkPhosphatase ) / ( MapkP + km_mapk ) ;
+ /* ~ Mapk <-> MapkP ( _ztempMapk , _ztempMapkP )*/
+ f_flux =  _ztempMapk * Mapk ;
+ b_flux =  _ztempMapkP * MapkP ;
+ DMapk -= (f_flux - b_flux);
+ DMapkP += (f_flux - b_flux);
+ 
+ /*REACTION*/
+  _ztempMapkPP1 = ( kcat_mapk * MekPP ) / ( MapkP + km_mapk ) ;
+ _ztempMapkPP2 = ( kcat_mapk * MapkPhosphatase ) / ( MapkPP + km_mapk ) ;
+ /* ~ MapkP <-> MapkPP ( _ztempMapkPP1 , _ztempMapkPP2 )*/
+ f_flux =  _ztempMapkPP1 * MapkP ;
+ b_flux =  _ztempMapkPP2 * MapkPP ;
+ DMapkP -= (f_flux - b_flux);
+ DMapkPP += (f_flux - b_flux);
+ 
+ /*REACTION*/
+  _p[_dlist1[7]] /= ( PI * diam * diam / 4.0);
+ _p[_dlist1[8]] /= ( PI * diam * diam / 4.0);
+ _p[_dlist1[9]] /= ( PI * diam * diam / 4.0);
+ _p[_dlist1[10]] /= ( PI * diam * diam / 4.0);
+ _p[_dlist1[11]] /= ( PI * diam * diam / 4.0);
+ _p[_dlist1[12]] /= ( PI * diam * diam / 4.0);
+ _p[_dlist1[13]] /= ( PI * diam * diam / 4.0);
+ _p[_dlist1[14]] /= ( PI * diam * diam / 4.0);
+ _p[_dlist1[15]] /= ( PI * diam);
+ _p[_dlist1[16]] /= ( PI * diam);
    } return _reset;
  }
  
@@ -581,23 +928,66 @@ _MATELM1(8, 8) *= ( PI * pow( ( diam / 2.0 ) , 2.0 ));  }
  double b_flux, f_flux, _term; int _i;
    b_flux = f_flux = 0.;
  {int _i; double _dt1 = 1.0/dt;
-for(_i=0;_i<11;_i++){
+for(_i=0;_i<19;_i++){
   	_RHS1(_i) = _dt1*(_p[_dlist1[_i]]);
 	_MATELM1(_i, _i) = _dt1;
       
 }  
-_RHS1(7) *= ( PI * pow( ( diam / 2.0 ) , 2.0 )) ;
-_MATELM1(7, 7) *= ( PI * pow( ( diam / 2.0 ) , 2.0 )); 
-_RHS1(8) *= ( PI * pow( ( diam / 2.0 ) , 2.0 )) ;
-_MATELM1(8, 8) *= ( PI * pow( ( diam / 2.0 ) , 2.0 ));  }
- /* COMPARTMENT PI * pow( ( diam / 2.0 ) , 2.0 ) {
+_RHS1(7) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(7, 7) *= ( PI * diam * diam / 4.0); 
+_RHS1(8) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(8, 8) *= ( PI * diam * diam / 4.0); 
+_RHS1(9) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(9, 9) *= ( PI * diam * diam / 4.0); 
+_RHS1(10) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(10, 10) *= ( PI * diam * diam / 4.0); 
+_RHS1(11) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(11, 11) *= ( PI * diam * diam / 4.0); 
+_RHS1(12) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(12, 12) *= ( PI * diam * diam / 4.0); 
+_RHS1(13) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(13, 13) *= ( PI * diam * diam / 4.0); 
+_RHS1(14) *= ( PI * diam * diam / 4.0) ;
+_MATELM1(14, 14) *= ( PI * diam * diam / 4.0); 
+_RHS1(15) *= ( PI * diam) ;
+_MATELM1(15, 15) *= ( PI * diam); 
+_RHS1(16) *= ( PI * diam) ;
+_MATELM1(16, 16) *= ( PI * diam);  }
+ /* COMPARTMENT PI * diam {
  RasGDPi RasGTPi }
  */
- /* LONGITUDINAL_DIFFUSION DRas * PI * pow( ( diam / 2.0 ) , 2.0 ) {
+ /* COMPARTMENT PI * diam * diam / 4.0 {
+ Rafi RafPi Mek MekP MekPP Mapk MapkP MapkPP }
+ */
+ /* LONGITUDINAL_DIFFUSION DRas * diam {
  RasGDPi }
  */
- /* LONGITUDINAL_DIFFUSION DRas * PI * pow( ( diam / 2.0 ) , 2.0 ) {
+ /* LONGITUDINAL_DIFFUSION DRas * diam {
  RasGTPi }
+ */
+ /* LONGITUDINAL_DIFFUSION DRaf * PI * diam * diam / 4.0 {
+ Rafi }
+ */
+ /* LONGITUDINAL_DIFFUSION DRaf * PI * diam * diam / 4.0 {
+ RafPi }
+ */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+ Mek }
+ */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+ MekP }
+ */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+ MekPP }
+ */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+ Mapk }
+ */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+ MapkP }
+ */
+ /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
+ MapkPP }
  */
  /* ~ ca < < ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) )*/
  /*FLUX*/
@@ -606,57 +996,57 @@ _MATELM1(8, 8) *= ( PI * pow( ( diam / 2.0 ) , 2.0 ));  }
  /* ~ ca_modif + Cam <-> Cam_Ca ( kf_cam1 , kr_cam1 )*/
  _term =  kf_cam1 * ca_modif ;
  _MATELM1( 4 ,4)  += _term;
- _MATELM1( 9 ,4)  += _term;
+ _MATELM1( 17 ,4)  += _term;
  _MATELM1( 3 ,4)  -= _term;
  _term =  kf_cam1 * Cam ;
- _MATELM1( 4 ,9)  += _term;
- _MATELM1( 9 ,9)  += _term;
- _MATELM1( 3 ,9)  -= _term;
+ _MATELM1( 4 ,17)  += _term;
+ _MATELM1( 17 ,17)  += _term;
+ _MATELM1( 3 ,17)  -= _term;
  _term =  kr_cam1 ;
  _MATELM1( 4 ,3)  -= _term;
- _MATELM1( 9 ,3)  -= _term;
+ _MATELM1( 17 ,3)  -= _term;
  _MATELM1( 3 ,3)  += _term;
  /*REACTION*/
   /* ~ ca_modif + Cam_Ca <-> Cam_Ca2 ( kf_cam2 , kr_cam2 )*/
  _term =  kf_cam2 * ca_modif ;
  _MATELM1( 3 ,3)  += _term;
- _MATELM1( 9 ,3)  += _term;
+ _MATELM1( 17 ,3)  += _term;
  _MATELM1( 2 ,3)  -= _term;
  _term =  kf_cam2 * Cam_Ca ;
- _MATELM1( 3 ,9)  += _term;
- _MATELM1( 9 ,9)  += _term;
- _MATELM1( 2 ,9)  -= _term;
+ _MATELM1( 3 ,17)  += _term;
+ _MATELM1( 17 ,17)  += _term;
+ _MATELM1( 2 ,17)  -= _term;
  _term =  kr_cam2 ;
  _MATELM1( 3 ,2)  -= _term;
- _MATELM1( 9 ,2)  -= _term;
+ _MATELM1( 17 ,2)  -= _term;
  _MATELM1( 2 ,2)  += _term;
  /*REACTION*/
   /* ~ ca_modif + Cam_Ca2 <-> Cam_Ca3 ( kf_cam3 , kr_cam3 )*/
  _term =  kf_cam3 * ca_modif ;
  _MATELM1( 2 ,2)  += _term;
- _MATELM1( 9 ,2)  += _term;
+ _MATELM1( 17 ,2)  += _term;
  _MATELM1( 1 ,2)  -= _term;
  _term =  kf_cam3 * Cam_Ca2 ;
- _MATELM1( 2 ,9)  += _term;
- _MATELM1( 9 ,9)  += _term;
- _MATELM1( 1 ,9)  -= _term;
+ _MATELM1( 2 ,17)  += _term;
+ _MATELM1( 17 ,17)  += _term;
+ _MATELM1( 1 ,17)  -= _term;
  _term =  kr_cam3 ;
  _MATELM1( 2 ,1)  -= _term;
- _MATELM1( 9 ,1)  -= _term;
+ _MATELM1( 17 ,1)  -= _term;
  _MATELM1( 1 ,1)  += _term;
  /*REACTION*/
   /* ~ ca_modif + Cam_Ca3 <-> Cam_Ca4 ( kf_cam4 , kr_cam4 )*/
  _term =  kf_cam4 * ca_modif ;
  _MATELM1( 1 ,1)  += _term;
- _MATELM1( 9 ,1)  += _term;
+ _MATELM1( 17 ,1)  += _term;
  _MATELM1( 0 ,1)  -= _term;
  _term =  kf_cam4 * Cam_Ca3 ;
- _MATELM1( 1 ,9)  += _term;
- _MATELM1( 9 ,9)  += _term;
- _MATELM1( 0 ,9)  -= _term;
+ _MATELM1( 1 ,17)  += _term;
+ _MATELM1( 17 ,17)  += _term;
+ _MATELM1( 0 ,17)  -= _term;
  _term =  kr_cam4 ;
  _MATELM1( 1 ,0)  -= _term;
- _MATELM1( 9 ,0)  -= _term;
+ _MATELM1( 17 ,0)  -= _term;
  _MATELM1( 0 ,0)  += _term;
  /*REACTION*/
   /* ~ Cam_Ca4 + Gef <-> Gef_activated ( kf_gef , kr_gef )*/
@@ -675,18 +1065,68 @@ _MATELM1(8, 8) *= ( PI * pow( ( diam / 2.0 ) , 2.0 ));  }
  /*REACTION*/
   /* ~ RasGDPi <-> RasGTPi ( kf_rasGDP * Gef_activated , kr_rasGDP )*/
  _term =  kf_rasGDP * Gef_activated ;
- _MATELM1( 7 ,7)  += _term;
- _MATELM1( 8 ,7)  -= _term;
+ _MATELM1( 15 ,15)  += _term;
+ _MATELM1( 16 ,15)  -= _term;
  _term =  kr_rasGDP ;
- _MATELM1( 7 ,8)  -= _term;
+ _MATELM1( 15 ,16)  -= _term;
+ _MATELM1( 16 ,16)  += _term;
+ /*REACTION*/
+  _ztempRaf = ( kcat_raf * RasGTPi ) / ( Rafi + km_raf ) ;
+ _ztempRafP = ( kcat_rafP * RafPhosphatase ) / ( RafPi + km_rafP ) ;
+ /* ~ Rafi <-> RafPi ( _ztempRaf , _ztempRafP )*/
+ _term =  _ztempRaf ;
+ _MATELM1( 14 ,14)  += _term;
+ _MATELM1( 13 ,14)  -= _term;
+ _term =  _ztempRafP ;
+ _MATELM1( 14 ,13)  -= _term;
+ _MATELM1( 13 ,13)  += _term;
+ /*REACTION*/
+  _ztempMek = ( kcat_mek * RafPi ) / ( Mek + km_mek ) ;
+ _ztempMekP = ( kcat_mek * MekPhosphatase ) / ( MekP + km_mek ) ;
+ /* ~ Mek <-> MekP ( _ztempMek , _ztempMekP )*/
+ _term =  _ztempMek ;
+ _MATELM1( 12 ,12)  += _term;
+ _MATELM1( 11 ,12)  -= _term;
+ _term =  _ztempMekP ;
+ _MATELM1( 12 ,11)  -= _term;
+ _MATELM1( 11 ,11)  += _term;
+ /*REACTION*/
+  _ztempMekPP1 = ( kcat_mek * RafPi ) / ( MekP + km_mek ) ;
+ _ztempMekPP2 = ( kcat_mek * MekPhosphatase ) / ( MekPP + km_mek ) ;
+ /* ~ MekP <-> MekPP ( _ztempMekPP1 , _ztempMekPP2 )*/
+ _term =  _ztempMekPP1 ;
+ _MATELM1( 11 ,11)  += _term;
+ _MATELM1( 10 ,11)  -= _term;
+ _term =  _ztempMekPP2 ;
+ _MATELM1( 11 ,10)  -= _term;
+ _MATELM1( 10 ,10)  += _term;
+ /*REACTION*/
+  _ztempMapk = ( kcat_mapk * MekPP ) / ( Mapk + km_mapk ) ;
+ _ztempMapkP = ( kcat_mapk * MapkPhosphatase ) / ( MapkP + km_mapk ) ;
+ /* ~ Mapk <-> MapkP ( _ztempMapk , _ztempMapkP )*/
+ _term =  _ztempMapk ;
+ _MATELM1( 9 ,9)  += _term;
+ _MATELM1( 8 ,9)  -= _term;
+ _term =  _ztempMapkP ;
+ _MATELM1( 9 ,8)  -= _term;
  _MATELM1( 8 ,8)  += _term;
+ /*REACTION*/
+  _ztempMapkPP1 = ( kcat_mapk * MekPP ) / ( MapkP + km_mapk ) ;
+ _ztempMapkPP2 = ( kcat_mapk * MapkPhosphatase ) / ( MapkPP + km_mapk ) ;
+ /* ~ MapkP <-> MapkPP ( _ztempMapkPP1 , _ztempMapkPP2 )*/
+ _term =  _ztempMapkPP1 ;
+ _MATELM1( 8 ,8)  += _term;
+ _MATELM1( 7 ,8)  -= _term;
+ _term =  _ztempMapkPP2 ;
+ _MATELM1( 8 ,7)  -= _term;
+ _MATELM1( 7 ,7)  += _term;
  /*REACTION*/
     } return _reset;
  }
  
 /*CVODE end*/
  
-static int _ode_count(int _type){ return 11;}
+static int _ode_count(int _type){ return 19;}
  
 static void _ode_spec(_NrnThread* _nt, _Memb_list* _ml, int _type) {
    double* _p; Datum* _ppvar; Datum* _thread;
@@ -704,22 +1144,30 @@ static void _ode_spec(_NrnThread* _nt, _Memb_list* _ml, int _type) {
   RasGTPi = _ion_RasGTPi;
   RasGDPi = _ion_RasGDPi;
   RasGDPi = _ion_RasGDPi;
+  Rafi = _ion_Rafi;
+  Rafi = _ion_Rafi;
+  RafPi = _ion_RafPi;
+  RafPi = _ion_RafPi;
      _ode_spec1 (_p, _ppvar, _thread, _nt);
   _ion_cai = cai;
   _ion_RasGTPi = RasGTPi;
   _ion_RasGDPi = RasGDPi;
+  _ion_Rafi = Rafi;
+  _ion_RafPi = RafPi;
  }}
  
 static void _ode_map(int _ieq, double** _pv, double** _pvdot, double* _pp, Datum* _ppd, double* _atol, int _type) { 
 	double* _p; Datum* _ppvar;
  	int _i; _p = _pp; _ppvar = _ppd;
 	_cvode_ieq = _ieq;
-	for (_i=0; _i < 11; ++_i) {
+	for (_i=0; _i < 19; ++_i) {
 		_pv[_i] = _pp + _slist1[_i];  _pvdot[_i] = _pp + _dlist1[_i];
 		_cvode_abstol(_atollist, _atol, _i);
 	}
- 	_pv[8] = &(_ion_RasGTPi);
- 	_pv[7] = &(_ion_RasGDPi);
+ 	_pv[16] = &(_ion_RasGTPi);
+ 	_pv[15] = &(_ion_RasGDPi);
+ 	_pv[14] = &(_ion_Rafi);
+ 	_pv[13] = &(_ion_RafPi);
  }
  static void _ode_synonym(int _cnt, double** _pp, Datum** _ppd) { 
 	double* _p; Datum* _ppvar;
@@ -744,12 +1192,21 @@ static void _ode_matsol(_NrnThread* _nt, _Memb_list* _ml, int _type) {
   RasGTPi = _ion_RasGTPi;
   RasGDPi = _ion_RasGDPi;
   RasGDPi = _ion_RasGDPi;
- _cvode_sparse_thread(&_thread[_cvspth1]._pvoid, 11, _dlist1, _p, _ode_matsol1, _ppvar, _thread, _nt);
+  Rafi = _ion_Rafi;
+  Rafi = _ion_Rafi;
+  RafPi = _ion_RafPi;
+  RafPi = _ion_RafPi;
+ _cvode_sparse_thread(&_thread[_cvspth1]._pvoid, 19, _dlist1, _p, _ode_matsol1, _ppvar, _thread, _nt);
  }}
+ 
+static void _thread_mem_init(Datum* _thread) {
+   _thread[2]._pval = (double*)ecalloc(10, sizeof(double));
+ }
  
 static void _thread_cleanup(Datum* _thread) {
    _nrn_destroy_sparseobj_thread(_thread[_cvspth1]._pvoid);
    _nrn_destroy_sparseobj_thread(_thread[_spth1]._pvoid);
+   free((void*)(_thread[2]._pval));
  }
  extern void nrn_update_ion_pointer(Symbol*, Datum*, int, int);
  static void _update_ion_pointer(Datum* _ppvar) {
@@ -760,22 +1217,82 @@ static void _thread_cleanup(Datum* _thread) {
    nrn_update_ion_pointer(_RasGTP_sym, _ppvar, 6, 4);
    nrn_update_ion_pointer(_RasGDP_sym, _ppvar, 7, 1);
    nrn_update_ion_pointer(_RasGDP_sym, _ppvar, 9, 4);
+   nrn_update_ion_pointer(_Raf_sym, _ppvar, 10, 1);
+   nrn_update_ion_pointer(_Raf_sym, _ppvar, 12, 4);
+   nrn_update_ion_pointer(_RafP_sym, _ppvar, 13, 1);
+   nrn_update_ion_pointer(_RafP_sym, _ppvar, 15, 4);
  }
  static void* _difspace1;
 extern double nrn_nernst_coef();
 static double _difcoef1(int _i, double* _p, Datum* _ppvar, double* _pdvol, double* _pdfcdc, Datum* _thread, _NrnThread* _nt) {
-   *_pdvol =  PI * pow( ( diam / 2.0 ) , 2.0 ) ; *_pdfcdc=0.;
-   return DRas * PI * pow( ( diam / 2.0 ) , 2.0 ) ;
+   *_pdvol =  PI * diam ; *_pdfcdc=0.;
+   return DRas * diam ;
 }
  static void* _difspace2;
 extern double nrn_nernst_coef();
 static double _difcoef2(int _i, double* _p, Datum* _ppvar, double* _pdvol, double* _pdfcdc, Datum* _thread, _NrnThread* _nt) {
-   *_pdvol =  PI * pow( ( diam / 2.0 ) , 2.0 ) ; *_pdfcdc=0.;
-   return DRas * PI * pow( ( diam / 2.0 ) , 2.0 ) ;
+   *_pdvol =  PI * diam ; *_pdfcdc=0.;
+   return DRas * diam ;
+}
+ static void* _difspace3;
+extern double nrn_nernst_coef();
+static double _difcoef3(int _i, double* _p, Datum* _ppvar, double* _pdvol, double* _pdfcdc, Datum* _thread, _NrnThread* _nt) {
+   *_pdvol =  PI * diam * diam / 4.0 ; *_pdfcdc=0.;
+   return DRaf * PI * diam * diam / 4.0 ;
+}
+ static void* _difspace4;
+extern double nrn_nernst_coef();
+static double _difcoef4(int _i, double* _p, Datum* _ppvar, double* _pdvol, double* _pdfcdc, Datum* _thread, _NrnThread* _nt) {
+   *_pdvol =  PI * diam * diam / 4.0 ; *_pdfcdc=0.;
+   return DRaf * PI * diam * diam / 4.0 ;
+}
+ static void* _difspace5;
+extern double nrn_nernst_coef();
+static double _difcoef5(int _i, double* _p, Datum* _ppvar, double* _pdvol, double* _pdfcdc, Datum* _thread, _NrnThread* _nt) {
+   *_pdvol =  PI * diam * diam / 4.0 ; *_pdfcdc=0.;
+   return DKinases * PI * diam * diam / 4.0 ;
+}
+ static void* _difspace6;
+extern double nrn_nernst_coef();
+static double _difcoef6(int _i, double* _p, Datum* _ppvar, double* _pdvol, double* _pdfcdc, Datum* _thread, _NrnThread* _nt) {
+   *_pdvol =  PI * diam * diam / 4.0 ; *_pdfcdc=0.;
+   return DKinases * PI * diam * diam / 4.0 ;
+}
+ static void* _difspace7;
+extern double nrn_nernst_coef();
+static double _difcoef7(int _i, double* _p, Datum* _ppvar, double* _pdvol, double* _pdfcdc, Datum* _thread, _NrnThread* _nt) {
+   *_pdvol =  PI * diam * diam / 4.0 ; *_pdfcdc=0.;
+   return DKinases * PI * diam * diam / 4.0 ;
+}
+ static void* _difspace8;
+extern double nrn_nernst_coef();
+static double _difcoef8(int _i, double* _p, Datum* _ppvar, double* _pdvol, double* _pdfcdc, Datum* _thread, _NrnThread* _nt) {
+   *_pdvol =  PI * diam * diam / 4.0 ; *_pdfcdc=0.;
+   return DKinases * PI * diam * diam / 4.0 ;
+}
+ static void* _difspace9;
+extern double nrn_nernst_coef();
+static double _difcoef9(int _i, double* _p, Datum* _ppvar, double* _pdvol, double* _pdfcdc, Datum* _thread, _NrnThread* _nt) {
+   *_pdvol =  PI * diam * diam / 4.0 ; *_pdfcdc=0.;
+   return DKinases * PI * diam * diam / 4.0 ;
+}
+ static void* _difspace10;
+extern double nrn_nernst_coef();
+static double _difcoef10(int _i, double* _p, Datum* _ppvar, double* _pdvol, double* _pdfcdc, Datum* _thread, _NrnThread* _nt) {
+   *_pdvol =  PI * diam * diam / 4.0 ; *_pdfcdc=0.;
+   return DKinases * PI * diam * diam / 4.0 ;
 }
  static void _difusfunc(ldifusfunc2_t _f, _NrnThread* _nt) {int _i;
-  (*_f)(_mechtype, _difcoef1, &_difspace1, 0,  -8, 25 , _nt);
-  (*_f)(_mechtype, _difcoef2, &_difspace2, 0,  -5, 27 , _nt);
+  (*_f)(_mechtype, _difcoef1, &_difspace1, 0,  -8, 34 , _nt);
+  (*_f)(_mechtype, _difcoef2, &_difspace2, 0,  -5, 36 , _nt);
+  (*_f)(_mechtype, _difcoef3, &_difspace3, 0,  -11, 38 , _nt);
+  (*_f)(_mechtype, _difcoef4, &_difspace4, 0,  -14, 40 , _nt);
+  (*_f)(_mechtype, _difcoef5, &_difspace5, 0,  13, 42 , _nt);
+  (*_f)(_mechtype, _difcoef6, &_difspace6, 0,  14, 43 , _nt);
+  (*_f)(_mechtype, _difcoef7, &_difspace7, 0,  15, 44 , _nt);
+  (*_f)(_mechtype, _difcoef8, &_difspace8, 0,  17, 46 , _nt);
+  (*_f)(_mechtype, _difcoef9, &_difspace9, 0,  18, 47 , _nt);
+  (*_f)(_mechtype, _difcoef10, &_difspace10, 0,  19, 48 , _nt);
  }
 
 static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {
@@ -787,6 +1304,15 @@ static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt
   Cam = Cam0;
   Gef_activated = Gef_activated0;
   Gef = Gef0;
+  MapkPhosphatase = MapkPhosphatase0;
+  MapkPP = MapkPP0;
+  MapkP = MapkP0;
+  Mapk = Mapk0;
+  MekPhosphatase = MekPhosphatase0;
+  MekPP = MekPP0;
+  MekP = MekP0;
+  Mek = Mek0;
+  RafPhosphatase = RafPhosphatase0;
   ca_modif = ca_modif0;
   ca = ca0;
  {
@@ -801,6 +1327,17 @@ static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt
    Gef_activated = 0.0 ;
    RasGDPi = 0.0012 ;
    RasGTPi = 0.0 ;
+   Rafi = 0.2e-3 ;
+   RafPi = 0.0 ;
+   RafPhosphatase = 0.00375e-3 ;
+   Mek = 0.18e-3 ;
+   MekP = 0.0 ;
+   MekPP = 0.0 ;
+   MekPhosphatase = 0.112e-3 ;
+   Mapk = 0.36e-3 ;
+   MapkP = 0.0 ;
+   MapkPP = 0.0 ;
+   MapkPhosphatase = 0.001e-3 ;
    }
  
 }
@@ -833,6 +1370,10 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   RasGTPi = _ion_RasGTPi;
   RasGDPi = _ion_RasGDPi;
   RasGDPi = _ion_RasGDPi;
+  Rafi = _ion_Rafi;
+  Rafi = _ion_Rafi;
+  RafPi = _ion_RafPi;
+  RafPi = _ion_RafPi;
  initmodel(_p, _ppvar, _thread, _nt);
   _ion_cai = cai;
   nrn_wrote_conc(_ca_sym, (&(_ion_cai)) - 1, _style_ca);
@@ -840,6 +1381,10 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   nrn_wrote_conc(_RasGTP_sym, (&(_ion_RasGTPi)) - 1, _style_RasGTP);
   _ion_RasGDPi = RasGDPi;
   nrn_wrote_conc(_RasGDP_sym, (&(_ion_RasGDPi)) - 1, _style_RasGDP);
+  _ion_Rafi = Rafi;
+  nrn_wrote_conc(_Raf_sym, (&(_ion_Rafi)) - 1, _style_Raf);
+  _ion_RafPi = RafPi;
+  nrn_wrote_conc(_RafP_sym, (&(_ion_RafPi)) - 1, _style_RafP);
 }}
 
 static double _nrn_current(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt, double _v){double _current=0.;v=_v;{
@@ -921,9 +1466,13 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   RasGTPi = _ion_RasGTPi;
   RasGDPi = _ion_RasGDPi;
   RasGDPi = _ion_RasGDPi;
+  Rafi = _ion_Rafi;
+  Rafi = _ion_Rafi;
+  RafPi = _ion_RafPi;
+  RafPi = _ion_RafPi;
  { {
  for (; t < _break; t += dt) {
-  sparse_thread(&_thread[_spth1]._pvoid, 11, _slist1, _dlist1, _p, &t, dt, state, _linmat1, _ppvar, _thread, _nt);
+  sparse_thread(&_thread[_spth1]._pvoid, 19, _slist1, _dlist1, _p, &t, dt, state, _linmat1, _ppvar, _thread, _nt);
   
 }}
  t = _save;
@@ -932,6 +1481,8 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   _ion_cai = cai;
   _ion_RasGTPi = RasGTPi;
   _ion_RasGDPi = RasGDPi;
+  _ion_Rafi = Rafi;
+  _ion_RafPi = RafPi;
 }}
 
 }
@@ -949,10 +1500,18 @@ static void _initlists(){
  _slist1[4] = &(Cam) - _p;  _dlist1[4] = &(DCam) - _p;
  _slist1[5] = &(Gef_activated) - _p;  _dlist1[5] = &(DGef_activated) - _p;
  _slist1[6] = &(Gef) - _p;  _dlist1[6] = &(DGef) - _p;
- _slist1[7] = &(RasGDPi) - _p;  _dlist1[7] = &(DRasGDPi) - _p;
- _slist1[8] = &(RasGTPi) - _p;  _dlist1[8] = &(DRasGTPi) - _p;
- _slist1[9] = &(ca_modif) - _p;  _dlist1[9] = &(Dca_modif) - _p;
- _slist1[10] = &(ca) - _p;  _dlist1[10] = &(Dca) - _p;
+ _slist1[7] = &(MapkPP) - _p;  _dlist1[7] = &(DMapkPP) - _p;
+ _slist1[8] = &(MapkP) - _p;  _dlist1[8] = &(DMapkP) - _p;
+ _slist1[9] = &(Mapk) - _p;  _dlist1[9] = &(DMapk) - _p;
+ _slist1[10] = &(MekPP) - _p;  _dlist1[10] = &(DMekPP) - _p;
+ _slist1[11] = &(MekP) - _p;  _dlist1[11] = &(DMekP) - _p;
+ _slist1[12] = &(Mek) - _p;  _dlist1[12] = &(DMek) - _p;
+ _slist1[13] = &(RafPi) - _p;  _dlist1[13] = &(DRafPi) - _p;
+ _slist1[14] = &(Rafi) - _p;  _dlist1[14] = &(DRafi) - _p;
+ _slist1[15] = &(RasGDPi) - _p;  _dlist1[15] = &(DRasGDPi) - _p;
+ _slist1[16] = &(RasGTPi) - _p;  _dlist1[16] = &(DRasGTPi) - _p;
+ _slist1[17] = &(ca_modif) - _p;  _dlist1[17] = &(Dca_modif) - _p;
+ _slist1[18] = &(ca) - _p;  _dlist1[18] = &(Dca) - _p;
 _first = 0;
 }
 
