@@ -1,0 +1,650 @@
+//Principale différence : ajout de cadifus
+
+
+/*Pour obtenir les mêmes résultats que la figure 1.B de l'article de U.S Bhalla 
+(Multiscale interactions between chemical and electric signaling in LTP induction,
+ LTP reversal and dendritic excitability), injecter un courant de 1nA, pendant 200ms, à soma(0).*/
+
+load_file("nrngui.hoc")
+//load_file("NMDA.hoc")
+
+//load_file("ca1_cell.ses")
+
+/*	Correspondances entre les fichiers 
+	basal[0] = basal_3	basal[1] = basal_5	basal[2] = basal_6	basal[3] = basal_8
+	
+	apical[0] = apical_10	apical[1] = apical_11	apical[2] = apical_12	apical[3] = apical_13
+	apical[4] = apical_14	apical[5] = apical_15	apical[6] = apical_16	apical[7] = apical_17
+	apical[8] = apical_18	apical[9] = apical_19
+	
+	lateral[0] = lat_11_1	lateral[1] = lat_11_2	lateral[2] = lat_11_3	lateral[3] = lat_11_4
+	lateral[4] = lat_13_1	lateral[5] = lat_13_2	lateral[6] = lat_14_1	lateral[7] = lat_14_2
+	lateral[8] = lat_14_3	lateral[9] = lat_14_10	lateral[10] = lat_15_1	lateral[11] = lat_15_2
+	
+	spine[0] = spine_neck_14_1	spine[1] = spine_head_14_1	
+	spine[2] = spine_neck_14_2	spine[3] = spine_head_14_2	
+	spine[4] = spine_neck_14_10	spine[5] = spine_head_14_10
+	
+	*/
+
+forall delete_section()
+create soma,  basal[4], apical[10], lateral[12], spine[6]
+
+/*Géométries + Canaux ioniques*/
+
+//paramètres généraux
+forall{
+	Ra = 100
+	insert capacitance { cm=3}
+	insert pas { g_pas=0.0001 e_pas=-60}
+}
+
+
+//soma
+soma {
+	diam=8.46
+	L=125
+	nseg = 1
+	insert cadifus
+ 	insert na_Bh
+ 	insert ca_debug_Bh
+ 	insert k_dr_Bh
+ 	insert k_ahp_Bh
+ 	insert k_c_Bh
+ 	insert k_a_Bh
+ 	//var0 = 17.402e6 * area(.5) * 1e-8
+ 	//soma.beta_cadifus = ( 17.402e12 * (PI*diam/2*diam/2*L*1e-18) * 1e-6)
+ 	soma.beta_cadifus = ( 2e-8 / (FARADAY*1e6*soma.diam*1e-18))
+ 	soma.gna_na_Bh = 0.03
+ 	soma.gca_ca_debug_Bh = 0.004
+ 	soma.gk_k_dr_Bh = 0.025
+ 	soma.gk_k_ahp_Bh = 0.0008
+ 	soma.gk_k_c_Bh = 0.01
+ 	soma.gk_k_a_Bh = 0.005
+ 	soma.phi_cadifus = 0.075
+ 	soma.kf_rasGDP_cadifus = 0
+ 	}
+
+//basal compartiments
+basal[0] { 
+	diam=3.84
+	L=220
+	nseg = 1
+	insert cadifus
+ 	insert ca_debug_Bh
+ 	insert k_ahp_Bh
+ 	insert k_c_Bh
+ 	//volume3 = PI*diam/2*diam/2*L*1e-18
+ 	//var3 = 8.96e-3 * 1e-6
+ 	basal[0].beta_cadifus = ( 2e-8 / (FARADAY*1e6*basal[0].diam*1e-18))
+ 	basal[0].gca_ca_debug_Bh = 0.005
+ 	basal[0].gk_k_ahp_Bh = 0.0008
+ 	basal[0].gk_k_c_Bh = 0.005
+ 	basal[0].phi_cadifus = 0.075
+ 	basal[0].kf_rasGDP_cadifus = 0
+ 	}
+
+basal[1] {
+	diam=3.84
+	L=220 
+	nseg = 1
+	insert cadifus
+ 	insert ca_debug_Bh
+ 	insert k_ahp_Bh
+ 	insert k_c_Bh
+ 	//volume4 = PI*diam/2*diam/2*L*1e-18
+ 	//var4 = (8.96e-3 / volume4) *1e-6 * area(.5) * 1e-8
+ 	basal[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*basal[1].diam*1e-18))
+ 	basal[1].gca_ca_debug_Bh = 0.007
+ 	basal[1].gk_k_ahp_Bh = 0.0008
+ 	basal[1].gk_k_c_Bh = 0.005
+ 	basal[1].phi_cadifus = 0.075
+ 	basal[1].kf_rasGDP_cadifus = 0
+ 	}
+
+basal[2] {
+	diam=3.84
+	L=220 
+	nseg = 1
+	insert cadifus
+ 	insert na_Bh
+ 	insert ca_debug_Bh
+ 	insert k_dr_Bh
+ 	insert k_ahp_Bh
+ 	insert k_c_Bh
+ 	//volume5 = PI*diam/2*diam/2*L*1e-18
+ 	//var5 = (8.96e-3 / volume5) *1e-6 * area(.5) * 1e-8
+ 	basal[2].beta_cadifus = ( 2e-8 / (FARADAY*1e6*basal[2].diam*1e-18))
+ 	basal[2].gna_na_Bh = 0.02
+ 	basal[2].gca_ca_debug_Bh = 0.012
+ 	basal[2].gk_k_dr_Bh = 0.02
+ 	basal[2].gk_k_ahp_Bh = 0.0008
+ 	basal[2].gk_k_c_Bh = 0.01
+ 	basal[2].phi_cadifus = 0.075
+ 	basal[2].kf_rasGDP_cadifus = 0
+ 	}
+ 	
+basal[3] { 
+	diam=3.84
+	L=110
+	nseg = 1
+	insert cadifus
+ 	insert na_Bh
+ 	insert ca_debug_Bh
+ 	insert k_dr_Bh
+ 	insert k_ahp_Bh
+ 	insert k_c_Bh
+ 	//var1 = 34.53e6 * area(.5) * 1e-8
+	//basal[3].beta_cadifus = ( 34.53e12 * (PI*diam/2*diam/2*L*1e-18) * 1e-6)
+	basal[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*basal[3].diam*1e-18))
+ 	basal[3].gna_na_Bh = 0.015
+ 	basal[3].gca_ca_debug_Bh = 0.008
+ 	basal[3].gk_k_dr_Bh = 0.01
+ 	basal[3].gk_k_ahp_Bh = 0.0008
+ 	basal[3].gk_k_c_Bh = 0.02
+ 	basal[3].phi_cadifus = 0.075
+ 	basal[3].kf_rasGDP_cadifus = 0
+ 	}	
+
+//apical compartiments
+
+for i=1,8{
+	apical[i]{
+		nseg = 1
+		insert cadifus
+ 		insert ca_debug_Bh
+ 		insert k_dr_Bh
+ 		insert k_ahp_Bh
+ 		insert k_c_Bh
+ 		insert k_a_Bh
+ 		insert nmda_current
+ 		
+ 		//volume6 = PI*diam/2*diam/2*L*1e-18
+ 		//var6 = (8.96e-3 / volume6) *1e-6 * area(.5) * 1e-8
+		//apical[i].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[i].diam*1e-18))
+ 		apical[i].gca_ca_debug_Bh = 0.007
+ 		apical[i].gk_k_dr_Bh = 0.006
+ 		apical[i].gk_k_ahp_Bh = 0.0008
+ 		apical[i].gk_k_c_Bh = 0.005
+ 		apical[i].gk_k_a_Bh = 0.01
+ 		
+ 		
+ 		}
+ 	}
+ 	
+ 	apical[0]{
+ 		nseg = 1
+		insert cadifus
+ 		insert na_Bh
+ 		insert ca_debug_Bh
+ 		insert k_dr_Bh
+ 		insert k_ahp_Bh
+ 		insert k_c_Bh
+ 		insert nmda_current
+ 		
+ 		//var2 = 26.404e6 * area(.5) * 1e-8
+ 		//apical[0].beta_cadifus = ( 26.404e12 * (PI*diam/2*diam/2*L*1e-18) * 1e-6)
+ 		apical[0].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[0].diam*1e-18))
+ 		apical[0].gna_na_Bh = 0.015
+ 		apical[0].gca_ca_debug_Bh = 0.008
+ 		apical[0].gk_k_dr_Bh = 0.01
+ 		apical[0].gk_k_ahp_Bh = 0.0008
+ 		apical[0].gk_k_c_Bh = 0.02
+ 		apical[0].phi_cadifus = 0.075
+ 		apical[0].kf_rasGDP_cadifus = 0
+ 		
+ 		}
+ 		
+ 	apical[1]{
+ 		insert na_Bh
+ 		apical[1].gna_na_Bh = 0.008
+ 		}
+ 	apical[2]{
+ 		insert na_Bh
+ 		apical[2].gna_na_Bh = 0.006
+ 		}
+ 	apical[3]{
+ 		insert na_Bh
+ 		apical[3].gna_na_Bh = 0.005
+ 		}
+for i=4,8{
+ 	apical[i]{
+ 		insert na_Bh
+ 		apical[i].gna_na_Bh = 0.004
+ 		}
+ 	}
+ 	
+ 	apical[9]{
+	nseg = 1
+	}	
+
+for i=0,9{
+	apical[i] {L = 120}
+	}
+	
+	apical[0] {diam = 4}
+	apical[1] {diam = 3}
+	apical[2] {diam = 3}
+for i = 3,9{
+	apical[i] {diam = 2.6}
+	}
+
+apical[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[1].diam*1e-18))
+apical[1].phi_cadifus = 0.075
+apical[1].kf_rasGDP_cadifus = 0
+apical[2].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[2].diam*1e-18))
+apical[2].phi_cadifus = 0.075
+apical[2].kf_rasGDP_cadifus = 0
+apical[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[3].diam*1e-18))
+apical[3].phi_cadifus = 0.075
+apical[3].kf_rasGDP_cadifus = 0
+apical[4].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[4].diam*1e-18))
+apical[4].phi_cadifus = 0.075
+apical[4].kf_rasGDP_cadifus = 0
+apical[5].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[5].diam*1e-18))
+apical[5].phi_cadifus = 0.075
+apical[5].kf_rasGDP_cadifus = 0
+apical[6].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[6].diam*1e-18))
+apical[6].phi_cadifus = 0.075
+apical[6].kf_rasGDP_cadifus = 0
+apical[7].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[7].diam*1e-18))
+apical[7].phi_cadifus = 0.075
+apical[7].kf_rasGDP_cadifus = 0
+apical[8].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[8].diam*1e-18))
+apical[8].phi_cadifus = 0.075
+apical[8].kf_rasGDP_cadifus = 0
+	
+//lateral compartiments
+
+for i=0,11{
+	lateral[i]{
+		nseg = 1
+	 	//insert cadifus
+		insert ca_debug_Bh
+	 	insert k_ahp_Bh
+	 	insert k_c_Bh
+	 	insert k_dr_Bh
+	 	insert k_a_Bh
+	 	insert nmda_current
+	 	
+	 	//volume7 = PI*diam/2*diam/2*L*1e-18
+ 		//var7 = (8.96e-3 / volume7) *1e-6 * area(.5) * 1e-8
+	 	//lateral[i].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[i].diam*1e-18))
+	 	lateral[i].gca_ca_debug_Bh = 0.007
+	 	lateral[i].gk_k_ahp_Bh = 0.0008
+ 	 	lateral[i].gk_k_c_Bh = 0.005
+ 	 	lateral[i].gk_k_dr_Bh = 0.006
+ 	 	lateral[i].gk_k_a_Bh = 0.01
+ 	 	
+ 	 	
+ 	 	}
+ 	 }
+ 	 
+ 	lateral[0]{
+ 	 	insert na_Bh
+ 		lateral[0].gna_na_Bh = 0.008
+ 		}
+ 	
+for i=1,11{
+ 	lateral[i]{
+ 		insert na_Bh
+ 		lateral[i].gna_na_Bh = 0.004
+ 		}
+ 	}
+
+	
+	lateral[0] {L=85 insert cadifus}
+
+	lateral[1] {L=85 insert cadifus}
+
+	lateral[2] {L=80 insert cadifus}
+
+	lateral[3] {L=80 insert cadifus}
+
+	lateral[4] {L=57 insert cadifus} //dans suplementary data c'est 57 mis ca1.p 56.6
+
+	lateral[5] {L=57 insert cadifus} //dans suplementary data c'est 57 mis ca1.p 56.6
+
+	lateral[6] {L=10 insert cadifus}
+	//lateral[6] {nseg = 10}
+	
+	lateral[7] {L=10 insert cadifus}
+
+	lateral[8] {L=70 insert cadifus}
+
+	lateral[9] {L=30 insert cadifus}
+
+	lateral[10] {L=60 insert cadifus}
+	lateral[11] {L=60 insert cadifus}
+
+	
+	lateral[0] {diam=2}
+	lateral[1] {diam=1.8}
+	lateral[2] {diam=1.5}
+	lateral[3] {diam=1.5}
+for i=4,11{
+	lateral[i] {diam=1}
+	}
+	
+lateral[0].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[0].diam*1e-18))
+	lateral[0].phi_cadifus = 0.075
+ 	lateral[0].kf_rasGDP_cadifus = 0
+lateral[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[1].diam*1e-18))
+	lateral[1].phi_cadifus = 0.075
+ 	lateral[1].kf_rasGDP_cadifus = 0
+lateral[2].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[2].diam*1e-18))
+	lateral[2].phi_cadifus = 0.075
+ 	lateral[2].kf_rasGDP_cadifus = 0
+lateral[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[3].diam*1e-18))
+	lateral[3].phi_cadifus = 0.075
+ 	lateral[3].kf_rasGDP_cadifus = 0
+lateral[4].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[4].diam*1e-18))
+	lateral[4].phi_cadifus = 0.075
+ 	lateral[4].kf_rasGDP_cadifus = 0
+lateral[5].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[5].diam*1e-18))
+	lateral[5].phi_cadifus = 0.075
+ 	lateral[5].kf_rasGDP_cadifus = 0
+lateral[6].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[6].diam*1e-18))
+	lateral[6].phi_cadifus = 0.075
+ 	lateral[6].kf_rasGDP_cadifus = 0
+lateral[7].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[7].diam*1e-18))
+	lateral[7].phi_cadifus = 0.075
+ 	lateral[7].kf_rasGDP_cadifus = 0
+lateral[8].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[8].diam*1e-18))
+	lateral[8].phi_cadifus = 0.075
+ 	lateral[8].kf_rasGDP_cadifus = 0
+lateral[9].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[9].diam*1e-18))
+//lateral[9].beta_cadifus  = ( 2e-8 / (FARADAY*1e6*lateral[9].diam*1e-18))
+	lateral[9].phi_cadifus = 0.075
+ 	lateral[9].kf_rasGDP_cadifus = 0
+lateral[10].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[10].diam*1e-18))
+	lateral[10].phi_cadifus = 0.075
+ 	lateral[10].kf_rasGDP_cadifus = 0
+lateral[11].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+	lateral[11].phi_cadifus = 0.075
+	lateral[11].kf_rasGDP_cadifus = 0
+
+	
+	
+// spine
+spine[1]{
+	nseg = 1
+	diam = 0.5
+	//insert nmda_ca_conc_Bh
+	insert ca_debug_Bh
+	insert nmda_current
+	insert nmda_ca_current
+	
+	//volume8 = PI*diam/2*diam/2*L*1e-18
+ 	//var8 = (8.96e-3 / volume8) *1e-6 * area(.5) * 1e-8
+	//spine[1].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18))
+	spine[1].gca_ca_debug_Bh = 0.06
+	
+	insert cadifus	
+	}
+spine[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18))
+
+
+spine[3]{
+	nseg = 1
+	diam = 0.5
+	//insert nmda_ca_conc_Bh
+	insert ca_debug_Bh
+	insert nmda_current
+	insert nmda_ca_current
+	
+	//volume9 = PI*diam/2*diam/2*L*1e-18
+ 	//var9 = (8.96e-3 / volume9) *1e-6 * area(.5) * 1e-8
+	//spine[3].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[3].diam*1e-18))
+	spine[3].gca_ca_debug_Bh = 0.06
+	
+	 insert cadifus
+	}
+spine[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[3].diam*1e-18))
+	
+	
+spine[5]{
+	nseg = 1
+	diam = 0.5
+	//insert nmda_ca_conc_Bh
+	insert ca_debug_Bh
+	insert nmda_current
+	insert nmda_ca_current
+	
+	//volume10 = PI*diam/2*diam/2*L*1e-18
+ 	//var10 = (8.96e-3 / volume10) *1e-6 * area(.5) * 1e-8
+	//spine[5].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18))
+	spine[5].gca_ca_debug_Bh = 0.06
+	
+	 insert cadifus
+	}
+spine[5].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18))
+
+
+for i=0,5{
+	spine[i] {L=0.5}
+	}
+
+	spine[0] {diam=0.1	 
+	insert cadifus
+	}
+spine[0].beta_cadifus = 0
+
+	spine[2] {diam=0.1	 
+	insert cadifus
+	}
+spine[2].beta_cadifus = 0
+
+	spine[4] {diam=0.1	 
+	insert cadifus
+	}
+spine[4].beta_cadifus = 0
+
+//////////////////////////////////////////////
+//Connecter les compartiments
+
+/*connect fils(), parent()*/
+
+//soma est la racine :0 end(left) at the origin; 1 end(right) 
+//apical[0]: 0 end(left) at the origin; 1 end(right) >> sections get drawn from left to right
+//basal[3]: 1 end(left) at the origin; 0 end(right) >> sections get drawn from right to left
+
+//Begin, at the right of the soma
+connect apical[0](0), soma(1)
+connect apical[1](0), apical[0](1)
+connect apical[2](0), apical[1](1)
+connect apical[3](0), apical[2](1)
+connect apical[4](0), apical[3](1)
+connect apical[5](0), apical[4](1)
+connect apical[6](0), apical[5](1)
+connect apical[7](0), apical[6](1)
+connect apical[8](0), apical[7](1)
+connect apical[9](0), apical[8](1)
+
+//End, at the left of the soma
+connect basal[3](0), soma(0)
+connect basal[2](0), basal[3](1)
+connect basal[1](0), basal[2](1)
+connect basal[0](0), basal[1](1)
+
+//lateral connection
+connect lateral[0](0), apical[0](0.5)
+connect lateral[1](0), lateral[0](1)
+connect lateral[2](0), lateral[1](1)
+connect lateral[3](0), lateral[2](1)
+
+connect lateral[4](0), apical[2](0.5)
+connect lateral[5](0), lateral[4](1)
+connect lateral[6](0), lateral[5](1)
+connect lateral[7](0), lateral[6](1)
+connect lateral[8](0), lateral[7](1)
+connect lateral[9](0), lateral[8](1)
+connect lateral[10](0), lateral[9](1)
+connect lateral[11](0), lateral[10](1)
+
+//spine connection
+connect spine[0](0), lateral[6](0.5)
+connect spine[1](0), spine[0](1)
+
+connect spine[2](0), lateral[7](0.5)
+connect spine[3](0), spine[2](1)
+
+connect spine[4](0), lateral[9](0.5)
+connect spine[5](0), spine[4](1)
+
+
+//show topology
+/*
+objref s
+s = new Shape()
+s.show(0)
+soma s.color(2)
+topology()
+finitialize()
+*/
+
+/*
+//creation de la sous-section pour l'insertion des point-process
+objref sl
+sl = new SectionList()
+
+for i=0,8{
+	access apical[i]{ sl.append() }
+	}
+for i=0,11{
+	access lateral[i]{sl.append() }
+	}
+for i=1,1{	
+	access spine[i]{sl.append() }
+	}
+for i=3,3{	
+	access spine[i]{sl.append() }
+	}
+for i=5,5{	
+	access spine[i]{sl.append() }
+	}
+//sl.printnames()*/
+	
+//Variables pour l'affichage de graphe et de la fenêtre principale d'initialisation
+objectvar save_window_, rvp_
+objectvar scene_vector_[10]
+objectvar ocbox_, ocbox_list_, scene_, scene_list_
+{ocbox_list_ = new List()  scene_list_ = new List()}
+{pwman_place(0,0,0)}
+{
+xpanel("RunControl", 0)
+v_init = -60
+xvalue("Init","v_init", 1,"stdinit()", 1, 1 )
+xbutton("Init & Run","run()")
+xbutton("Stop","stoprun=1")
+runStopAt = 5
+xvalue("Continue til","runStopAt", 1,"{continuerun(runStopAt) stoprun=1}", 1, 1 )
+runStopIn = 1
+xvalue("Continue for","runStopIn", 1,"{continuerun(t + runStopIn) stoprun=1}", 1, 1 )
+xbutton("Single Step","steprun()")
+t = 1264.78
+xvalue("t","t", 2 )
+tstop = 600000
+xvalue("Tstop","tstop", 1,"tstop_changed()", 0, 1 )
+dt = 0.025
+xvalue("dt","dt", 1,"setdt()", 0, 1 )
+steps_per_ms = 40
+xvalue("Points plotted/ms","steps_per_ms", 1,"setdt()", 0, 1 )
+screen_update_invl = 0.5
+xvalue("Scrn update invl","screen_update_invl", 1,"", 0, 1 )
+realtime = 6.01
+xvalue("Real Time","realtime", 0,"", 0, 1 )
+xpanel(9,77)
+}
+{
+save_window_ = new Graph(0)
+save_window_.size(0,600000,-80,40)
+scene_vector_[2] = save_window_
+{save_window_.view(0, -80, 600000, 120, 373, 0, 300.48, 200.32)}
+graphList[0].append(save_window_)
+save_window_.save_name("graphList[0].")
+save_window_.addvar("spine[1].v( 0.5 )", 2, 1, 0.8, 0.9, 2)
+}
+{
+save_window_ = new Graph(0)
+save_window_.size(0,600000,-80,40)
+scene_vector_[3] = save_window_
+{save_window_.view(0, -80, 600000, 120, 697, 0, 300.48, 200.32)}
+graphList[1].append(save_window_)
+save_window_.save_name("graphList[1].")
+save_window_.addvar("spine[1].cai( 0.5 )", 2, 1, 0.8, 0.9, 2)
+}
+{
+save_window_ = new Graph(0)
+save_window_.size(0,600000,0,1)
+scene_vector_[5] = save_window_
+{save_window_.view(0, 0, 600000, 1, 1018, 1, 300.48, 200.32)}
+graphList[2].append(save_window_)
+save_window_.save_name("graphList[2].")
+save_window_.addvar("spine[1].RasGTPi( 0.5 )", 2, 1, 0.8, 0.9, 2)
+}
+{
+save_window_ = new Graph(0)
+save_window_.size(0,600000,0,1)
+scene_vector_[6] = save_window_
+{save_window_.view(0, 0, 600000, 1, 373, 267, 300.48, 200.32)}
+graphList[2].append(save_window_)
+save_window_.save_name("graphList[2].")
+save_window_.addvar("spine[0].cai( 0.5 )", 3, 1, 0.8, 0.9, 2)
+}
+{
+save_window_ = new Graph(0)
+save_window_.size(0,600000,0,1)
+scene_vector_[7] = save_window_
+{save_window_.view(0, 0, 600000, 1, 701, 267, 300.48, 200.32)}
+graphList[2].append(save_window_)
+save_window_.save_name("graphList[2].")
+save_window_.addvar("spine[0].RasGTPi( 0.5 )", 3, 1, 0.8, 0.9, 2)
+}
+{
+save_window_ = new Graph(0)
+save_window_.size(0,600000,0,1)
+scene_vector_[8] = save_window_
+{save_window_.view(0, 0, 600000, 1, 682, 530, 300.48, 200.32)}
+graphList[2].append(save_window_)
+save_window_.save_name("graphList[2].")
+save_window_.addvar("lateral[6].RasGTPi( 0.5 )", 4, 1, 0.8, 0.9, 2)
+}
+{
+save_window_ = new Graph(0)
+save_window_.size(0,600000,0,1)
+scene_vector_[9] = save_window_
+{save_window_.view(0, 0, 600000, 1, 1027, 270, 300.48, 200.32)}
+graphList[2].append(save_window_)
+save_window_.save_name("graphList[2].")
+save_window_.addvar("lateral[6].cai( 0.5 )", 4, 1, 0.8, 0.9, 2)
+}
+objectvar scene_vector_[1]
+{doNotify()}
+
+
+/*Stimulations : injections de courant; Modifié juste le stim.amp pour faire varier nos simulations selon
+le modèle de Bhalla; Les différents cas sont les suivants: stim.amp = -1; stim.amp = -0.8; stim.amp = -0.6
+stim.amp = -0.4; stim.amp = -0.2; stim.amp = 0; stim.amp = 0.2; stim.amp = 0.4; stim.amp = 0.6; stim.amp = 0.8; 
+stim.amp = 1 */
+/*Par rapport au fichier construit dans le shell, on obtient 3 pics et un début de 4eme avec 
+input.dur = 200; si on augmente à input.dur = 250, on obtient les 4 pics. la courbe est similaire
+mais il y a une légère différence dans les temps d'arrivées des PA.
+
+Dépendemment de la série d'input que je veux j'obtiens un résultat. Rien ne précise dans bhalla ou il effectue son
+input initial.!!!*/
+
+/*Validation des nouveaux fichiers. :)*/
+/*
+objectvar input
+soma input = new IClamp (0.5)
+input.del = 100
+input.dur = 200
+input.amp = 1.6 
+*/
+
+/*running simmulation*/
+//run()
+
+/*Scenario: enlever les voltages ca channels pis voir comment les synapses agissent*/
+

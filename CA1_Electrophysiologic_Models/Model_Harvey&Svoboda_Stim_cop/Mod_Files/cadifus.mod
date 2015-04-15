@@ -91,6 +91,7 @@ STATE {
   MapkP (mM)
   MapkPP (mM)
   MapkPhosphatase (mM)
+  
 }
 
 BREAKPOINT { SOLVE state METHOD sparse }
@@ -120,10 +121,11 @@ INITIAL {
   	MapkP = 0
   	MapkPP = 0
   	MapkPhosphatase = 0.001e-3
+
 	}
 
 :Definitions of the temporary variables for the Michaelis-Mentens rates calculation
-LOCAL tempRaf, tempRafP , tempMek, tempMekP, tempMekPP1, tempMekPP2, tempMapk, tempMapkP, tempMapkPP1, tempMapkPP2
+LOCAL tempRaf, tempRafP , tempMek, tempMekP, tempMekPP1, tempMekPP2, tempMapk, tempMapkP, tempMapkPP1, tempMapkPP2, tempKV42, tempKV42P
 	
 KINETIC state {
    	COMPARTMENT PI*diam {RasGDPi RasGTPi}
@@ -138,6 +140,7 @@ KINETIC state {
 	LONGITUDINAL_DIFFUSION DKinases*PI*diam*diam/4 {Mapk} :diffusion volumique
 	LONGITUDINAL_DIFFUSION DKinases*PI*diam*diam/4 {MapkP}
 	LONGITUDINAL_DIFFUSION DKinases*PI*diam*diam/4 {MapkPP}
+
    ~ ca << ( (- beta * ica)- (phi * (cai - caiBase)) ) 
     cai = ca 
     ca_modif = ca - 0.00045
@@ -167,5 +170,7 @@ KINETIC state {
   tempMapkPP1 = (kcat_mapk * MekPP)/(MapkP + km_mapk)
   tempMapkPP2 = (kcat_mapk * MapkPhosphatase)/(MapkPP + km_mapk)
   ~ MapkP <-> MapkPP (tempMapkPP1, tempMapkPP2)
+  
+
 
 }

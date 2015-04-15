@@ -6,7 +6,7 @@
  LTP reversal and dendritic excitability), injecter un courant de 1nA, pendant 200ms, à soma(0).*/
 
 load_file("nrngui.hoc")
-load_file("all_tau_vecs.hoc")
+//load_file("all_tau_vecs.hoc")
 //load_file("NMDA.hoc")
 
 //load_file("ca1_cell.ses")
@@ -63,7 +63,7 @@ soma {
  	soma.phi_cadifus = 0.075
  	soma.kf_rasGDP_cadifus = 0
  	
- 	insert kaf
+ 	
  	}
 
 //basal compartiments

@@ -1,0 +1,56 @@
+load_file("nrngui.hoc")
+create cable[2]
+cable[0]{
+	nseg = 1
+	L = 1
+	diam = 1
+	insert cadifus
+	cable[0].phi_cadifus = 0.075
+	cable[0].kf_rasGDP_cadifus = 0
+}
+
+cable[1]{
+	nseg = 1
+	L = 1
+	diam = 1
+	insert cadifus
+}
+connect cable[1](0), cable[0](0)
+
+//Fenetre d'initiation
+{
+xpanel("RunControl", 0)
+v_init = -60
+xvalue("Init","v_init", 1,"stdinit()", 1, 1 )
+xbutton("Init & Run","run()")
+xbutton("Stop","stoprun=1")
+runStopAt = 5
+xvalue("Continue til","runStopAt", 1,"{continuerun(runStopAt) stoprun=1}", 1, 1 )
+runStopIn = 1
+xvalue("Continue for","runStopIn", 1,"{continuerun(t + runStopIn) stoprun=1}", 1, 1 )
+xbutton("Single Step","steprun()")
+t = 300
+xvalue("t","t", 2 )
+tstop = 300
+xvalue("Tstop","tstop", 1,"tstop_changed()", 0, 1 )
+dt = 0.025
+xvalue("dt","dt", 1,"setdt()", 0, 1 )
+steps_per_ms = 40
+xvalue("Points plotted/ms","steps_per_ms", 1,"setdt()", 0, 1 )
+screen_update_invl = 0.5
+xvalue("Scrn update invl","screen_update_invl", 1,"", 0, 1 )
+realtime = 0
+xvalue("Real Time","realtime", 0,"", 0, 1 )
+xpanel(9,77)
+}
+
+
+objectvar input
+cable[1] input = new IClamp (0.5)
+input.del = 100
+input.dur = 200
+input.amp = 100
+
+
+/*running simmulation*/
+run()

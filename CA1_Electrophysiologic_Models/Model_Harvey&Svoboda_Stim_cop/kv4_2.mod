@@ -18,7 +18,8 @@ UNITS {
 NEURON {
 	SUFFIX kaf
 	USEION k READ ek WRITE ik
-	RANGE gkbar, ik, mshift, hshift
+	USEION KV42P READ KV42Pi
+	RANGE gkbar, ik, mshift, hshift, mshift_mutant, hshift_mutant
 }
 
 PARAMETER {
@@ -26,40 +27,61 @@ PARAMETER {
 
 	:wild-type of kv4.2			: Schrader et al, 2006
 	mvhalf = -24.0	(mV)		: Schrader et al, 2006
-	mslope = -18	(mV)		: Schrader et al, 2006 or18
+	mslope = -18	(mV)		: Schrader et al, 2006 
 	mshift = 0	(mV)
 	
-	hvhalf = 61	(mV)		: Schrader et al, 2006
+	hvhalf = 61	(mV)			: Schrader et al, 2006
 	hslope	= 3.4	(mV)		: Schrader et al, 2006
 	hshift = 0	(mV)
 	htau = 10	(ms)			: Schrader et al, 2006
 
+
+	:mutant of kv4.2 T607D		: Schrader et al, 2006
+	mvhalf_mutant = 6	(mV)		: Schrader et al, 2006
+	mslope_mutant = -18	(mV)		: Schrader et al, 2006 
+	mshift_mutant = 0	(mV)
+	
+	hvhalf_mutant = 63	(mV)			: Schrader et al, 2006
+	hslope_mutant	= 3.9	(mV)		: Schrader et al, 2006
+	hshift_mutant = 0	(mV)
+	htau_mutant = 20	(ms)			: Schrader et al, 2006
+
+
 	qfact = 3
 	power = 2
+	
+	ek = -95	(mV)  
+	KV42Pi		(1)
 }
 
 ASSIGNED { 
 	v 		(mV)
     ik 		(mA/cm2)
-	ek 		(mV)
+	:ek 		(mV)
 
 	minf
 	hinf
+	ninf
+	qinf
 }
 
 STATE {
-    m h
+    m h n q
 }
 
 BREAKPOINT {
     SOLVE states METHOD cnexp
-	ik  = gkbar * m^power * h * (v-ek)
+    if (KV42Pi == 0) { ik  = gkbar * m^power * h * (v-ek) }
+    else {
+	ik  = gkbar * m^power * h * (v-ek) + KV42Pi*gkbar * n^power * q * (v-ek) }
 }
 
 INITIAL {
 	rates(v)
 	m = minf
 	h = hinf
+	n = ninf
+	q = qinf
 }
 
 FUNCTION_TABLE mtau (v(mV))  (ms)	: Tkatch 2000 Fig 2B
@@ -68,12 +90,18 @@ DERIVATIVE states {
 	rates(v)
 	m' = (minf - m) / (mtau(v) / qfact)
 	h' = (hinf - h) / (htau / qfact)
+	n' = (ninf - n) / (mtau(v) / qfact)
+	q' = (qinf - q) / (htau_mutant / qfact)
 }
 
 
 PROCEDURE rates( v(mV) ) {  : Boltzman adjusted to give proper Erev dependency 
-	TABLE minf, hinf DEPEND mshift, hshift, hslope
-		FROM -200 TO 200 WITH 201
+:	TABLE minf, hinf DEPEND mshift, hshift, hslope
+:		FROM -200 TO 200 WITH 201
+
 			minf = 1  /  ( 1 + exp( (v - mvhalf - mshift) / mslope) ) 
 			hinf = 1  /  ( 1 + exp( (v - hvhalf - hshift) / hslope) ) 
+	
+			ninf = 1  /  ( 1 + exp( (v - mvhalf_mutant - mshift_mutant) / mslope_mutant) ) 
+			qinf = 1  /  ( 1 + exp( (v - hvhalf_mutant - hshift_mutant) / hslope_mutant) ) 
 }
