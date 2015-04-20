@@ -58,8 +58,8 @@ PARAMETER {
 	km_mapk = 0.0462963e-3 (mM) :the same for the phosphorylation of MapkP to MapkPP
 	kcat_mapkP = 1e-3 (/ms) 
 	km_mapkP = 0.0666667e-3 (mM) :the same for the dephosphorylation of MapkPP to MapkP
-	km_KV42 = 0.00006 (mM) :60nM from Paige Adams, 2000
-	kcat_KV42 = 25.6e-9 (/ms) : vmax = 26/pmol/min/mg from Paige Adams, 2000
+	km_KV42 = 10e-3 (mM)		:0.00006 (mM) :60nM from Paige Adams, 2000
+	kcat_KV42 = 10e-3 (/ms)		:25.6e-9 (/ms) : vmax = 26/pmol/min/mg from Paige Adams, 2000
 	:k_MM = 0 : for the backward for every Michaelis-Menten equation
 	:tempRaf = 0
 	:tempRafP = 0

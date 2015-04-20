@@ -54,6 +54,7 @@ PARAMETER {
 	ek = -95	(mV)  
 	KV42Pi		(1)
 	KV42i		(1)
+	KV42_total = 1.86e-4  (mM)
 }
 
 ASSIGNED { 
@@ -75,7 +76,7 @@ BREAKPOINT {
     SOLVE states METHOD cnexp
     if (KV42Pi == 0) { ik  = gkbar * m^power * h * (v-ek) }
     else {
-	ik  = (KV42i - KV42Pi/KV42i) * gkbar * m^power * h * (v-ek) + (KV42Pi/KV42i)*gkbar * n^power * q * (v-ek) }
+	ik  = (KV42i/KV42_total) * gkbar * m^power * h * (v-ek) + (KV42Pi/KV42_total)*gkbar * n^power * q * (v-ek) }
 }
 
 INITIAL {

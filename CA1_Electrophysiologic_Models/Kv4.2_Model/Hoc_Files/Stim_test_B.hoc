@@ -43,5 +43,43 @@ cao0_ca_ion = 4
 mg_nmda = 0
 mg_nmda_ca = 0
 //v_init = 0
+
+
+//Evenements pré-synaptiques 
+objref stim_2
+	stim_2 = new NetStim(.5)
+	stim_2.interval = 2000
+	stim_2.number = 30
+	stim_2.start 	= 443000
+	stim_2.noise 	= 0
+	
+	
+objref nc_stim2 , nc_AMPA_stim2 , nc_NMDA_CA_stim2
+
+//1000
+//spine1
+for i=22,22{ 
+	access spine[i-19]{
+		//netcon
+		nc_stim2 = new NetCon(stim_2, sNMDA[i])
+		nc_stim2.weight =  0.5
+		nc_stim2.delay = 0 
+		
+		nc_AMPA_stim2 = new NetCon(stim_2, sAMPA[i])
+		nc_AMPA_stim2.weight = 0.5
+		nc_AMPA_stim2.delay = 0 
+		
+		nc_NMDA_CA_stim2 = new NetCon(stim_2, sNMDA_CA[0])
+		nc_NMDA_CA_stim2.weight = 0.5
+		nc_NMDA_CA_stim2.delay = 0 
+		}
+	}
+	
+
+cao0_ca_ion = 4
+mg_nmda = 0
+mg_nmda_ca = 0
+//v_init = 0
+
 access soma
 run()

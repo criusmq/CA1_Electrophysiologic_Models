@@ -114,6 +114,8 @@ extern Memb_func* memb_func;
  extern double mtau( _threadargsprotocomma_ double );
  extern double table_mtau( );
  /* declare global and static user variables */
+#define KV42_total KV42_total_kaf
+ double KV42_total = 0.000186;
 #define htau_mutant htau_mutant_kaf
  double htau_mutant = 20;
 #define hslope_mutant hslope_mutant_kaf
@@ -153,6 +155,7 @@ extern Memb_func* memb_func;
  "hvhalf_mutant_kaf", "mV",
  "hslope_mutant_kaf", "mV",
  "htau_mutant_kaf", "ms",
+ "KV42_total_kaf", "mM",
  "gkbar_kaf", "S/cm2",
  "mshift_kaf", "mV",
  "hshift_kaf", "mV",
@@ -180,6 +183,7 @@ extern Memb_func* memb_func;
  "htau_mutant_kaf", &htau_mutant_kaf,
  "qfact_kaf", &qfact_kaf,
  "power_kaf", &power_kaf,
+ "KV42_total_kaf", &KV42_total_kaf,
  0,0
 };
  static DoubVec hoc_vdoub[] = {
@@ -479,7 +483,7 @@ static double _nrn_current(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread
      ik = gkbar * pow( m , power ) * h * ( v - ek ) ;
      }
    else {
-     ik = ( KV42i - KV42Pi / KV42i ) * gkbar * pow( m , power ) * h * ( v - ek ) + ( KV42Pi / KV42i ) * gkbar * pow( n , power ) * q * ( v - ek ) ;
+     ik = ( KV42i / KV42_total ) * gkbar * pow( m , power ) * h * ( v - ek ) + ( KV42Pi / KV42_total ) * gkbar * pow( n , power ) * q * ( v - ek ) ;
      }
    }
  _current += ik;

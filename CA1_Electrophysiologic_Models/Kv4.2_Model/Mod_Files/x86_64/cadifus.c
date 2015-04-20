@@ -181,9 +181,9 @@ extern Memb_func* memb_func;
 #define ceiling ceiling_cadifus
  double ceiling = 2;
 #define kcat_KV42 kcat_KV42_cadifus
- double kcat_KV42 = 2.56e-08;
+ double kcat_KV42 = 0.01;
 #define km_KV42 km_KV42_cadifus
- double km_KV42 = 6e-05;
+ double km_KV42 = 0.01;
 #define km_mapkP km_mapkP_cadifus
  double km_mapkP = 6.66667e-05;
 #define kcat_mapkP kcat_mapkP_cadifus

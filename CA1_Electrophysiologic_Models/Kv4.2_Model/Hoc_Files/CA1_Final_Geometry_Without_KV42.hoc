@@ -63,7 +63,7 @@ soma {
  	soma.phi_cadifus = 0.075
  	soma.kf_rasGDP_cadifus = 0
  	
- 	insert kaf
+ 	
  	}
 
 //basal compartiments
@@ -81,7 +81,6 @@ basal[0] {
  	basal[0].gk_k_c_Bh = 0.005
  	basal[0].phi_cadifus = 0.075
  	basal[0].kf_rasGDP_cadifus = 0
- 	insert kaf
  	}
 
 basal[1] {
@@ -98,7 +97,6 @@ basal[1] {
  	basal[1].gk_k_c_Bh = 0.005
  	basal[1].phi_cadifus = 0.075
  	basal[1].kf_rasGDP_cadifus = 0
- 	insert kaf
  	}
 
 basal[2] {
@@ -119,7 +117,6 @@ basal[2] {
  	basal[2].gk_k_c_Bh = 0.01
  	basal[2].phi_cadifus = 0.075
  	basal[2].kf_rasGDP_cadifus = 0
- 	insert kaf
  	}
  	
 basal[3] { 
@@ -140,7 +137,6 @@ basal[3] {
  	basal[3].gk_k_c_Bh = 0.02
  	basal[3].phi_cadifus = 0.075
  	basal[3].kf_rasGDP_cadifus = 0
- 	insert kaf
  	}	
 
 //apical compartiments
@@ -165,7 +161,7 @@ for i=1,8{
  		apical[i].gk_k_c_Bh = 0.005
  		apical[i].gk_k_a_Bh = 0.01
  		
- 		insert kaf
+ 		
  		}
  	}
  	
@@ -189,7 +185,7 @@ for i=1,8{
  		apical[0].gk_k_c_Bh = 0.02
  		apical[0].phi_cadifus = 0.075
  		apical[0].kf_rasGDP_cadifus = 0
- 		insert kaf
+ 		
  		}
  		
  	apical[1]{
@@ -268,7 +264,7 @@ for i=0,29{
  	 	lateral[i].gk_k_dr_Bh = 0.006
  	 	lateral[i].gk_k_a_Bh = 0.01
  	 	
- 	 	insert kaf
+ 	 	
  	 	}
  	 }
  	 
@@ -439,7 +435,6 @@ spine[1]{
 	insert nmda_ca_current
 	spine[1].gca_ca_debug_Bh = 0.06
 	insert cadifus	
-	insert kaf
 	}
 spine[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18))
 
@@ -452,7 +447,6 @@ spine[3]{
 	insert nmda_ca_current
 	spine[3].gca_ca_debug_Bh = 0.06	
 	 insert cadifus
-	 insert kaf
 	}
 spine[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[3].diam*1e-18))
 	
@@ -465,7 +459,6 @@ spine[5]{
 	insert nmda_ca_current
 	spine[5].gca_ca_debug_Bh = 0.06
 	insert cadifus
-	insert kaf
 	}
 spine[5].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18))
 
@@ -477,7 +470,6 @@ spine[7]{
 	insert nmda_ca_current
 	spine[7].gca_ca_debug_Bh = 0.06
 	insert cadifus
-	insert kaf
 	}
 spine[7].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18))
 
@@ -487,25 +479,21 @@ for i=0,7{
 
 	spine[0] {diam=0.1	 
 	insert cadifus
-	insert kaf
 	}
 spine[0].beta_cadifus = 0
 
 	spine[2] {diam=0.1	 
 	insert cadifus
-	insert kaf
 	}
 spine[2].beta_cadifus = 0
 
 	spine[4] {diam=0.1	 
 	insert cadifus
-	insert kaf
 	}
 spine[4].beta_cadifus = 0
 
 	spine[6] {diam=0.1	 
 	insert cadifus
-	insert kaf
 	}
 spine[6].beta_cadifus = 0
 
@@ -638,9 +626,9 @@ t = 0
 xvalue("t","t", 2 )
 tstop = 1000000
 xvalue("Tstop","tstop", 1,"tstop_changed()", 0, 1 )
-dt = 0.025
+dt = 1
 xvalue("dt","dt", 1,"setdt()", 0, 1 )
-steps_per_ms = 40
+steps_per_ms = 1
 xvalue("Points plotted/ms","steps_per_ms", 1,"setdt()", 0, 1 )
 screen_update_invl = 0.5
 xvalue("Scrn update invl","screen_update_invl", 1,"", 0, 1 )
