@@ -152,7 +152,8 @@ KINETIC state {
 	LONGITUDINAL_DIFFUSION DKV42*diam {KV42Pi}
    ~ ca << ( (- beta * ica)- (phi * (cai - caiBase)) ) 
     cai = ca 
-    ca_modif = ca - 0.00045
+    :ca_modif = ca - 0.00045 : basal activity of calcium without KV.4.2 in the model. It use to match the Gef_activated with the one's from the Vcell model
+    ca_modif = ca - 0.00027 
   ~ ca_modif + Cam <-> Cam_Ca (kf_cam1, kr_cam1)
   ~ ca_modif + Cam_Ca <-> Cam_Ca2 (kf_cam2, kr_cam2)
   ~ ca_modif + Cam_Ca2 <-> Cam_Ca3 (kf_cam3, kr_cam3)

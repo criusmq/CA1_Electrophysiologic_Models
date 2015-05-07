@@ -231,7 +231,7 @@ static void nrn_alloc(Prop* _prop) {
 	double *_p; Datum *_ppvar;
  	_p = nrn_prop_data_alloc(_mechtype, 23, _prop);
  	/*initialize range parameters*/
- 	gkbar = 0.21;
+ 	gkbar = 0.019211;
  	mshift = 0;
  	hshift = 0;
  	mshift_mutant = 0;

@@ -24,7 +24,7 @@ NEURON {
 }
 
 PARAMETER {
-	gkbar = 0.21	(S/cm2)		: 0.21 in soma and prox; 0.019211 in mid/dist dends
+	gkbar = 0.019211	(S/cm2)		: 0.21 in soma and prox; 0.019211 in mid/dist dends
 
 	:wild-type of kv4.2			: Schrader et al, 2006
 	mvhalf = -24.0	(mV)		: Schrader et al, 2006
@@ -74,6 +74,10 @@ STATE {
 
 BREAKPOINT {
     SOLVE states METHOD cnexp
+    :ik  = 0.8333 * gkbar * m^power * h * (v-ek) + 0.1667 * gkbar * n^power * q * (v-ek) 
+    :ik  = 0.5* gkbar * m^power * h * (v-ek) + 0.5 * gkbar * n^power * q * (v-ek) 
+    :ik  = 0.2 * gkbar * m^power * h * (v-ek) + 0.8 * gkbar * n^power * q * (v-ek) 
+    :test de  stim faible, c est pour ca c est en commentaire. a enlever automatiquement apres
     if (KV42Pi == 0) { ik  = gkbar * m^power * h * (v-ek) }
     else {
 	ik  = (KV42i/KV42_total) * gkbar * m^power * h * (v-ek) + (KV42Pi/KV42_total)*gkbar * n^power * q * (v-ek) }

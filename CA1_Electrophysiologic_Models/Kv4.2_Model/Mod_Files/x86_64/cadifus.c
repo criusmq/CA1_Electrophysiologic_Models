@@ -638,7 +638,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  _RHS1( 20) += (b_flux =   ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) ) );
  /*FLUX*/
   cai = ca ;
-   ca_modif = ca - 0.00045 ;
+   ca_modif = ca - 0.00027 ;
    /* ~ ca_modif + Cam <-> Cam_Ca ( kf_cam1 , kr_cam1 )*/
  f_flux =  kf_cam1 * Cam * ca_modif ;
  b_flux =  kr_cam1 * Cam_Ca ;
@@ -896,7 +896,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  Dca += (b_flux =   ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) ) );
  /*FLUX*/
   cai = ca ;
- ca_modif = ca - 0.00045 ;
+ ca_modif = ca - 0.00027 ;
  /* ~ ca_modif + Cam <-> Cam_Ca ( kf_cam1 , kr_cam1 )*/
  f_flux =  kf_cam1 * Cam * ca_modif ;
  b_flux =  kr_cam1 * Cam_Ca ;
@@ -1092,7 +1092,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  /* ~ ca < < ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) )*/
  /*FLUX*/
   cai = ca ;
- ca_modif = ca - 0.00045 ;
+ ca_modif = ca - 0.00027 ;
  /* ~ ca_modif + Cam <-> Cam_Ca ( kf_cam1 , kr_cam1 )*/
  _term =  kf_cam1 * ca_modif ;
  _MATELM1( 4 ,4)  += _term;

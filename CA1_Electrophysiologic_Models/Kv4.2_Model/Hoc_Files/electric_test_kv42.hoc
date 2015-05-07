@@ -59,7 +59,7 @@ soma {
  	soma.gk_k_dr_Bh = 0.025
  	soma.gk_k_ahp_Bh = 0.0008
  	soma.gk_k_c_Bh = 0.01
- 	soma.gk_k_a_Bh = 0.005
+ 	soma.gk_k_a_Bh = 0.0015
  	soma.phi_cadifus = 0.075
  	soma.kf_rasGDP_cadifus = 0
  	
@@ -82,7 +82,7 @@ basal[0] {
  	basal[0].gk_k_c_Bh = 0.005
  	basal[0].phi_cadifus = 0.075
  	basal[0].kf_rasGDP_cadifus = 0
- 	//insert kaf
+ 	insert kaf
  	}
 
 basal[1] {
@@ -99,7 +99,7 @@ basal[1] {
  	basal[1].gk_k_c_Bh = 0.005
  	basal[1].phi_cadifus = 0.075
  	basal[1].kf_rasGDP_cadifus = 0
- 	//insert kaf
+ 	insert kaf
  	}
 
 basal[2] {
@@ -120,7 +120,7 @@ basal[2] {
  	basal[2].gk_k_c_Bh = 0.01
  	basal[2].phi_cadifus = 0.075
  	basal[2].kf_rasGDP_cadifus = 0
- 	//insert kaf
+ 	insert kaf
  	}
  	
 basal[3] { 
@@ -141,7 +141,7 @@ basal[3] {
  	basal[3].gk_k_c_Bh = 0.02
  	basal[3].phi_cadifus = 0.075
  	basal[3].kf_rasGDP_cadifus = 0
- 	//insert kaf
+ 	insert kaf
  	}	
 
 //apical compartiments
@@ -164,7 +164,7 @@ for i=1,8{
  		apical[i].gk_k_dr_Bh = 0.006
  		apical[i].gk_k_ahp_Bh = 0.0008
  		apical[i].gk_k_c_Bh = 0.005
- 		apical[i].gk_k_a_Bh = 0.01
+ 		apical[i].gk_k_a_Bh = 0.004
  		
  		insert kaf
  		apical[i].gkbar_kaf = 0.019211
@@ -269,7 +269,7 @@ for i=0,29{
 	 	lateral[i].gk_k_ahp_Bh = 0.0008
  	 	lateral[i].gk_k_c_Bh = 0.005
  	 	lateral[i].gk_k_dr_Bh = 0.006
- 	 	lateral[i].gk_k_a_Bh = 0.01
+ 	 	lateral[i].gk_k_a_Bh = 0.004
  	 	
  	 	insert kaf
  	 	lateral[i].gkbar_kaf = 0.019211
@@ -631,7 +631,7 @@ for i=5,5{
 	
 //Variables pour l'affichage de graphe et de la fenêtre principale d'initialisation
 objectvar save_window_, rvp_
-objectvar scene_vector_[17]
+objectvar scene_vector_[9]
 objectvar ocbox_, ocbox_list_, scene_, scene_list_
 {ocbox_list_ = new List()  scene_list_ = new List()}
 {pwman_place(0,0,0)}
@@ -648,7 +648,7 @@ xvalue("Continue for","runStopIn", 1,"{continuerun(t + runStopIn) stoprun=1}", 1
 xbutton("Single Step","steprun()")
 t = 0
 xvalue("t","t", 2 )
-tstop = 1000000
+tstop = 1000
 xvalue("Tstop","tstop", 1,"tstop_changed()", 0, 1 )
 dt = 0.025
 xvalue("dt","dt", 1,"setdt()", 0, 1 )
@@ -658,96 +658,38 @@ screen_update_invl = 0.5
 xvalue("Scrn update invl","screen_update_invl", 1,"", 0, 1 )
 realtime = 0
 xvalue("Real Time","realtime", 0,"", 0, 1 )
-xpanel(10,101)
+xpanel(10,133)
 }
 {
 save_window_ = new Graph(0)
-save_window_.size(0,600000,0,1)
-scene_vector_[11] = save_window_
-{save_window_.view(0, 0, 600000, 1, 371, 0, 522.24, 337.6)}
-graphList[2].append(save_window_)
-save_window_.save_name("graphList[2].")
-save_window_.addvar("spine[1].RasGTPi( 0.5 )", 1, 1, 0.8, 0.9, 2)
-save_window_.addexpr("spine[3].RasGTPi( 0.5 )", 2, 1, 0.8, 0.9, 2)
-save_window_.addexpr("spine[7].RasGTPi( 0.5 )", 3, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[10].RasGTPi( 0.5 )", 4, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[11].RasGTPi( 0.5 )", 5, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[15].RasGTPi( 0.5 )", 6, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[18].RasGTPi( 0.5 )", 7, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[20].RasGTPi( 0.5 )", 8, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[23].RasGTPi( 0.5 )", 9, 1, 0.8, 0.9, 2)
-}
-{
-save_window_ = new Graph(0)
-save_window_.size(0,600000,0,1)
-scene_vector_[12] = save_window_
-{save_window_.view(0, 0, 600000, 1, 922, 0, 550.08, 338.56)}
-graphList[2].append(save_window_)
-save_window_.save_name("graphList[2].")
-save_window_.addvar("spine[1].RafPi( 0.5 )", 1, 1, 0.8, 0.9, 2)
-save_window_.addexpr("spine[3].RafPi( 0.5 )", 2, 1, 0.8, 0.9, 2)
-save_window_.addexpr("spine[7].RafPi( 0.5 )", 3, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[10].RafPi( 0.5 )", 4, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[11].RafPi( 0.5 )", 5, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[15].RafPi( 0.5 )", 6, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[18].RafPi( 0.5 )", 7, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[20].RafPi( 0.5 )", 8, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[23].RafPi( 0.5 )", 9, 1, 0.8, 0.9, 2)
-}
-{
-save_window_ = new Graph(0)
-save_window_.size(0,600000,0,1)
-scene_vector_[13] = save_window_
-{save_window_.view(0, 0, 600000, 1, 372, 404, 524.16, 335.68)}
-graphList[2].append(save_window_)
-save_window_.save_name("graphList[2].")
-save_window_.addvar("spine[1].MekPP_cadifus( 0.5 )", 1, 1, 0.8, 0.9, 2)
-save_window_.addexpr("spine[3].MekPP_cadifus( 0.5 )", 2, 1, 0.8, 0.9, 2)
-save_window_.addexpr("spine[7].MekPP_cadifus( 0.5 )", 3, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[10].MekPP_cadifus( 0.5 )", 4, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[11].MekPP_cadifus( 0.5 )", 5, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[15].MekPP_cadifus( 0.5 )", 6, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[18].MekPP_cadifus( 0.5 )", 7, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[20].MekPP_cadifus( 0.5 )", 8, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[23].MekPP_cadifus( 0.5 )", 9, 1, 0.8, 0.9, 2)
-}
-{
-save_window_ = new Graph(0)
-save_window_.size(0,600000,0,1)
-scene_vector_[14] = save_window_
-{save_window_.view(0, 0, 600000, 1, 924, 404, 552.96, 337.6)}
-graphList[2].append(save_window_)
-save_window_.save_name("graphList[2].")
-save_window_.addvar("spine[1].MapkPP_cadifus( 0.5 )", 1, 1, 0.8, 0.9, 2)
-save_window_.addexpr("spine[3].MapkPP_cadifus( 0.5 )", 2, 1, 0.8, 0.9, 2)
-save_window_.addexpr("spine[7].MapkPP_cadifus( 0.5 )", 3, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[10].MapkPP_cadifus( 0.5 )", 4, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[11].MapkPP_cadifus( 0.5 )", 5, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[15].MapkPP_cadifus( 0.5 )", 6, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[18].MapkPP_cadifus( 0.5 )", 7, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[20].MapkPP_cadifus( 0.5 )", 8, 1, 0.8, 0.9, 2)
-save_window_.addexpr("lateral[23].MapkPP_cadifus( 0.5 )", 9, 1, 0.8, 0.9, 2)
-}
-{
-save_window_ = new Graph(0)
-save_window_.size(0,600000,0,1)
-scene_vector_[15] = save_window_
-{save_window_.view(0, 0, 600000, 1, 13, 501, 300.48, 200.32)}
+save_window_.size(0,1000,0,1)
+scene_vector_[6] = save_window_
+{save_window_.view(0, 0, 1000, 1, 417, 0, 300.48, 200.32)}
 graphList[2].append(save_window_)
 save_window_.save_name("graphList[2].")
 save_window_.addvar("spine[1].cai( 0.5 )", 1, 1, 0.8, 0.9, 2)
 }
 {
 save_window_ = new Graph(0)
-save_window_.size(0,600000,0,1)
-scene_vector_[16] = save_window_
-{save_window_.view(0, 0, 600000, 1, 52, 151, 300.48, 200.32)}
+save_window_.size(0,1000,0,1)
+scene_vector_[7] = save_window_
+{save_window_.view(0, 0, 1000, 1, 745, 3, 300.48, 200.32)}
 graphList[2].append(save_window_)
 save_window_.save_name("graphList[2].")
 save_window_.addvar("spine[1].v( 0.5 )", 1, 1, 0.8, 0.9, 2)
 }
+{
+save_window_ = new Graph(0)
+save_window_.size(0,1000,0,1)
+scene_vector_[8] = save_window_
+{save_window_.view(0, 0, 1000, 1, 423, 270, 300.48, 200.32)}
+graphList[2].append(save_window_)
+save_window_.save_name("graphList[2].")
+save_window_.addvar("soma.v( 0.5 )", 1, 1, 0.8, 0.9, 2)
+}
 objectvar scene_vector_[1]
 {doNotify()}
+
 
 
 /*Stimulations : injections de courant; Modifié juste le stim.amp pour faire varier nos simulations selon
