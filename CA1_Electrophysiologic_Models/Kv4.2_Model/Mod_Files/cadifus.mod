@@ -29,7 +29,7 @@ PARAMETER {
 	DRas = 0.65e-3 (um2/ms) :old values 0.65e-3 25% of reduction 1st, then 50% then 75%
 	DRaf = 6e-3 (um2/ms) :old values 6e-3
 	DKinases = 1e-3 (um2/ms) :old values 1e-3
-	DKV42 = 0 (um2/ms)
+	:DKV42 = 0 (um2/ms)
    	phi 	= 0.25(/ms) :(1/4) phi	= 13.33 (ms)
 	beta = 17.402  
 	ceiling	= 2	(mM)
@@ -46,7 +46,7 @@ PARAMETER {
 	kr_gef =  0.008333333e-3(/ms)
 	kf_rasGDP = 0.1 (/mM-ms) : for spine, 0 for dendrite
 	kr_rasGDP = 0.003703703703703704e-3 (/ms)
-	kcat_raf = 0.07624e-3 (/ms)
+	kcat_raf = 0.060992e-3	(/ms)					:0.049556e-3 (/ms)  			:0.07624e-3 (/ms)
 	km_raf = 0.072e-3 (mM)
 	kcat_rafP = 1e-3 (/ms)
 	km_rafP = 0.0167e-3 (mM)
@@ -63,6 +63,7 @@ PARAMETER {
 	:k_MM = 0 : for the backward for every Michaelis-Menten equation
 	:tempRaf = 0
 	:tempRafP = 0
+	temp = 10
 }
 
 ASSIGNED {
@@ -83,8 +84,8 @@ STATE {
   Cam_Ca4 (mM)
   Gef  (mM)
   Gef_activated  (mM)
-  RasGDPi (mM)
-  RasGTPi (mM)
+  RasGDPi (1)
+  RasGTPi (1)
   Rafi (mM)
   RafPi (mM)
   RafPhosphatase (mM)
@@ -114,7 +115,7 @@ INITIAL {
 	Cam_Ca4 = 0
 	Gef = 0.0006
 	Gef_activated = 0
-	RasGDPi = 0.0012
+	RasGDPi = 90
 	RasGTPi = 0
 	Rafi = 0.2e-3
   	RafPi = 0
@@ -136,7 +137,7 @@ INITIAL {
 LOCAL tempRaf, tempRafP , tempMek, tempMekP, tempMekPP1, tempMekPP2, tempMapk, tempMapkP, tempMapkPP1, tempMapkPP2, tempKV42, tempKV42P
 	
 KINETIC state {
-   	COMPARTMENT PI*diam {RasGDPi RasGTPi KV42i KV42Pi}
+   	COMPARTMENT PI*diam {RasGDPi RasGTPi} :KV42i KV42Pi
    	COMPARTMENT PI*diam*diam/4 {Rafi RafPi Mek MekP MekPP Mapk MapkP MapkPP}
 	LONGITUDINAL_DIFFUSION DRas*diam {RasGDPi} :diffusion surfacique
 	LONGITUDINAL_DIFFUSION DRas*diam {RasGTPi}
@@ -148,8 +149,8 @@ KINETIC state {
 	LONGITUDINAL_DIFFUSION DKinases*PI*diam*diam/4 {Mapk} :diffusion volumique
 	LONGITUDINAL_DIFFUSION DKinases*PI*diam*diam/4 {MapkP}
 	LONGITUDINAL_DIFFUSION DKinases*PI*diam*diam/4 {MapkPP}
-	LONGITUDINAL_DIFFUSION DKV42*diam {KV42i} :diffusion surfacique
-	LONGITUDINAL_DIFFUSION DKV42*diam {KV42Pi}
+	:LONGITUDINAL_DIFFUSION DKV42*diam {KV42i} :diffusion surfacique
+	:LONGITUDINAL_DIFFUSION DKV42*diam {KV42Pi}
    ~ ca << ( (- beta * ica)- (phi * (cai - caiBase)) ) 
     cai = ca 
     :ca_modif = ca - 0.00045 : basal activity of calcium without KV.4.2 in the model. It use to match the Gef_activated with the one's from the Vcell model
@@ -161,28 +162,30 @@ KINETIC state {
   ~ Cam_Ca4 + Gef <-> Gef_activated (kf_gef, kr_gef)
   ~ RasGDPi <-> RasGTPi (kf_rasGDP*Gef_activated, kr_rasGDP)
   
-  tempRaf = (kcat_raf * RasGTPi)/(Rafi + km_raf)
+  tempRaf = (((4*kcat_raf/diam)*0.00000166057) * RasGTPi)/(Rafi + km_raf)
   tempRafP = (kcat_rafP * RafPhosphatase)/(RafPi + km_rafP)
   ~ Rafi <-> RafPi (tempRaf, tempRafP)
   
   tempMek = (kcat_mek * RafPi)/(Mek + km_mek)
-  tempMekP = (kcat_mek * MekPhosphatase)/(MekP + km_mek)
+  tempMekP = (kcat_mekP * MekPhosphatase)/(MekP + km_mekP)
   ~ Mek <-> MekP (tempMek, tempMekP)
   
   tempMekPP1 = (kcat_mek * RafPi)/(MekP + km_mek)
-  tempMekPP2 = (kcat_mek * MekPhosphatase)/(MekPP + km_mek)
+  tempMekPP2 = (kcat_mekP * MekPhosphatase)/(MekPP + km_mekP)
   ~ MekP <-> MekPP (tempMekPP1, tempMekPP2)
   
   tempMapk = (kcat_mapk * MekPP)/(Mapk + km_mapk)
-  tempMapkP = (kcat_mapk * MapkPhosphatase)/(MapkP + km_mapk)
+  tempMapkP = (kcat_mapkP * MapkPhosphatase)/(MapkP + km_mapkP)
   ~ Mapk <-> MapkP (tempMapk, tempMapkP)
   
   tempMapkPP1 = (kcat_mapk * MekPP)/(MapkP + km_mapk)
-  tempMapkPP2 = (kcat_mapk * MapkPhosphatase)/(MapkPP + km_mapk)
+  tempMapkPP2 = (kcat_mapkP * MapkPhosphatase)/(MapkPP + km_mapkP)
   ~ MapkP <-> MapkPP (tempMapkPP1, tempMapkPP2)
   
   tempKV42 = (kcat_KV42 * MapkPP)/(KV42i + km_KV42)
-  tempKV42P = (kcat_mek * MekPhosphatase)/(KV42Pi + km_mek)
+  tempKV42P = (kcat_mekP * MekPhosphatase)/(KV42Pi + km_mekP)
   ~ KV42i <-> KV42Pi (tempKV42, tempKV42P)
 
 }
+
+:correction probable du bug au niveau de la dephosphorylation car apparement je ne faisais pas la bonne dephosphorylation (on croise les doigs)

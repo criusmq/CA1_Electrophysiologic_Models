@@ -168,8 +168,6 @@ extern Memb_func* memb_func;
  #define _ztempKV42 _thread[2]._pval[10]
  #define _ztempKV42P _thread[2]._pval[11]
  /* declare global and static user variables */
-#define DKV42 DKV42_cadifus
- double DKV42 = 0;
 #define DKinases DKinases_cadifus
  double DKinases = 0.001;
 #define DRaf DRaf_cadifus
@@ -207,7 +205,7 @@ extern Memb_func* memb_func;
 #define km_raf km_raf_cadifus
  double km_raf = 7.2e-05;
 #define kcat_raf kcat_raf_cadifus
- double kcat_raf = 7.624e-05;
+ double kcat_raf = 6.0992e-05;
 #define kr_rasGDP kr_rasGDP_cadifus
  double kr_rasGDP = 3.7037e-06;
 #define kr_gef kr_gef_cadifus
@@ -230,6 +228,8 @@ extern Memb_func* memb_func;
  double kr_cam1 = 0.0084853;
 #define kf_cam1 kf_cam1_cadifus
  double kf_cam1 = 1;
+#define temp temp_cadifus
+ double temp = 10;
  /* some parameters have upper and lower limits */
  static HocParmLimits _hoc_parm_limits[] = {
  0,0,0
@@ -238,7 +238,6 @@ extern Memb_func* memb_func;
  "DRas_cadifus", "um2/ms",
  "DRaf_cadifus", "um2/ms",
  "DKinases_cadifus", "um2/ms",
- "DKV42_cadifus", "um2/ms",
  "ceiling_cadifus", "mM",
  "caiBase_cadifus", "mM",
  "kf_cam1_cadifus", "/mM-ms",
@@ -318,7 +317,6 @@ extern Memb_func* memb_func;
  "DRas_cadifus", &DRas_cadifus,
  "DRaf_cadifus", &DRaf_cadifus,
  "DKinases_cadifus", &DKinases_cadifus,
- "DKV42_cadifus", &DKV42_cadifus,
  "ceiling_cadifus", &ceiling_cadifus,
  "caiBase_cadifus", &caiBase_cadifus,
  "kf_cam1_cadifus", &kf_cam1_cadifus,
@@ -346,6 +344,7 @@ extern Memb_func* memb_func;
  "km_mapkP_cadifus", &km_mapkP_cadifus,
  "km_KV42_cadifus", &km_KV42_cadifus,
  "kcat_KV42_cadifus", &kcat_KV42_cadifus,
+ "temp_cadifus", &temp_cadifus,
  0,0
 };
  static DoubVec hoc_vdoub[] = {
@@ -528,7 +527,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  	hoc_register_synonym(_mechtype, _ode_synonym);
  	hoc_register_ldifus1(_difusfunc);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 cadifus /Users/maoss2/NEURON/CA1_cell_test/Stimulation_case_per_case/CA1_Electrophysiologic_Models/CA1_Electrophysiologic_Models/Kv4.2_Model/Mod_Files/x86_64/cadifus.mod\n");
+ 	ivoc_help("help ?1 cadifus /Users/maoss2/Documents/Kv4.2_Model/Mod_Files/x86_64/cadifus.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -567,10 +566,6 @@ for(_i=0;_i<21;_i++){
 	_MATELM1(_i, _i) = _dt1;
       
 }  
-_RHS1(7) *= ( PI * diam) ;
-_MATELM1(7, 7) *= ( PI * diam); 
-_RHS1(8) *= ( PI * diam) ;
-_MATELM1(8, 8) *= ( PI * diam); 
 _RHS1(9) *= ( PI * diam * diam / 4.0) ;
 _MATELM1(9, 9) *= ( PI * diam * diam / 4.0); 
 _RHS1(10) *= ( PI * diam * diam / 4.0) ;
@@ -592,7 +587,7 @@ _MATELM1(17, 17) *= ( PI * diam);
 _RHS1(18) *= ( PI * diam) ;
 _MATELM1(18, 18) *= ( PI * diam);  }
  /* COMPARTMENT PI * diam {
-     RasGDPi RasGTPi KV42i KV42Pi }
+     RasGDPi RasGTPi }
    */
  /* COMPARTMENT PI * diam * diam / 4.0 {
      Rafi RafPi Mek MekP MekPP Mapk MapkP MapkPP }
@@ -626,12 +621,6 @@ _MATELM1(18, 18) *= ( PI * diam);  }
    */
  /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
      MapkPP }
-   */
- /* LONGITUDINAL_DIFFUSION DKV42 * diam {
-     KV42i }
-   */
- /* LONGITUDINAL_DIFFUSION DKV42 * diam {
-     KV42Pi }
    */
  /* ~ ca < < ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) )*/
  f_flux = b_flux = 0.;
@@ -752,7 +741,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  _MATELM1( 17 ,18)  -= _term;
  _MATELM1( 18 ,18)  += _term;
  /*REACTION*/
-  _ztempRaf = ( kcat_raf * RasGTPi ) / ( Rafi + km_raf ) ;
+  _ztempRaf = ( ( ( 4.0 * kcat_raf / diam ) * 0.00000166057 ) * RasGTPi ) / ( Rafi + km_raf ) ;
    _ztempRafP = ( kcat_rafP * RafPhosphatase ) / ( RafPi + km_rafP ) ;
    /* ~ Rafi <-> RafPi ( _ztempRaf , _ztempRafP )*/
  f_flux =  _ztempRaf * Rafi ;
@@ -768,7 +757,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  _MATELM1( 15 ,15)  += _term;
  /*REACTION*/
   _ztempMek = ( kcat_mek * RafPi ) / ( Mek + km_mek ) ;
-   _ztempMekP = ( kcat_mek * MekPhosphatase ) / ( MekP + km_mek ) ;
+   _ztempMekP = ( kcat_mekP * MekPhosphatase ) / ( MekP + km_mekP ) ;
    /* ~ Mek <-> MekP ( _ztempMek , _ztempMekP )*/
  f_flux =  _ztempMek * Mek ;
  b_flux =  _ztempMekP * MekP ;
@@ -783,7 +772,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  _MATELM1( 13 ,13)  += _term;
  /*REACTION*/
   _ztempMekPP1 = ( kcat_mek * RafPi ) / ( MekP + km_mek ) ;
-   _ztempMekPP2 = ( kcat_mek * MekPhosphatase ) / ( MekPP + km_mek ) ;
+   _ztempMekPP2 = ( kcat_mekP * MekPhosphatase ) / ( MekPP + km_mekP ) ;
    /* ~ MekP <-> MekPP ( _ztempMekPP1 , _ztempMekPP2 )*/
  f_flux =  _ztempMekPP1 * MekP ;
  b_flux =  _ztempMekPP2 * MekPP ;
@@ -798,7 +787,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  _MATELM1( 12 ,12)  += _term;
  /*REACTION*/
   _ztempMapk = ( kcat_mapk * MekPP ) / ( Mapk + km_mapk ) ;
-   _ztempMapkP = ( kcat_mapk * MapkPhosphatase ) / ( MapkP + km_mapk ) ;
+   _ztempMapkP = ( kcat_mapkP * MapkPhosphatase ) / ( MapkP + km_mapkP ) ;
    /* ~ Mapk <-> MapkP ( _ztempMapk , _ztempMapkP )*/
  f_flux =  _ztempMapk * Mapk ;
  b_flux =  _ztempMapkP * MapkP ;
@@ -813,7 +802,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  _MATELM1( 10 ,10)  += _term;
  /*REACTION*/
   _ztempMapkPP1 = ( kcat_mapk * MekPP ) / ( MapkP + km_mapk ) ;
-   _ztempMapkPP2 = ( kcat_mapk * MapkPhosphatase ) / ( MapkPP + km_mapk ) ;
+   _ztempMapkPP2 = ( kcat_mapkP * MapkPhosphatase ) / ( MapkPP + km_mapkP ) ;
    /* ~ MapkP <-> MapkPP ( _ztempMapkPP1 , _ztempMapkPP2 )*/
  f_flux =  _ztempMapkPP1 * MapkP ;
  b_flux =  _ztempMapkPP2 * MapkPP ;
@@ -828,7 +817,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  _MATELM1( 9 ,9)  += _term;
  /*REACTION*/
   _ztempKV42 = ( kcat_KV42 * MapkPP ) / ( KV42i + km_KV42 ) ;
-   _ztempKV42P = ( kcat_mek * MekPhosphatase ) / ( KV42Pi + km_mek ) ;
+   _ztempKV42P = ( kcat_mekP * MekPhosphatase ) / ( KV42Pi + km_mekP ) ;
    /* ~ KV42i <-> KV42Pi ( _ztempKV42 , _ztempKV42P )*/
  f_flux =  _ztempKV42 * KV42i ;
  b_flux =  _ztempKV42P * KV42Pi ;
@@ -850,7 +839,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  double b_flux, f_flux, _term; int _i;
  {int _i; for(_i=0;_i<21;_i++) _p[_dlist1[_i]] = 0.0;}
  /* COMPARTMENT PI * diam {
-   RasGDPi RasGTPi KV42i KV42Pi }
+   RasGDPi RasGTPi }
  */
  /* COMPARTMENT PI * diam * diam / 4.0 {
    Rafi RafPi Mek MekP MekPP Mapk MapkP MapkPP }
@@ -884,12 +873,6 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  */
  /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
    MapkPP }
- */
- /* LONGITUDINAL_DIFFUSION DKV42 * diam {
-   KV42i }
- */
- /* LONGITUDINAL_DIFFUSION DKV42 * diam {
-   KV42Pi }
  */
  /* ~ ca < < ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) )*/
  f_flux = b_flux = 0.;
@@ -944,7 +927,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  DRasGTPi += (f_flux - b_flux);
  
  /*REACTION*/
-  _ztempRaf = ( kcat_raf * RasGTPi ) / ( Rafi + km_raf ) ;
+  _ztempRaf = ( ( ( 4.0 * kcat_raf / diam ) * 0.00000166057 ) * RasGTPi ) / ( Rafi + km_raf ) ;
  _ztempRafP = ( kcat_rafP * RafPhosphatase ) / ( RafPi + km_rafP ) ;
  /* ~ Rafi <-> RafPi ( _ztempRaf , _ztempRafP )*/
  f_flux =  _ztempRaf * Rafi ;
@@ -954,7 +937,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  
  /*REACTION*/
   _ztempMek = ( kcat_mek * RafPi ) / ( Mek + km_mek ) ;
- _ztempMekP = ( kcat_mek * MekPhosphatase ) / ( MekP + km_mek ) ;
+ _ztempMekP = ( kcat_mekP * MekPhosphatase ) / ( MekP + km_mekP ) ;
  /* ~ Mek <-> MekP ( _ztempMek , _ztempMekP )*/
  f_flux =  _ztempMek * Mek ;
  b_flux =  _ztempMekP * MekP ;
@@ -963,7 +946,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  
  /*REACTION*/
   _ztempMekPP1 = ( kcat_mek * RafPi ) / ( MekP + km_mek ) ;
- _ztempMekPP2 = ( kcat_mek * MekPhosphatase ) / ( MekPP + km_mek ) ;
+ _ztempMekPP2 = ( kcat_mekP * MekPhosphatase ) / ( MekPP + km_mekP ) ;
  /* ~ MekP <-> MekPP ( _ztempMekPP1 , _ztempMekPP2 )*/
  f_flux =  _ztempMekPP1 * MekP ;
  b_flux =  _ztempMekPP2 * MekPP ;
@@ -972,7 +955,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  
  /*REACTION*/
   _ztempMapk = ( kcat_mapk * MekPP ) / ( Mapk + km_mapk ) ;
- _ztempMapkP = ( kcat_mapk * MapkPhosphatase ) / ( MapkP + km_mapk ) ;
+ _ztempMapkP = ( kcat_mapkP * MapkPhosphatase ) / ( MapkP + km_mapkP ) ;
  /* ~ Mapk <-> MapkP ( _ztempMapk , _ztempMapkP )*/
  f_flux =  _ztempMapk * Mapk ;
  b_flux =  _ztempMapkP * MapkP ;
@@ -981,7 +964,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  
  /*REACTION*/
   _ztempMapkPP1 = ( kcat_mapk * MekPP ) / ( MapkP + km_mapk ) ;
- _ztempMapkPP2 = ( kcat_mapk * MapkPhosphatase ) / ( MapkPP + km_mapk ) ;
+ _ztempMapkPP2 = ( kcat_mapkP * MapkPhosphatase ) / ( MapkPP + km_mapkP ) ;
  /* ~ MapkP <-> MapkPP ( _ztempMapkPP1 , _ztempMapkPP2 )*/
  f_flux =  _ztempMapkPP1 * MapkP ;
  b_flux =  _ztempMapkPP2 * MapkPP ;
@@ -990,7 +973,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  
  /*REACTION*/
   _ztempKV42 = ( kcat_KV42 * MapkPP ) / ( KV42i + km_KV42 ) ;
- _ztempKV42P = ( kcat_mek * MekPhosphatase ) / ( KV42Pi + km_mek ) ;
+ _ztempKV42P = ( kcat_mekP * MekPhosphatase ) / ( KV42Pi + km_mekP ) ;
  /* ~ KV42i <-> KV42Pi ( _ztempKV42 , _ztempKV42P )*/
  f_flux =  _ztempKV42 * KV42i ;
  b_flux =  _ztempKV42P * KV42Pi ;
@@ -998,9 +981,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  DKV42Pi += (f_flux - b_flux);
  
  /*REACTION*/
-  _p[_dlist1[7]] /= ( PI * diam);
- _p[_dlist1[8]] /= ( PI * diam);
- _p[_dlist1[9]] /= ( PI * diam * diam / 4.0);
+  _p[_dlist1[9]] /= ( PI * diam * diam / 4.0);
  _p[_dlist1[10]] /= ( PI * diam * diam / 4.0);
  _p[_dlist1[11]] /= ( PI * diam * diam / 4.0);
  _p[_dlist1[12]] /= ( PI * diam * diam / 4.0);
@@ -1023,10 +1004,6 @@ for(_i=0;_i<21;_i++){
 	_MATELM1(_i, _i) = _dt1;
       
 }  
-_RHS1(7) *= ( PI * diam) ;
-_MATELM1(7, 7) *= ( PI * diam); 
-_RHS1(8) *= ( PI * diam) ;
-_MATELM1(8, 8) *= ( PI * diam); 
 _RHS1(9) *= ( PI * diam * diam / 4.0) ;
 _MATELM1(9, 9) *= ( PI * diam * diam / 4.0); 
 _RHS1(10) *= ( PI * diam * diam / 4.0) ;
@@ -1048,7 +1025,7 @@ _MATELM1(17, 17) *= ( PI * diam);
 _RHS1(18) *= ( PI * diam) ;
 _MATELM1(18, 18) *= ( PI * diam);  }
  /* COMPARTMENT PI * diam {
- RasGDPi RasGTPi KV42i KV42Pi }
+ RasGDPi RasGTPi }
  */
  /* COMPARTMENT PI * diam * diam / 4.0 {
  Rafi RafPi Mek MekP MekPP Mapk MapkP MapkPP }
@@ -1082,12 +1059,6 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  */
  /* LONGITUDINAL_DIFFUSION DKinases * PI * diam * diam / 4.0 {
  MapkPP }
- */
- /* LONGITUDINAL_DIFFUSION DKV42 * diam {
- KV42i }
- */
- /* LONGITUDINAL_DIFFUSION DKV42 * diam {
- KV42Pi }
  */
  /* ~ ca < < ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) )*/
  /*FLUX*/
@@ -1171,7 +1142,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  _MATELM1( 17 ,18)  -= _term;
  _MATELM1( 18 ,18)  += _term;
  /*REACTION*/
-  _ztempRaf = ( kcat_raf * RasGTPi ) / ( Rafi + km_raf ) ;
+  _ztempRaf = ( ( ( 4.0 * kcat_raf / diam ) * 0.00000166057 ) * RasGTPi ) / ( Rafi + km_raf ) ;
  _ztempRafP = ( kcat_rafP * RafPhosphatase ) / ( RafPi + km_rafP ) ;
  /* ~ Rafi <-> RafPi ( _ztempRaf , _ztempRafP )*/
  _term =  _ztempRaf ;
@@ -1182,7 +1153,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  _MATELM1( 15 ,15)  += _term;
  /*REACTION*/
   _ztempMek = ( kcat_mek * RafPi ) / ( Mek + km_mek ) ;
- _ztempMekP = ( kcat_mek * MekPhosphatase ) / ( MekP + km_mek ) ;
+ _ztempMekP = ( kcat_mekP * MekPhosphatase ) / ( MekP + km_mekP ) ;
  /* ~ Mek <-> MekP ( _ztempMek , _ztempMekP )*/
  _term =  _ztempMek ;
  _MATELM1( 14 ,14)  += _term;
@@ -1192,7 +1163,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  _MATELM1( 13 ,13)  += _term;
  /*REACTION*/
   _ztempMekPP1 = ( kcat_mek * RafPi ) / ( MekP + km_mek ) ;
- _ztempMekPP2 = ( kcat_mek * MekPhosphatase ) / ( MekPP + km_mek ) ;
+ _ztempMekPP2 = ( kcat_mekP * MekPhosphatase ) / ( MekPP + km_mekP ) ;
  /* ~ MekP <-> MekPP ( _ztempMekPP1 , _ztempMekPP2 )*/
  _term =  _ztempMekPP1 ;
  _MATELM1( 13 ,13)  += _term;
@@ -1202,7 +1173,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  _MATELM1( 12 ,12)  += _term;
  /*REACTION*/
   _ztempMapk = ( kcat_mapk * MekPP ) / ( Mapk + km_mapk ) ;
- _ztempMapkP = ( kcat_mapk * MapkPhosphatase ) / ( MapkP + km_mapk ) ;
+ _ztempMapkP = ( kcat_mapkP * MapkPhosphatase ) / ( MapkP + km_mapkP ) ;
  /* ~ Mapk <-> MapkP ( _ztempMapk , _ztempMapkP )*/
  _term =  _ztempMapk ;
  _MATELM1( 11 ,11)  += _term;
@@ -1212,7 +1183,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  _MATELM1( 10 ,10)  += _term;
  /*REACTION*/
   _ztempMapkPP1 = ( kcat_mapk * MekPP ) / ( MapkP + km_mapk ) ;
- _ztempMapkPP2 = ( kcat_mapk * MapkPhosphatase ) / ( MapkPP + km_mapk ) ;
+ _ztempMapkPP2 = ( kcat_mapkP * MapkPhosphatase ) / ( MapkPP + km_mapkP ) ;
  /* ~ MapkP <-> MapkPP ( _ztempMapkPP1 , _ztempMapkPP2 )*/
  _term =  _ztempMapkPP1 ;
  _MATELM1( 10 ,10)  += _term;
@@ -1222,7 +1193,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  _MATELM1( 9 ,9)  += _term;
  /*REACTION*/
   _ztempKV42 = ( kcat_KV42 * MapkPP ) / ( KV42i + km_KV42 ) ;
- _ztempKV42P = ( kcat_mek * MekPhosphatase ) / ( KV42Pi + km_mek ) ;
+ _ztempKV42P = ( kcat_mekP * MekPhosphatase ) / ( KV42Pi + km_mekP ) ;
  /* ~ KV42i <-> KV42Pi ( _ztempKV42 , _ztempKV42P )*/
  _term =  _ztempKV42 ;
  _MATELM1( 8 ,8)  += _term;
@@ -1408,18 +1379,6 @@ static double _difcoef10(int _i, double* _p, Datum* _ppvar, double* _pdvol, doub
    *_pdvol =  PI * diam * diam / 4.0 ; *_pdfcdc=0.;
    return DKinases * PI * diam * diam / 4.0 ;
 }
- static void* _difspace11;
-extern double nrn_nernst_coef();
-static double _difcoef11(int _i, double* _p, Datum* _ppvar, double* _pdvol, double* _pdfcdc, Datum* _thread, _NrnThread* _nt) {
-   *_pdvol =  PI * diam ; *_pdfcdc=0.;
-   return DKV42 * diam ;
-}
- static void* _difspace12;
-extern double nrn_nernst_coef();
-static double _difcoef12(int _i, double* _p, Datum* _ppvar, double* _pdvol, double* _pdfcdc, Datum* _thread, _NrnThread* _nt) {
-   *_pdvol =  PI * diam ; *_pdfcdc=0.;
-   return DKV42 * diam ;
-}
  static void _difusfunc(ldifusfunc2_t _f, _NrnThread* _nt) {int _i;
   (*_f)(_mechtype, _difcoef1, &_difspace1, 0,  -8, 34 , _nt);
   (*_f)(_mechtype, _difcoef2, &_difspace2, 0,  -5, 36 , _nt);
@@ -1431,8 +1390,6 @@ static double _difcoef12(int _i, double* _p, Datum* _ppvar, double* _pdvol, doub
   (*_f)(_mechtype, _difcoef8, &_difspace8, 0,  17, 46 , _nt);
   (*_f)(_mechtype, _difcoef9, &_difspace9, 0,  18, 47 , _nt);
   (*_f)(_mechtype, _difcoef10, &_difspace10, 0,  19, 48 , _nt);
-  (*_f)(_mechtype, _difcoef11, &_difspace11, 0,  -17, 51 , _nt);
-  (*_f)(_mechtype, _difcoef12, &_difspace12, 0,  -20, 53 , _nt);
  }
 
 static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {
@@ -1465,7 +1422,7 @@ static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt
    Cam_Ca4 = 0.0 ;
    Gef = 0.0006 ;
    Gef_activated = 0.0 ;
-   RasGDPi = 0.0012 ;
+   RasGDPi = 90.0 ;
    RasGTPi = 0.0 ;
    Rafi = 0.2e-3 ;
    RafPi = 0.0 ;

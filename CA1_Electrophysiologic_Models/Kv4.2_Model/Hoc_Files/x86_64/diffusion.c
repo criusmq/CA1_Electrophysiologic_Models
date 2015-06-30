@@ -228,7 +228,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  	hoc_register_synonym(_mechtype, _ode_synonym);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 diffusion /Users/maoss2/NEURON/CA1_cell_test/Stimulation_case_per_case/CA1_Electrophysiologic_Models/CA1_Electrophysiologic_Models/Kv4.2_Model/Mod_Files/x86_64/diffusion.mod\n");
+ 	ivoc_help("help ?1 diffusion /Users/maoss2/Documents/Kv4.2_Model/Mod_Files/x86_64/diffusion.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }

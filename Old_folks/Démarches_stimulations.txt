@@ -1,0 +1,136 @@
+COMMENTAIRES SUR LA DÉMARCHE DE STIMULATION 3 
+
+-- stim_3000.hoc fichier de départ 
+	Rep: Aucun changement (stim_3000_repeat)
+
+-- stimulation_3.hoc (redéfinition du fichier)
+	Rep: Obtiens la mm chose chaque fois (Fig_A)
+		 Mais taux élevé dans les épines et lateral[6] 
+		 	Q: Pourquoi ca?
+
+-- Enlever ca_conc dhab (Fig_B)
+	Rep: Aucun changement à par le cai bien sur
+	
+-- Enlever Ampa pour test (Fig_C)
+	Rep: L'effet de NMDA est visible. Très faible. (ce qui est normal à priori)
+
+-- Enlever les stims sur Lateral[0..11] (Fig_D)
+	Rep: Calcium très faible dans es épines et lat[6]
+		 Calcium plus élevé dans soma
+		 Voltage plus élevé dans soma
+		 Voltage plus faible dans lat[6] et spine[1, 3] par rapport à soma
+		 Comme dans l'article
+		 Cependant le voltage n'est pas aussi élevé!!!!!!!!! mais la 
+		 	courbe est respectée
+		 
+		 
+-- Enlever les stims sur apical[0..8] (Fig_E)
+	Rep: MM chose qu'en Fig_A
+	
+Conclusion préliminaire: Il faut possiblement ne pas stimuler les lat[0..11]
+
+
+COMMENTAIRES SUR LA DÉMARCHE DE STIMULATION 1
+
+-- A repris le fichier qui marchait en Fig_D de la stim3 en mode repeat pour la stim1
+(stimuler juste l'épine 1 )
+	Rep: résultats concluant (Fig_Stim_1_A)
+		Problème: Dépolarisation plus élevées que dans la stim3 ou j'applique sur cell_wide
+			Q: Pourquoi ca?
+
+-- A diminuer la conductance de ampa (Fig_Stim_1_B) g= 200
+	Rep:  obtiens un résultat plus petit 
+	
+COMMENTAIRES SUR LA DÉMARCHE DE STIMULATION 2
+
+-- Identique à la stim1 mais juste sur la spine[2] donc inutile de reprendre
+
+COMMENTAIRES SUR LA DÉMARCHE DE STIMULATION 4
+
+-- N'ayant pas trouvé de solution au cas (Fig_Stim_1_A), j'ai décidé de combiner 
+les stim3 et stim1 simplement et d'observer le résultat
+	Rep: la forme de la courbe en stim1 prédomine. Vue que le voltage est plus élevé. Ce qui est
+		normal (Fig_Stim_4_A)
+	Probleme: Dans Bhalla certes la le voltage dans spine[1] est élevé mais
+		pas plus que dans la soma ce qui nous ramène au problème noté plus 
+		haut dans (Fig_D) c'est à dire " Cependant le voltage n'est pas aussi élevé!!!!!!!!! mais la 
+		 	courbe est respectée"
+
+-- Suite à cela en relisant l'article j'ai lu le paragraphe suivant :
+
+<< The AMPAR and NMDAR conductances in the model were PARAMETERIZED AGAINST 
+THREE ACTIVITY READOUTS:
+– EPSPs resulting from single synaptic input should be about 0.5 mV at the soma.
+– Cell-wide synaptic input should elicit a somatic spike
+– Cell-wide tetanic input should give about 10 times as much peak calcium influx in a spine, 
+as single synaptic input to the same spine.
+The cell model parameters were robust by each of these measures. 
+As expected from cable theory, the EPSP had an almost linear dependence on the receptor conductances. 
+
+THE SOMATIC SPIKE CRITERION WAS ALSO EASILY MET WITH A REASONABLE (50–100) NUMBER OF SIMULTANEOUS SYNAPTIC
+INPUTS. 
+
+The calcium influx in the spine had a somewhat more complex dependence on the receptor channel 
+conductances. I scanned a 5-fold range for the AMPAR and found that the tetanic response increased in a 
+sublinear manner, whereas the single pulse response increased supralinearly with the receptor conductance. 
+Thus the ratio of the two calcium responses (tetanic:single pulse) declined with increasing AMPAR.
+I also scanned a 5-fold range of NMDAR conductances, and found that both the single pulse and tetanic 
+responses increased sublinearly, and the ratio of the two was not much affected by conductance changes.>>
+
+	Donc je me suis dit que peut-être sa stimulation cell-wide est différente en ce qui concerne le stimuli 
+appliqué. Donc j'ai choisis d'essayé à tout hasard STIM_I.NUMBER = 5 . i=1..6
+	Rep: J'ai le pattern de la stim3 qui est respecté i.e dépolarisation plus élevée dans soma que dans les
+		autres. 
+		En l'appliquant à la stim4, j'obtiens le pattern de bhalla en 4 (Fig_Stim_4_B). Donc je suppose qu'il fallait utilisé
+	STIM_I.NUMBER = 5 . i=1..6.
+	Q: Pourquoi number = 5? Je ne saurais le dire. J'ai pris ce chiffre surtout à cause du paragraphe cité ci-haut
+		en me disant vu que par défaut ils AMPA et NMDA sont paramétrisé contre un spike somatic en cell-wide. 
+		pour en obtenir comme lui il a surement augmenter le stimulis en cell-wide. La 2eme phrase en majuscule aussi 
+		m'a comme donné un indice de tenter avec 5 en divisant 50-100 par 10.
+		En effet résultat identique avec n = 5 ou n =10. A part dans le cai ou ca augemente dans spine[1] ce qui est normal
+		Mais a partir de n = 20 on obtient une courbe du genre (Fig_Stim_4_C). Ce qui n'est pas recherché. 
+		NB: J'ai essayé n = 500 aussi pr voir mais le pattern en n=20 est répété juste plusieurs fois.
+
+
+COMMENTAIRES SUR LA DÉMARCHE DE STIMULATION 5
+
+-- Identique à la stim4 mais juste sur la spine[2] donc inutile de reprendre
+
+COMMENTAIRES SUR LA DÉMARCHE DE STIMULATION 6
+
+-- Recopie de la stimulation4 puis injection de la stim téthanic à la dernière stim(stim6)
+	Rep: Non sens: La stimulation téthanic décroit le voltage :O (Fig_Stim_6_A)
+
+Indices: quand il parle de stimulation tétanic c'est de la mm stimulation à 100HZ
+mais le mien il se comporte comme une stimulation à n=1, 100 fois ??? WTF!
+Tired :(
+
+
+Débugage avec Simon ( Lab Meeting du mercredi)
+Idéees: 
+		- Voir genesis et la stimulation présynaptique
+		- Revoir les anciens articles de bhalla pr checker les parametres et voir les files genesis
+
+Effectuées et idéees personnelles:
+		- IL ya un spike detector ou generator à la fin du proto.g avec un threshold de -40
+			Par defaut il est à 10 dans netstims. Maybe le changer pr voir
+				Nope ca a rine changé au niveau  du netcon
+		- 
+
+
+
+
+Justifications du g_mox:
+
+
+BREAKPOINT {
+	SOLVE state METHOD cnexp
+	
+	g = g_max*(B*0.8+C*0.2-A)
+	i = g*(v - e)*1/(1+(exp(0.08(/mV) * -v)*(mg / 0.69)))	
+	
+	g2=g			:global variable can be read in 'canmda.mod' 
+	i2=i*k/Area		:to get a current in 'mA/cm2' and send it to 'canmda.mod'
+}
+http://senselab.med.yale.edu/ModelDb/showmodel.asp?model=116769&file=\SpineCaModel\nmda.mod
+

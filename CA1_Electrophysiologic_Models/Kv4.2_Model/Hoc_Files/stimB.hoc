@@ -25,15 +25,15 @@ for i=21,21{
 	access spine[i-20]{
 		//netcon
 		nc_stim1 = new NetCon(stim_1, sNMDA[i])
-		nc_stim1.weight =  1.7
+		nc_stim1.weight =  1.25 //1.25
 		nc_stim1.delay = 0 
 		
 		nc_AMPA_stim1 = new NetCon(stim_1, sAMPA[i])
-		nc_AMPA_stim1.weight = 1.7
+		nc_AMPA_stim1.weight = 1.25 //1.25
 		nc_AMPA_stim1.delay = 0 
 		
 		nc_NMDA_CA_stim1 = new NetCon(stim_1, sNMDA_CA[0])
-		nc_NMDA_CA_stim1.weight = 1.7
+		nc_NMDA_CA_stim1.weight = 1.25 //1.25
 		nc_NMDA_CA_stim1.delay = 0 
 		}
 	}

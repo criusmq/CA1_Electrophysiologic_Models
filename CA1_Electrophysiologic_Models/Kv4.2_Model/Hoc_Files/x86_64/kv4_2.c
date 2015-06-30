@@ -45,24 +45,30 @@ extern double hoc_Exp(double);
 #define h _p[7]
 #define n _p[8]
 #define q _p[9]
-#define ek _p[10]
-#define KV42Pi _p[11]
-#define KV42i _p[12]
-#define minf _p[13]
-#define hinf _p[14]
-#define ninf _p[15]
-#define qinf _p[16]
-#define Dm _p[17]
-#define Dh _p[18]
-#define Dn _p[19]
-#define Dq _p[20]
-#define v _p[21]
-#define _g _p[22]
+#define KV42Pi _p[10]
+#define KV42i _p[11]
+#define KTESTi _p[12]
+#define KTESTPi _p[13]
+#define ek _p[14]
+#define minf _p[15]
+#define hinf _p[16]
+#define ninf _p[17]
+#define qinf _p[18]
+#define Dm _p[19]
+#define Dh _p[20]
+#define Dn _p[21]
+#define Dq _p[22]
+#define v _p[23]
+#define _g _p[24]
 #define _ion_ek	*_ppvar[0]._pval
 #define _ion_ik	*_ppvar[1]._pval
 #define _ion_dikdv	*_ppvar[2]._pval
 #define _ion_KV42Pi	*_ppvar[3]._pval
 #define _ion_KV42i	*_ppvar[4]._pval
+#define _ion_KTESTi	*_ppvar[5]._pval
+#define _style_KTEST	*((int*)_ppvar[6]._pvoid)
+#define _ion_KTESTPi	*_ppvar[7]._pval
+#define _style_KTESTP	*((int*)_ppvar[8]._pvoid)
  
 #if MAC
 #if !defined(v)
@@ -82,6 +88,7 @@ extern "C" {
  /* external NEURON variables */
  /* declaration of user functions */
  static void _hoc_mtau(void);
+ static void _hoc_ratio(void);
  static void _hoc_rates(void);
  static void _hoc_table_mtau(void);
  static int _mechtype;
@@ -105,6 +112,7 @@ extern Memb_func* memb_func;
  static VoidFunc hoc_intfunc[] = {
  "setdata_kaf", _hoc_setdata,
  "mtau_kaf", _hoc_mtau,
+ "ratio_kaf", _hoc_ratio,
  "rates_kaf", _hoc_rates,
  "table_mtau_kaf", _hoc_table_mtau,
  0, 0
@@ -201,7 +209,8 @@ static void _ode_map(int, double**, double**, double*, Datum*, double*, int);
 static void _ode_spec(_NrnThread*, _Memb_list*, int);
 static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  
-#define _cvode_ieq _ppvar[5]._i
+#define _cvode_ieq _ppvar[9]._i
+ static void _ode_synonym(int, double**, Datum**);
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
  "6.2.0",
@@ -223,13 +232,15 @@ static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  static Symbol* _k_sym;
  static Symbol* _KV42P_sym;
  static Symbol* _KV42_sym;
+ static Symbol* _KTEST_sym;
+ static Symbol* _KTESTP_sym;
  
 extern Prop* need_memb(Symbol*);
 
 static void nrn_alloc(Prop* _prop) {
 	Prop *prop_ion;
 	double *_p; Datum *_ppvar;
- 	_p = nrn_prop_data_alloc(_mechtype, 23, _prop);
+ 	_p = nrn_prop_data_alloc(_mechtype, 25, _prop);
  	/*initialize range parameters*/
  	gkbar = 0.019211;
  	mshift = 0;
@@ -237,8 +248,8 @@ static void nrn_alloc(Prop* _prop) {
  	mshift_mutant = 0;
  	hshift_mutant = 0;
  	_prop->param = _p;
- 	_prop->param_size = 23;
- 	_ppvar = nrn_prop_datum_alloc(_mechtype, 6, _prop);
+ 	_prop->param_size = 25;
+ 	_ppvar = nrn_prop_datum_alloc(_mechtype, 10, _prop);
  	_prop->dparam = _ppvar;
  	/*connect ionic variables to this model*/
  prop_ion = need_memb(_k_sym);
@@ -252,6 +263,16 @@ static void nrn_alloc(Prop* _prop) {
  prop_ion = need_memb(_KV42_sym);
  nrn_promote(prop_ion, 1, 0);
  	_ppvar[4]._pval = &prop_ion->param[1]; /* KV42i */
+ prop_ion = need_memb(_KTEST_sym);
+ nrn_check_conc_write(_prop, prop_ion, 1);
+ nrn_promote(prop_ion, 3, 0);
+ 	_ppvar[5]._pval = &prop_ion->param[1]; /* KTESTi */
+ 	_ppvar[6]._pvoid = (void*)(&(prop_ion->dparam[0]._i)); /* iontype for KTEST */
+ prop_ion = need_memb(_KTESTP_sym);
+ nrn_check_conc_write(_prop, prop_ion, 1);
+ nrn_promote(prop_ion, 3, 0);
+ 	_ppvar[7]._pval = &prop_ion->param[1]; /* KTESTPi */
+ 	_ppvar[8]._pvoid = (void*)(&(prop_ion->dparam[0]._i)); /* iontype for KTESTP */
  
 }
  static void _initlists();
@@ -273,18 +294,24 @@ extern void _cvode_abstol( Symbol**, double*, int);
  	ion_reg("k", -10000.);
  	ion_reg("KV42P", -10000.);
  	ion_reg("KV42", -10000.);
+ 	ion_reg("KTEST", 1.0);
+ 	ion_reg("KTESTP", 1.0);
  	_k_sym = hoc_lookup("k_ion");
  	_KV42P_sym = hoc_lookup("KV42P_ion");
  	_KV42_sym = hoc_lookup("KV42_ion");
+ 	_KTEST_sym = hoc_lookup("KTEST_ion");
+ 	_KTESTP_sym = hoc_lookup("KTESTP_ion");
  	register_mech(_mechanism, nrn_alloc,nrn_cur, nrn_jacob, nrn_state, nrn_init, hoc_nrnpointerindex, 1);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
      _nrn_thread_reg(_mechtype, 2, _update_ion_pointer);
-  hoc_register_dparam_size(_mechtype, 6);
+  hoc_register_dparam_size(_mechtype, 10);
+ 	nrn_writes_conc(_mechtype, 0);
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
+ 	hoc_register_synonym(_mechtype, _ode_synonym);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 kaf /Users/maoss2/NEURON/CA1_cell_test/Stimulation_case_per_case/CA1_Electrophysiologic_Models/CA1_Electrophysiologic_Models/Kv4.2_Model/Mod_Files/x86_64/kv4_2.mod\n");
+ 	ivoc_help("help ?1 kaf /Users/maoss2/Documents/Kv4.2_Model/Mod_Files/x86_64/kv4_2.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -295,6 +322,7 @@ static int error;
 static int _ninits = 0;
 static int _match_recurse=1;
 static void _modl_cleanup(){ _match_recurse=1;}
+static int ratio(_threadargsproto_);
 static int rates(_threadargsprotocomma_ double);
  
 static int _ode_spec1(_threadargsproto_);
@@ -341,6 +369,7 @@ static void _hoc_table_mtau(void) {
 /*CVODE*/
  static int _ode_spec1 (double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {int _reset = 0; {
    rates ( _threadargscomma_ v ) ;
+   ratio ( _threadargs_ ) ;
    Dm = ( minf - m ) / ( mtau ( _threadargscomma_ v ) / qfact ) ;
    Dh = ( hinf - h ) / ( htau / qfact ) ;
    Dn = ( ninf - n ) / ( mtau ( _threadargscomma_ v ) / qfact ) ;
@@ -350,6 +379,7 @@ static void _hoc_table_mtau(void) {
 }
  static int _ode_matsol1 (double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {
  rates ( _threadargscomma_ v ) ;
+ ratio ( _threadargs_ ) ;
  Dm = Dm  / (1. - dt*( ( ( ( - 1.0 ) ) ) / ( mtau ( _threadargscomma_ v ) / qfact ) )) ;
  Dh = Dh  / (1. - dt*( ( ( ( - 1.0 ) ) ) / ( htau / qfact ) )) ;
  Dn = Dn  / (1. - dt*( ( ( ( - 1.0 ) ) ) / ( mtau ( _threadargscomma_ v ) / qfact ) )) ;
@@ -359,6 +389,7 @@ static void _hoc_table_mtau(void) {
  /*END CVODE*/
  static int states (double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) { {
    rates ( _threadargscomma_ v ) ;
+   ratio ( _threadargs_ ) ;
     m = m + (1. - exp(dt*(( ( ( - 1.0 ) ) ) / ( mtau ( _threadargscomma_ v ) / qfact ))))*(- ( ( ( minf ) ) / ( mtau ( _threadargscomma_ v ) / qfact ) ) / ( ( ( ( - 1.0) ) ) / ( mtau ( _threadargscomma_ v ) / qfact ) ) - m) ;
     h = h + (1. - exp(dt*(( ( ( - 1.0 ) ) ) / ( htau / qfact ))))*(- ( ( ( hinf ) ) / ( htau / qfact ) ) / ( ( ( ( - 1.0) ) ) / ( htau / qfact ) ) - h) ;
     n = n + (1. - exp(dt*(( ( ( - 1.0 ) ) ) / ( mtau ( _threadargscomma_ v ) / qfact ))))*(- ( ( ( ninf ) ) / ( mtau ( _threadargscomma_ v ) / qfact ) ) / ( ( ( ( - 1.0) ) ) / ( mtau ( _threadargscomma_ v ) / qfact ) ) - n) ;
@@ -385,6 +416,22 @@ static void _hoc_rates(void) {
  hoc_retpushx(_r);
 }
  
+static int  ratio ( _threadargsproto_ ) {
+   KTESTi = KV42i / KV42_total ;
+   KTESTPi = KV42Pi / KV42_total ;
+    return 0; }
+ 
+static void _hoc_ratio(void) {
+  double _r;
+   double* _p; Datum* _ppvar; Datum* _thread; _NrnThread* _nt;
+   if (_extcall_prop) {_p = _extcall_prop->param; _ppvar = _extcall_prop->dparam;}else{ _p = (double*)0; _ppvar = (Datum*)0; }
+  _thread = _extcall_thread;
+  _nt = nrn_threads;
+ _r = 1.;
+ ratio ( _p, _ppvar, _thread, _nt );
+ hoc_retpushx(_r);
+}
+ 
 static int _ode_count(int _type){ return 4;}
  
 static void _ode_spec(_NrnThread* _nt, _Memb_list* _ml, int _type) {
@@ -399,8 +446,12 @@ static void _ode_spec(_NrnThread* _nt, _Memb_list* _ml, int _type) {
   ek = _ion_ek;
   KV42Pi = _ion_KV42Pi;
   KV42i = _ion_KV42i;
+  KTESTi = _ion_KTESTi;
+  KTESTPi = _ion_KTESTPi;
      _ode_spec1 (_p, _ppvar, _thread, _nt);
-  }}
+   _ion_KTESTi = KTESTi;
+  _ion_KTESTPi = KTESTPi;
+ }}
  
 static void _ode_map(int _ieq, double** _pv, double** _pvdot, double* _pp, Datum* _ppd, double* _atol, int _type) { 
 	double* _p; Datum* _ppvar;
@@ -411,6 +462,13 @@ static void _ode_map(int _ieq, double** _pv, double** _pvdot, double* _pp, Datum
 		_cvode_abstol(_atollist, _atol, _i);
 	}
  }
+ static void _ode_synonym(int _cnt, double** _pp, Datum** _ppd) { 
+	double* _p; Datum* _ppvar;
+ 	int _i; 
+	for (_i=0; _i < _cnt; ++_i) {_p = _pp[_i]; _ppvar = _ppd[_i];
+ _ion_KTESTi =  KV42i / KV42_total ;
+ _ion_KTESTPi =  KV42Pi / KV42_total ;
+ }}
  
 static void _ode_matsol(_NrnThread* _nt, _Memb_list* _ml, int _type) {
    double* _p; Datum* _ppvar; Datum* _thread;
@@ -424,6 +482,8 @@ static void _ode_matsol(_NrnThread* _nt, _Memb_list* _ml, int _type) {
   ek = _ion_ek;
   KV42Pi = _ion_KV42Pi;
   KV42i = _ion_KV42i;
+  KTESTi = _ion_KTESTi;
+  KTESTPi = _ion_KTESTPi;
  _ode_matsol1 (_p, _ppvar, _thread, _nt);
  }}
  extern void nrn_update_ion_pointer(Symbol*, Datum*, int, int);
@@ -433,6 +493,8 @@ static void _ode_matsol(_NrnThread* _nt, _Memb_list* _ml, int _type) {
    nrn_update_ion_pointer(_k_sym, _ppvar, 2, 4);
    nrn_update_ion_pointer(_KV42P_sym, _ppvar, 3, 1);
    nrn_update_ion_pointer(_KV42_sym, _ppvar, 4, 1);
+   nrn_update_ion_pointer(_KTEST_sym, _ppvar, 5, 1);
+   nrn_update_ion_pointer(_KTESTP_sym, _ppvar, 7, 1);
  }
 
 static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {
@@ -475,16 +537,17 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   ek = _ion_ek;
   KV42Pi = _ion_KV42Pi;
   KV42i = _ion_KV42i;
+  KTESTi = _ion_KTESTi;
+  KTESTPi = _ion_KTESTPi;
  initmodel(_p, _ppvar, _thread, _nt);
- }}
+   _ion_KTESTi = KTESTi;
+  nrn_wrote_conc(_KTEST_sym, (&(_ion_KTESTi)) - 1, _style_KTEST);
+  _ion_KTESTPi = KTESTPi;
+  nrn_wrote_conc(_KTESTP_sym, (&(_ion_KTESTPi)) - 1, _style_KTESTP);
+}}
 
 static double _nrn_current(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt, double _v){double _current=0.;v=_v;{ {
-   if ( KV42Pi  == 0.0 ) {
-     ik = gkbar * pow( m , power ) * h * ( v - ek ) ;
-     }
-   else {
-     ik = ( KV42i / KV42_total ) * gkbar * pow( m , power ) * h * ( v - ek ) + ( KV42Pi / KV42_total ) * gkbar * pow( n , power ) * q * ( v - ek ) ;
-     }
+   ik = KTESTi * gkbar * pow( m , power ) * h * ( v - ek ) + KTESTPi * gkbar * pow( n , power ) * q * ( v - ek ) ;
    }
  _current += ik;
 
@@ -513,6 +576,8 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   ek = _ion_ek;
   KV42Pi = _ion_KV42Pi;
   KV42i = _ion_KV42i;
+  KTESTi = _ion_KTESTi;
+  KTESTPi = _ion_KTESTPi;
  _g = _nrn_current(_p, _ppvar, _thread, _nt, _v + .001);
  	{ double _dik;
   _dik = ik;
@@ -521,6 +586,8 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  	}
  _g = (_g - _rhs)/.001;
   _ion_ik += ik ;
+  _ion_KTESTi = KTESTi;
+  _ion_KTESTPi = KTESTPi;
 #if CACHEVEC
   if (use_cachevec) {
 	VEC_RHS(_ni[_iml]) -= _rhs;
@@ -581,13 +648,17 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   ek = _ion_ek;
   KV42Pi = _ion_KV42Pi;
   KV42i = _ion_KV42i;
+  KTESTi = _ion_KTESTi;
+  KTESTPi = _ion_KTESTPi;
  { {
  for (; t < _break; t += dt) {
    states(_p, _ppvar, _thread, _nt);
   
 }}
  t = _save;
- } }}
+ }   _ion_KTESTi = KTESTi;
+  _ion_KTESTPi = KTESTPi;
+}}
 
 }
 

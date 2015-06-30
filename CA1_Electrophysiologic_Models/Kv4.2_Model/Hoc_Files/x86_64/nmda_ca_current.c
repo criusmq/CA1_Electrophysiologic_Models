@@ -162,7 +162,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
      _nrn_thread_reg(_mechtype, 2, _update_ion_pointer);
   hoc_register_dparam_size(_mechtype, 2);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 nmda_ca_current /Users/maoss2/NEURON/CA1_cell_test/Stimulation_case_per_case/CA1_Electrophysiologic_Models/CA1_Electrophysiologic_Models/Kv4.2_Model/Mod_Files/x86_64/nmda_ca_current.mod\n");
+ 	ivoc_help("help ?1 nmda_ca_current /Users/maoss2/Documents/Kv4.2_Model/Mod_Files/x86_64/nmda_ca_current.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }

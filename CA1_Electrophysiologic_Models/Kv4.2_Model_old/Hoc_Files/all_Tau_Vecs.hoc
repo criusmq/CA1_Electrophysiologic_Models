@@ -1,0 +1,32 @@
+//**************************************************************************
+// All_Tau_Vecs loads the tables used to define the taus for channels
+
+/*
+		Mazid Abiodoun OSSENI,Simon Hardy ,Nicolas Doyon
+		Laval University, Quebec, Qc
+BASED ON Tkatch, T., Baranauskas, G., and Surmeier, D. J. (2000). Kv4.2 mRNA
+abundance and A-type K(+) current amplitude are linearly related in
+basal ganglia and basal forebrain neurons. J Neurosci 20, 579-588.
+
+*/
+strdef dirstr, preface
+objref mtau_kaf_
+objref vtau_kaf_
+objref file_kaf_
+
+file_kaf_ = new File ()
+
+mtau_kaf_ = new Vector(11,0)
+vtau_kaf_ = new Vector(11,0)
+
+sprint(dirstr, "%staum_kaf.txt", preface)
+file_kaf_.ropen (dirstr)
+mtau_kaf_.scanf(file_kaf_)
+file_kaf_.close()
+
+sprint(dirstr, "%svtau_kaf.txt", preface)
+file_kaf_.ropen (dirstr)
+vtau_kaf_.scanf(file_kaf_)
+file_kaf_.close()
+
+table_mtau_kaf(mtau_kaf_,vtau_kaf_)

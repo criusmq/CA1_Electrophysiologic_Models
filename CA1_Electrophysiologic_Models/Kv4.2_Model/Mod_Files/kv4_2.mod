@@ -20,7 +20,10 @@ NEURON {
 	USEION k READ ek WRITE ik
 	USEION KV42P READ KV42Pi
 	USEION KV42 READ KV42i
-	RANGE gkbar, ik, mshift, hshift, mshift_mutant, hshift_mutant
+	USEION KTEST WRITE KTESTi VALENCE 1 :variables de tests
+	USEION KTESTP WRITE KTESTPi VALENCE 1
+	RANGE gkbar, ik,  mshift, hshift, mshift_mutant, hshift_mutant
+	RANGE coeff1, coeff2 :valeurs tests 
 }
 
 PARAMETER {
@@ -51,16 +54,21 @@ PARAMETER {
 	qfact = 3
 	power = 2
 	
-	ek = -95	(mV)  
-	KV42Pi		(1)
-	KV42i		(1)
+	:ek = -95	(mV)  
+	KV42Pi		(mM)
+	KV42i		(mM)
 	KV42_total = 1.86e-4  (mM)
+	KTESTi		(mM)
+	KTESTPi		(mM)
+	
+	:coeff1 = 0.51 (1)
+	:coeff2 = 0.49 (1)
 }
 
 ASSIGNED { 
 	v 		(mV)
     ik 		(mA/cm2)
-	:ek 		(mV)
+	ek 		(mV)
 
 	minf
 	hinf
@@ -74,13 +82,16 @@ STATE {
 
 BREAKPOINT {
     SOLVE states METHOD cnexp
-    :ik  = 0.8333 * gkbar * m^power * h * (v-ek) + 0.1667 * gkbar * n^power * q * (v-ek) 
-    :ik  = 0.5* gkbar * m^power * h * (v-ek) + 0.5 * gkbar * n^power * q * (v-ek) 
-    :ik  = 0.2 * gkbar * m^power * h * (v-ek) + 0.8 * gkbar * n^power * q * (v-ek) 
-    :test de  stim faible, c est pour ca c est en commentaire. a enlever automatiquement apres
-    if (KV42Pi == 0) { ik  = gkbar * m^power * h * (v-ek) }
-    else {
-	ik  = (KV42i/KV42_total) * gkbar * m^power * h * (v-ek) + (KV42Pi/KV42_total)*gkbar * n^power * q * (v-ek) }
+    
+    :if (KV42Pi == 0) { ik  = gkbar * m^power * h * (v-ek) }
+    :else {
+	ik  = KTESTi * gkbar * m^power * h * (v-ek) + KTESTPi*gkbar * n^power * q * (v-ek) 
+	
+	
+	:if (KV42Pi == 0) { ik  = gkbar * m^power * h * (v-ek) }
+    :else {
+	:ik  = coeff1 * gkbar * m^power * h * (v-ek) + coeff2 * gkbar * n^power * q * (v-ek) 
+	
 }
 
 INITIAL {
@@ -95,10 +106,13 @@ FUNCTION_TABLE mtau (v(mV))  (ms)	: Tkatch 2000 Fig 2B
 
 DERIVATIVE states {  
 	rates(v)
+	ratio()
 	m' = (minf - m) / (mtau(v) / qfact)
 	h' = (hinf - h) / (htau / qfact)
 	n' = (ninf - n) / (mtau(v) / qfact)
 	q' = (qinf - q) / (htau_mutant / qfact)
+	:KTESTi = KV42i/KV42_total
+	:KTESTPi = KV42Pi/KV42_total
 }
 
 
@@ -111,4 +125,9 @@ PROCEDURE rates( v(mV) ) {  : Boltzman adjusted to give proper Erev dependency
 	
 			ninf = 1  /  ( 1 + exp( (v - mvhalf_mutant - mshift_mutant) / mslope_mutant) ) 
 			qinf = 1  /  ( 1 + exp( (v - hvhalf_mutant - hshift_mutant) / hslope_mutant) ) 
+}
+
+PROCEDURE ratio() {
+	KTESTi = KV42i/KV42_total
+	KTESTPi = KV42Pi/KV42_total
 }
