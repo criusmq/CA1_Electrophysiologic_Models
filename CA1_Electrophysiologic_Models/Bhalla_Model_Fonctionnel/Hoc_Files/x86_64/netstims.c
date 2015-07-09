@@ -198,12 +198,12 @@ extern void _cvode_abstol( Symbol**, double*, int);
 	 _hoc_create_pnt, _hoc_destroy_pnt, _member_func);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
-  hoc_register_dparam_size(_mechtype, 3);
+  hoc_register_prop_size(_mechtype, 9, 3);
  add_nrn_has_net_event(_mechtype);
  pnt_receive[_mechtype] = _net_receive;
  pnt_receive_size[_mechtype] = 1;
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 NetStims /Users/maoss2/NEURON/CA1_cell_test/Stimulation_case_per_case/CA1_Electrophysiologic_Models/CA1_Electrophysiologic_Models/Mod_Files/x86_64/netstims.mod\n");
+ 	ivoc_help("help ?1 NetStims /Users/ossenimazidabiodoun/Documents/CA1_Electrophysiologic_Models/CA1_Electrophysiologic_Models/Bhalla_Model_Fonctionnel/Mod_Files/x86_64/netstims.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }

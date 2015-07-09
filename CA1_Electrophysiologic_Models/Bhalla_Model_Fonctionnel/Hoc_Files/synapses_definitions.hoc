@@ -7,7 +7,7 @@ for i=0,8{
 	
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
-		setpointer sNMDA[i].x, x_nmda_current(0.5)
+		setpointer x_nmda_current(0.5), sNMDA[i].msg
 		
     //AMPA_SYNAPSES	
     	sAMPA[i] = new ampa(0.5)	
@@ -20,7 +20,7 @@ for i=9,20{
 	
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
-		setpointer sNMDA[i].x, x_nmda_current(0.5)
+		setpointer x_nmda_current(0.5), sNMDA[i].msg
 		
     //AMPA_SYNAPSES	
     	sAMPA[i] = new ampa(0.5)
@@ -34,14 +34,14 @@ for i=21,21{
 	
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
-		setpointer sNMDA[i].x, x_nmda_current(0.5)
+		setpointer x_nmda_current(0.5), sNMDA[i].msg
 	
     //AMPA_SYNAPSES	
     	sAMPA[i] = new ampa(0.5)
     		
     //NMDA_CA_SYNAPSES	
 		sNMDA_CA[0] = new nmda_ca(0.5)
-		setpointer sNMDA_CA[0].y, y_nmda_ca_current(0.5)
+		setpointer y_nmda_ca_current(0.5), sNMDA_CA[0].mesg
 		}
 	}
 
@@ -50,14 +50,14 @@ for i=22,22{
 	
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
-		setpointer sNMDA[i].x, x_nmda_current(0.5)
+		setpointer x_nmda_current(0.5), sNMDA[i].msg
 	
     //AMPA_SYNAPSES	
     	sAMPA[i] = new ampa(0.5)
     	
     //NMDA_CA_SYNAPSES	
 		sNMDA_CA[1] = new nmda_ca(0.5)
-		setpointer sNMDA_CA[1].y, y_nmda_ca_current(0.5)
+		setpointer y_nmda_ca_current(0.5), sNMDA_CA[1].mesg
 		}
 	}
 	
@@ -66,13 +66,13 @@ for i=23,23{
 	
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
-		setpointer sNMDA[i].x, x_nmda_current(0.5)
+		setpointer x_nmda_current(0.5), sNMDA[i].msg
 	
     //AMPA_SYNAPSES	
     	sAMPA[i] = new ampa(0.5)
     	
     //NMDA_CA_SYNAPSES	
 		sNMDA_CA[2] = new nmda_ca(0.5)
-		setpointer sNMDA_CA[2].y, y_nmda_ca_current(0.5)
+		setpointer y_nmda_ca_current(0.5), sNMDA_CA[2].mesg
 		}
 	}

@@ -7,8 +7,9 @@ f <- function(t) {
 			((1-exp(-1/tau_GEF)) * exp(-(t-t0)/tau_GEF))))
 	y
 }
-
-plot(f,0,10)
+png('f_harvey.png')
+plot(f,0,10,xlab="Temps (min)", ylab="GEF")
+dev.off()
 
 D <- 0.65
 tau_inactivation <- 4.5
@@ -32,7 +33,7 @@ ras = matrix(nrow=100,ncol=100)
 for(i in 1:length(x))
 	for(j in 1:length(t))
 		ras[i,j] <- phi(x[i],t[j])$value
-
-dev.new()
-persp(x,t,ras,xlim=c(0,10),ylim=c(0,10),zlim=c(0,0.6),theta=30)
-
+png('ras_harvey.png')
+#dev.new()
+persp(x,t,ras,xlim=c(0,10),ylim=c(0,10),zlim=c(0,0.6),xlab="Distance (um)",zlab="Concentration de RAS (mM)",ylab="temps (min)",theta=30)
+dev.off()

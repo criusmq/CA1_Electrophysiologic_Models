@@ -408,6 +408,7 @@ connect spine[3](0), spine[2](1)
 connect spine[4](0), lateral[9](0.5)
 connect spine[5](0), spine[4](1)
 
+/*
 objref s
 s = new Shape()
 s.show(0)
@@ -415,7 +416,7 @@ soma s.color(2)
 topology()
 finitialize()
 
-/*
+
 //creation de la sous-section pour l'insertion des point-process
 objref sl
 sl = new SectionList()

@@ -35,7 +35,7 @@ NEURON {
 
 	RANGE tau1, tau2
 	GLOBAL total, mg
-	POINTER x
+	RANGE msg
 }
 
 UNITS {
@@ -55,7 +55,6 @@ PARAMETER {
 ASSIGNED {
 	v (mV)
 	i (nA)
-	x (1)
 	factor
 	total (umho)
 }
@@ -63,7 +62,7 @@ ASSIGNED {
 STATE {
 	A (umho)
 	B (umho)
-
+	msg (1)
 }
 
 INITIAL {
@@ -87,7 +86,7 @@ BREAKPOINT {
 DERIVATIVE state {
 	A' = -A/tau1
 	B' = -B/tau2
-	x = (B - A)*Mgblock(v)
+	msg = (B - A)*Mgblock(v)
 }
 
 NET_RECEIVE(weight (umho)) {

@@ -39,15 +39,15 @@ extern double hoc_Exp(double);
 #define tau2 _p[1]
 #define A _p[2]
 #define B _p[3]
-#define i _p[4]
-#define factor _p[5]
-#define DA _p[6]
-#define DB _p[7]
-#define _g _p[8]
-#define _tsav _p[9]
+#define msg _p[4]
+#define i _p[5]
+#define factor _p[6]
+#define DA _p[7]
+#define DB _p[8]
+#define Dmsg _p[9]
+#define _g _p[10]
+#define _tsav _p[11]
 #define _nd_area  *_ppvar[0]._pval
-#define x	*_ppvar[2]._pval
-#define _p_x	_ppvar[2]._pval
  
 #if MAC
 #if !defined(v)
@@ -61,7 +61,7 @@ extern double hoc_Exp(double);
 #if defined(__cplusplus)
 extern "C" {
 #endif
- static int hoc_nrnpointerindex =  2;
+ static int hoc_nrnpointerindex =  -1;
  /* external NEURON variables */
  /* declaration of user functions */
  static double _hoc_Mgblock();
@@ -127,12 +127,13 @@ extern Memb_func* memb_func;
  "tau2", "ms",
  "A", "umho",
  "B", "umho",
- "x", "1",
+ "msg", "1",
  0,0
 };
  static double A0 = 0;
  static double B0 = 0;
  static double delta_t = 0.01;
+ static double msg0 = 0;
  static double v = 0;
  /* connect global user variables to hoc */
  static DoubScal hoc_scdoub[] = {
@@ -159,7 +160,7 @@ static void _ode_map(int, double**, double**, double*, Datum*, double*, int);
 static void _ode_spec(_NrnThread*, _Memb_list*, int);
 static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  
-#define _cvode_ieq _ppvar[3]._i
+#define _cvode_ieq _ppvar[2]._i
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
  "6.2.0",
@@ -170,8 +171,8 @@ static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  0,
  "A",
  "B",
+ "msg",
  0,
- "x",
  0};
  
 extern Prop* need_memb(Symbol*);
@@ -184,15 +185,15 @@ static void nrn_alloc(Prop* _prop) {
 	_p = nrn_point_prop_->param;
 	_ppvar = nrn_point_prop_->dparam;
  }else{
- 	_p = nrn_prop_data_alloc(_mechtype, 10, _prop);
+ 	_p = nrn_prop_data_alloc(_mechtype, 12, _prop);
  	/*initialize range parameters*/
  	tau1 = 20;
  	tau2 = 20;
   }
  	_prop->param = _p;
- 	_prop->param_size = 10;
+ 	_prop->param_size = 12;
   if (!nrn_point_prop_) {
- 	_ppvar = nrn_prop_datum_alloc(_mechtype, 4, _prop);
+ 	_ppvar = nrn_prop_datum_alloc(_mechtype, 3, _prop);
   }
  	_prop->dparam = _ppvar;
  	/*connect ionic variables to this model*/
@@ -220,13 +221,13 @@ extern void _cvode_abstol( Symbol**, double*, int);
 	 _hoc_create_pnt, _hoc_destroy_pnt, _member_func);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
-  hoc_register_dparam_size(_mechtype, 4);
+  hoc_register_prop_size(_mechtype, 12, 3);
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  pnt_receive[_mechtype] = _net_receive;
  pnt_receive_size[_mechtype] = 1;
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 nmda /Users/maoss2/NEURON/CA1_cell_test/Stimulation_case_per_case/CA1_Electrophysiologic_Models/CA1_Electrophysiologic_Models/Mod_Files/x86_64/nmda_debug.mod\n");
+ 	ivoc_help("help ?1 nmda /Users/ossenimazidabiodoun/Documents/CA1_Electrophysiologic_Models/CA1_Electrophysiologic_Models/Bhalla_Model_Fonctionnel/Mod_Files/x86_64/nmda_debug.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -248,7 +249,7 @@ static int _ode_spec1(_threadargsproto_);
  {
    DA = - A / tau1 ;
    DB = - B / tau2 ;
-   x = ( B - A ) * Mgblock ( _threadargscomma_ v ) ;
+   msg = ( B - A ) * Mgblock ( _threadargscomma_ v ) ;
    }
  return _reset;
 }
@@ -262,7 +263,7 @@ static int _ode_spec1(_threadargsproto_);
  {
     A = A + (1. - exp(dt*(( - 1.0 ) / tau1)))*(- ( 0.0 ) / ( ( - 1.0 ) / tau1 ) - A) ;
     B = B + (1. - exp(dt*(( - 1.0 ) / tau2)))*(- ( 0.0 ) / ( ( - 1.0 ) / tau2 ) - B) ;
-   x = ( B - A ) * Mgblock ( _threadargscomma_ v ) ;
+   msg = ( B - A ) * Mgblock ( _threadargscomma_ v ) ;
    }
   return 0;
 }
@@ -332,6 +333,7 @@ static void initmodel() {
 {
   A = A0;
   B = B0;
+  msg = msg0;
  {
    double _ltp ;
  if ( tau1 / tau2 > .9999 ) {
@@ -441,7 +443,7 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  { {
  for (; t < _break; t += dt) {
  error =  state();
- if(error){fprintf(stderr,"at line 84 in file nmda_debug.mod:\n	SOLVE state METHOD cnexp\n"); nrn_complain(_p); abort_run(error);}
+ if(error){fprintf(stderr,"at line 83 in file nmda_debug.mod:\n	SOLVE state METHOD cnexp\n"); nrn_complain(_p); abort_run(error);}
  
 }}
  t = _save;
