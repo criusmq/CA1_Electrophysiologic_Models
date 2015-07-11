@@ -50,10 +50,6 @@ extern double hoc_Exp(double);
 #define _g _p[12]
 #define _tsav _p[13]
 #define _nd_area  *_ppvar[0]._pval
-#define _ion_ina	*_ppvar[2]._pval
-#define _ion_dinadv	*_ppvar[3]._pval
-#define _ion_ik	*_ppvar[4]._pval
-#define _ion_dikdv	*_ppvar[5]._pval
  
 #if MAC
 #if !defined(v)
@@ -163,7 +159,7 @@ static void _ode_map(int, double**, double**, double*, Datum*, double*, int);
 static void _ode_spec(_NrnThread*, _Memb_list*, int);
 static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  
-#define _cvode_ieq _ppvar[6]._i
+#define _cvode_ieq _ppvar[2]._i
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
  "6.2.0",
@@ -179,8 +175,6 @@ static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  "B",
  0,
  0};
- static Symbol* _na_sym;
- static Symbol* _k_sym;
  
 extern Prop* need_memb(Symbol*);
 
@@ -201,16 +195,10 @@ static void nrn_alloc(Prop* _prop) {
  	_prop->param = _p;
  	_prop->param_size = 14;
   if (!nrn_point_prop_) {
- 	_ppvar = nrn_prop_datum_alloc(_mechtype, 7, _prop);
+ 	_ppvar = nrn_prop_datum_alloc(_mechtype, 3, _prop);
   }
  	_prop->dparam = _ppvar;
  	/*connect ionic variables to this model*/
- prop_ion = need_memb(_na_sym);
- 	_ppvar[2]._pval = &prop_ion->param[3]; /* ina */
- 	_ppvar[3]._pval = &prop_ion->param[4]; /* _ion_dinadv */
- prop_ion = need_memb(_k_sym);
- 	_ppvar[4]._pval = &prop_ion->param[3]; /* ik */
- 	_ppvar[5]._pval = &prop_ion->param[4]; /* _ion_dikdv */
  
 }
  static void _initlists();
@@ -220,7 +208,6 @@ static void nrn_alloc(Prop* _prop) {
  0,0
 };
  static void _net_receive(Point_process*, double*, double);
- static void _update_ion_pointer(Datum*);
  extern Symbol* hoc_lookup(const char*);
 extern void _nrn_thread_reg(int, int, void(*f)(Datum*));
 extern void _nrn_thread_table_reg(int, void(*)(double*, Datum*, Datum*, _NrnThread*, int));
@@ -230,24 +217,19 @@ extern void _cvode_abstol( Symbol**, double*, int);
  void _ampa_glu_reg() {
 	int _vectorized = 0;
   _initlists();
- 	ion_reg("na", -10000.);
- 	ion_reg("k", -10000.);
- 	_na_sym = hoc_lookup("na_ion");
- 	_k_sym = hoc_lookup("k_ion");
  	_pointtype = point_register_mech(_mechanism,
 	 nrn_alloc,nrn_cur, nrn_jacob, nrn_state, nrn_init,
 	 hoc_nrnpointerindex, 0,
 	 _hoc_create_pnt, _hoc_destroy_pnt, _member_func);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
-     _nrn_thread_reg(_mechtype, 2, _update_ion_pointer);
-  hoc_register_prop_size(_mechtype, 14, 7);
+  hoc_register_prop_size(_mechtype, 14, 3);
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  pnt_receive[_mechtype] = _net_receive;
  pnt_receive_size[_mechtype] = 1;
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 ampa /Users/ossenimazidabiodoun/Documents/CA1_Electrophysiologic_Models/CA1_Electrophysiologic_Models/Bhalla_Model_Fonctionnel/Mod_Files/x86_64/ampa_glu.mod\n");
+ 	ivoc_help("help ?1 ampa /Users/ossenimazidabiodoun/Desktop/Bhalla_Model_Fonctionnel/Mod_Files/x86_64/ampa_glu.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -307,7 +289,7 @@ static void _ode_spec(_NrnThread* _nt, _Memb_list* _ml, int _type) {
     _nd = _ml->_nodelist[_iml];
     v = NODEV(_nd);
      _ode_spec1 ();
-   }}
+ }}
  
 static void _ode_map(int _ieq, double** _pv, double** _pvdot, double* _pp, Datum* _ppd, double* _atol, int _type) { 
  	int _i; _p = _pp; _ppvar = _ppd;
@@ -329,13 +311,6 @@ static void _ode_matsol(_NrnThread* _nt, _Memb_list* _ml, int _type) {
     v = NODEV(_nd);
  _ode_matsol1 ();
  }}
- extern void nrn_update_ion_pointer(Symbol*, Datum*, int, int);
- static void _update_ion_pointer(Datum* _ppvar) {
-   nrn_update_ion_pointer(_na_sym, _ppvar, 2, 3);
-   nrn_update_ion_pointer(_na_sym, _ppvar, 3, 4);
-   nrn_update_ion_pointer(_k_sym, _ppvar, 4, 3);
-   nrn_update_ion_pointer(_k_sym, _ppvar, 5, 4);
- }
 
 static void initmodel() {
   int _i; double _save;_ninits++;
@@ -378,14 +353,12 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   }
  v = _v;
  initmodel();
-  }}
+}}
 
 static double _nrn_current(double _v){double _current=0.;v=_v;{ {
    gsyn = B - A ;
-   i = g_mox * gsyn * ( v - e ) ;
+   i = gmax * gsyn * ( v - e ) ;
    }
- _current += ina;
- _current += ik;
  _current += i;
 
 } return _current;
@@ -409,17 +382,9 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
     _v = NODEV(_nd);
   }
  _g = _nrn_current(_v + .001);
- 	{ double _dik;
- double _dina;
-  _dina = ina;
-  _dik = ik;
- _rhs = _nrn_current(_v);
-  _ion_dinadv += (_dina - ina)/.001 * 1.e2/ (_nd_area);
-  _ion_dikdv += (_dik - ik)/.001 * 1.e2/ (_nd_area);
+ 	{ _rhs = _nrn_current(_v);
  	}
  _g = (_g - _rhs)/.001;
-  _ion_ina += ina * 1.e2/ (_nd_area);
-  _ion_ik += ik * 1.e2/ (_nd_area);
  _g *=  1.e2/(_nd_area);
  _rhs *= 1.e2/(_nd_area);
 #if CACHEVEC
@@ -478,11 +443,11 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  { {
  for (; t < _break; t += dt) {
  error =  state();
- if(error){fprintf(stderr,"at line 85 in file ampa_glu.mod:\n	SOLVE state METHOD cnexp\n"); nrn_complain(_p); abort_run(error);}
+ if(error){fprintf(stderr,"at line 83 in file ampa_glu.mod:\n	SOLVE state METHOD cnexp\n"); nrn_complain(_p); abort_run(error);}
  
 }}
  t = _save;
- }  }}
+ }}}
 
 }
 

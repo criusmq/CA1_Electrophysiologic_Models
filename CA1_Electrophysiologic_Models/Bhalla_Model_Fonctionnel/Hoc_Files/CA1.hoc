@@ -36,6 +36,8 @@ forall{
 	insert pas { g_pas=0.0001 e_pas=-60}
 }
 
+test_const = 0.04 //constante qui agit sur le beta pour influencer la réponse calcique conformément
+ 					//à celle de Bhalla. 
 
 //soma
 soma {
@@ -51,7 +53,7 @@ soma {
  	insert k_a_Bh
  	//var0 = 17.402e6 * area(.5) * 1e-8
  	//soma.beta_ca_conc_Bh = ( 17.402e12 * (PI*diam/2*diam/2*L*1e-18) * 1e-6)
- 	soma.beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*soma.diam*1e-18))
+ 	soma.beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*soma.diam*1e-18)) * test_const
  	soma.gna_na_Bh = 0.03
  	soma.gca_ca_debug_Bh = 0.004
  	soma.gk_k_dr_Bh = 0.025
@@ -71,7 +73,7 @@ basal[0] {
  	insert k_c_Bh
  	//volume3 = PI*diam/2*diam/2*L*1e-18
  	//var3 = 8.96e-3 * 1e-6
- 	basal[0].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*basal[0].diam*1e-18))
+ 	basal[0].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*basal[0].diam*1e-18)) * test_const
  	basal[0].gca_ca_debug_Bh = 0.005
  	basal[0].gk_k_ahp_Bh = 0.0008
  	basal[0].gk_k_c_Bh = 0.005
@@ -87,7 +89,7 @@ basal[1] {
  	insert k_c_Bh
  	//volume4 = PI*diam/2*diam/2*L*1e-18
  	//var4 = (8.96e-3 / volume4) *1e-6 * area(.5) * 1e-8
- 	basal[1].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*basal[1].diam*1e-18))
+ 	basal[1].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*basal[1].diam*1e-18)) * test_const
  	basal[1].gca_ca_debug_Bh = 0.007
  	basal[1].gk_k_ahp_Bh = 0.0008
  	basal[1].gk_k_c_Bh = 0.005
@@ -105,7 +107,7 @@ basal[2] {
  	insert k_c_Bh
  	//volume5 = PI*diam/2*diam/2*L*1e-18
  	//var5 = (8.96e-3 / volume5) *1e-6 * area(.5) * 1e-8
- 	basal[2].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*basal[2].diam*1e-18))
+ 	basal[2].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*basal[2].diam*1e-18)) * test_const
  	basal[2].gna_na_Bh = 0.02
  	basal[2].gca_ca_debug_Bh = 0.012
  	basal[2].gk_k_dr_Bh = 0.02
@@ -125,7 +127,7 @@ basal[3] {
  	insert k_c_Bh
  	//var1 = 34.53e6 * area(.5) * 1e-8
 	//basal[3].beta_ca_conc_Bh = ( 34.53e12 * (PI*diam/2*diam/2*L*1e-18) * 1e-6)
-	basal[3].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*basal[3].diam*1e-18))
+	basal[3].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*basal[3].diam*1e-18)) * test_const
  	basal[3].gna_na_Bh = 0.015
  	basal[3].gca_ca_debug_Bh = 0.008
  	basal[3].gk_k_dr_Bh = 0.01
@@ -148,7 +150,7 @@ for i=1,8{
  		
  		//volume6 = PI*diam/2*diam/2*L*1e-18
  		//var6 = (8.96e-3 / volume6) *1e-6 * area(.5) * 1e-8
-		//apical[i].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[i].diam*1e-18))
+		//apical[i].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[i].diam*1e-18)) * test_const
  		apical[i].gca_ca_debug_Bh = 0.007
  		apical[i].gk_k_dr_Bh = 0.006
  		apical[i].gk_k_ahp_Bh = 0.0008
@@ -171,7 +173,7 @@ for i=1,8{
  		
  		//var2 = 26.404e6 * area(.5) * 1e-8
  		//apical[0].beta_ca_conc_Bh = ( 26.404e12 * (PI*diam/2*diam/2*L*1e-18) * 1e-6)
- 		apical[0].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[0].diam*1e-18))
+ 		apical[0].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[0].diam*1e-18)) * test_const
  		apical[0].gna_na_Bh = 0.015
  		apical[0].gca_ca_debug_Bh = 0.008
  		apical[0].gk_k_dr_Bh = 0.01
@@ -215,14 +217,14 @@ for i = 3,9{
 	apical[i] {diam = 2.6}
 	}
 
-apical[1].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[1].diam*1e-18))
-apical[2].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[2].diam*1e-18))
-apical[3].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[3].diam*1e-18))
-apical[4].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[4].diam*1e-18))
-apical[5].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[5].diam*1e-18))
-apical[6].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[6].diam*1e-18))
-apical[7].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[7].diam*1e-18))
-apical[8].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[8].diam*1e-18))
+apical[1].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[1].diam*1e-18)) * test_const
+apical[2].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[2].diam*1e-18)) * test_const
+apical[3].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[3].diam*1e-18)) * test_const
+apical[4].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[4].diam*1e-18)) * test_const
+apical[5].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[5].diam*1e-18)) * test_const
+apical[6].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[6].diam*1e-18)) * test_const
+apical[7].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[7].diam*1e-18)) * test_const
+apical[8].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*apical[8].diam*1e-18)) * test_const
 	
 //lateral compartiments
 
@@ -283,18 +285,18 @@ for i=4,11{
 	lateral[i] {diam=1}
 	}
 	
-lateral[0].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[0].diam*1e-18))
-lateral[1].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[1].diam*1e-18))
-lateral[2].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[2].diam*1e-18))
-lateral[3].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[3].diam*1e-18))
-lateral[4].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[4].diam*1e-18))
-lateral[5].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[5].diam*1e-18))
-lateral[6].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[6].diam*1e-18))
-lateral[7].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[7].diam*1e-18))
-lateral[8].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[8].diam*1e-18))
-lateral[9].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[9].diam*1e-18))
-lateral[10].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[10].diam*1e-18))
-lateral[11].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[0].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[0].diam*1e-18)) * test_const
+lateral[1].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[1].diam*1e-18)) * test_const
+lateral[2].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[2].diam*1e-18)) * test_const
+lateral[3].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[3].diam*1e-18)) * test_const
+lateral[4].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[4].diam*1e-18)) * test_const
+lateral[5].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[5].diam*1e-18)) * test_const
+lateral[6].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[6].diam*1e-18)) * test_const
+lateral[7].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[7].diam*1e-18)) * test_const
+lateral[8].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[8].diam*1e-18)) * test_const
+lateral[9].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[9].diam*1e-18)) * test_const
+lateral[10].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[10].diam*1e-18)) * test_const
+lateral[11].beta_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 
 
 	
@@ -310,7 +312,7 @@ spine[1]{
 	
 	//volume8 = PI*diam/2*diam/2*L*1e-18
  	//var8 = (8.96e-3 / volume8) *1e-6 * area(.5) * 1e-8
-	spine[1].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18))
+	spine[1].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18)) * test_const
 	spine[1].gca_ca_debug_Bh = 0.006
 
 
@@ -326,7 +328,7 @@ spine[3]{
 	
 	//volume9 = PI*diam/2*diam/2*L*1e-18
  	//var9 = (8.96e-3 / volume9) *1e-6 * area(.5) * 1e-8
-	spine[3].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[3].diam*1e-18))
+	spine[3].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[3].diam*1e-18)) * test_const
 	spine[3].gca_ca_debug_Bh = 0.006
 	
 	
@@ -342,7 +344,7 @@ spine[5]{
 	
 	//volume10 = PI*diam/2*diam/2*L*1e-18
  	//var10 = (8.96e-3 / volume10) *1e-6 * area(.5) * 1e-8
-	spine[5].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18))
+	spine[5].beta_nmda_ca_conc_Bh = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18)) * test_const
 	spine[5].gca_ca_debug_Bh = 0.006
 	
 	

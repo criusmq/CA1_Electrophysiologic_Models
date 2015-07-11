@@ -34,8 +34,6 @@ NEURON {
 	POINT_PROCESS ampa
 	
 	RANGE tau1, tau2, e, i
-	USEION na WRITE ina
-	USEION k WRITE ik
 	NONSPECIFIC_CURRENT i
 	
 	RANGE gsyn
@@ -84,9 +82,8 @@ INITIAL {
 BREAKPOINT {
 	SOLVE state METHOD cnexp
 	gsyn = B - A
-	i = g_mox*gsyn*(v - e)
-	:ik = (i*1e-6)/Area :e-6 to convert in mA
-	:ina = (i*1e-6)/Area :e-6 to convert in mA
+	i = gmax*gsyn*(v - e)
+	
 }
 
 DERIVATIVE state {
