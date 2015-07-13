@@ -1,5 +1,5 @@
 /* Created by Language version: 6.2.0 */
-/* VECTORIZED */
+/* NOT VECTORIZED */
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -21,28 +21,29 @@ extern int _method3;
 extern double hoc_Exp(double);
 #endif
  
-#define _threadargscomma_ _p, _ppvar, _thread, _nt,
-#define _threadargs_ _p, _ppvar, _thread, _nt
+#define _threadargscomma_ /**/
+#define _threadargs_ /**/
  
-#define _threadargsprotocomma_ double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt,
-#define _threadargsproto_ double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt
+#define _threadargsprotocomma_ /**/
+#define _threadargsproto_ /**/
  	/*SUPPRESS 761*/
 	/*SUPPRESS 762*/
 	/*SUPPRESS 763*/
 	/*SUPPRESS 765*/
 	 extern double *getarg();
- /* Thread safe. No static _p or _ppvar. */
+ static double *_p; static Datum *_ppvar;
  
-#define t _nt->_t
-#define dt _nt->_dt
+#define t nrn_threads->_t
+#define dt nrn_threads->_dt
 #define e _p[0]
 #define gbar _p[1]
 #define g _p[2]
 #define ica _p[3]
-#define v _p[4]
-#define _g _p[5]
+#define _g _p[4]
 #define _ion_ica	*_ppvar[0]._pval
 #define _ion_dicadv	*_ppvar[1]._pval
+#define x	*_ppvar[2]._pval
+#define _p_x	_ppvar[2]._pval
  
 #if MAC
 #if !defined(v)
@@ -56,9 +57,7 @@ extern double hoc_Exp(double);
 #if defined(__cplusplus)
 extern "C" {
 #endif
- static int hoc_nrnpointerindex =  -1;
- static Datum* _extcall_thread;
- static Prop* _extcall_prop;
+ static int hoc_nrnpointerindex =  2;
  /* external NEURON variables */
  /* declaration of user functions */
  static int _mechtype;
@@ -70,7 +69,7 @@ extern void nrn_promote(Prop*, int, int);
 extern Memb_func* memb_func;
  extern void _nrn_setdata_reg(int, void(*)(Prop*));
  static void _setdata(Prop* _prop) {
- _extcall_prop = _prop;
+ _p = _prop->param; _ppvar = _prop->dparam;
  }
  static void _hoc_setdata() {
  Prop *_prop, *hoc_getdata_range(int);
@@ -84,22 +83,20 @@ extern Memb_func* memb_func;
  0, 0
 };
  /* declare global and static user variables */
-#define x x_nmda_current
- double x = 0;
  /* some parameters have upper and lower limits */
  static HocParmLimits _hoc_parm_limits[] = {
  0,0,0
 };
  static HocParmUnits _hoc_parm_units[] = {
- "x_nmda_current", "1",
  "e_nmda_current", "mV",
  "gbar_nmda_current", "mho/cm2",
  "g_nmda_current", "mho/cm2",
+ "x_nmda_current", "1",
  0,0
 };
+ static double v = 0;
  /* connect global user variables to hoc */
  static DoubScal hoc_scdoub[] = {
- "x_nmda_current", &x_nmda_current,
  0,0
 };
  static DoubVec hoc_vdoub[] = {
@@ -121,6 +118,7 @@ static void  nrn_jacob(_NrnThread*, _Memb_list*, int);
  "g_nmda_current",
  0,
  0,
+ "x_nmda_current",
  0};
  static Symbol* _ca_sym;
  
@@ -129,13 +127,13 @@ extern Prop* need_memb(Symbol*);
 static void nrn_alloc(Prop* _prop) {
 	Prop *prop_ion;
 	double *_p; Datum *_ppvar;
- 	_p = nrn_prop_data_alloc(_mechtype, 6, _prop);
+ 	_p = nrn_prop_data_alloc(_mechtype, 5, _prop);
  	/*initialize range parameters*/
  	e = 0;
  	gbar = 0.0005;
  	_prop->param = _p;
- 	_prop->param_size = 6;
- 	_ppvar = nrn_prop_datum_alloc(_mechtype, 2, _prop);
+ 	_prop->param_size = 5;
+ 	_ppvar = nrn_prop_datum_alloc(_mechtype, 3, _prop);
  	_prop->dparam = _ppvar;
  	/*connect ionic variables to this model*/
  prop_ion = need_memb(_ca_sym);
@@ -152,17 +150,17 @@ extern void hoc_register_tolerance(int, HocStateTolerance*, Symbol***);
 extern void _cvode_abstol( Symbol**, double*, int);
 
  void _nmda_current_reg() {
-	int _vectorized = 1;
+	int _vectorized = 0;
   _initlists();
  	ion_reg("ca", -10000.);
  	_ca_sym = hoc_lookup("ca_ion");
- 	register_mech(_mechanism, nrn_alloc,nrn_cur, nrn_jacob, nrn_state, nrn_init, hoc_nrnpointerindex, 1);
+ 	register_mech(_mechanism, nrn_alloc,nrn_cur, nrn_jacob, nrn_state, nrn_init, hoc_nrnpointerindex, 0);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
      _nrn_thread_reg(_mechtype, 2, _update_ion_pointer);
-  hoc_register_dparam_size(_mechtype, 2);
+  hoc_register_prop_size(_mechtype, 5, 3);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 nmda_current /Users/maoss2/Documents/Kv4.2_Model/Mod_Files/x86_64/nmda_current.mod\n");
+ 	ivoc_help("help ?1 nmda_current /Users/ossenimazidabiodoun/Documents/Master/Kv4.2_Model/Mod_Files/x86_64/nmda_current.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -179,8 +177,9 @@ static void _modl_cleanup(){ _match_recurse=1;}
    nrn_update_ion_pointer(_ca_sym, _ppvar, 1, 4);
  }
 
-static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt) {
-  int _i; double _save;{
+static void initmodel() {
+  int _i; double _save;_ninits++;
+{
  {
    g = gbar * x ;
    ica = g * ( v - e ) ;
@@ -190,13 +189,11 @@ static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt
 }
 
 static void nrn_init(_NrnThread* _nt, _Memb_list* _ml, int _type){
-double* _p; Datum* _ppvar; Datum* _thread;
 Node *_nd; double _v; int* _ni; int _iml, _cntml;
 #if CACHEVEC
     _ni = _ml->_nodeindices;
 #endif
 _cntml = _ml->_nodecount;
-_thread = _ml->_thread;
 for (_iml = 0; _iml < _cntml; ++_iml) {
  _p = _ml->_data[_iml]; _ppvar = _ml->_pdata[_iml];
 #if CACHEVEC
@@ -209,10 +206,10 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
     _v = NODEV(_nd);
   }
  v = _v;
- initmodel(_p, _ppvar, _thread, _nt);
+ initmodel();
  }}
 
-static double _nrn_current(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt, double _v){double _current=0.;v=_v;{ {
+static double _nrn_current(double _v){double _current=0.;v=_v;{ {
    g = gbar * x ;
    ica = g * ( v - e ) ;
    }
@@ -221,14 +218,12 @@ static double _nrn_current(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread
 } return _current;
 }
 
-static void nrn_cur(_NrnThread* _nt, _Memb_list* _ml, int _type) {
-double* _p; Datum* _ppvar; Datum* _thread;
+static void nrn_cur(_NrnThread* _nt, _Memb_list* _ml, int _type){
 Node *_nd; int* _ni; double _rhs, _v; int _iml, _cntml;
 #if CACHEVEC
     _ni = _ml->_nodeindices;
 #endif
 _cntml = _ml->_nodecount;
-_thread = _ml->_thread;
 for (_iml = 0; _iml < _cntml; ++_iml) {
  _p = _ml->_data[_iml]; _ppvar = _ml->_pdata[_iml];
 #if CACHEVEC
@@ -240,10 +235,10 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
     _nd = _ml->_nodelist[_iml];
     _v = NODEV(_nd);
   }
- _g = _nrn_current(_p, _ppvar, _thread, _nt, _v + .001);
+ _g = _nrn_current(_v + .001);
  	{ double _dica;
   _dica = ica;
- _rhs = _nrn_current(_p, _ppvar, _thread, _nt, _v);
+ _rhs = _nrn_current(_v);
   _ion_dicadv += (_dica - ica)/.001 ;
  	}
  _g = (_g - _rhs)/.001;
@@ -259,14 +254,12 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  
 }}
 
-static void nrn_jacob(_NrnThread* _nt, _Memb_list* _ml, int _type) {
-double* _p; Datum* _ppvar; Datum* _thread;
+static void nrn_jacob(_NrnThread* _nt, _Memb_list* _ml, int _type){
 Node *_nd; int* _ni; int _iml, _cntml;
 #if CACHEVEC
     _ni = _ml->_nodeindices;
 #endif
 _cntml = _ml->_nodecount;
-_thread = _ml->_thread;
 for (_iml = 0; _iml < _cntml; ++_iml) {
  _p = _ml->_data[_iml];
 #if CACHEVEC
@@ -281,19 +274,14 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  
 }}
 
-static void nrn_state(_NrnThread* _nt, _Memb_list* _ml, int _type) {
+static void nrn_state(_NrnThread* _nt, _Memb_list* _ml, int _type){
 
 }
 
 static void terminal(){}
 
-static void _initlists(){
- double _x; double* _p = &_x;
+static void _initlists() {
  int _i; static int _first = 1;
   if (!_first) return;
 _first = 0;
 }
-
-#if defined(__cplusplus)
-} /* extern "C" */
-#endif

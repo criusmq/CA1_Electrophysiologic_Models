@@ -40,26 +40,28 @@ extern double hoc_Exp(double);
 #define hshift _p[2]
 #define mshift_mutant _p[3]
 #define hshift_mutant _p[4]
-#define ik _p[5]
-#define m _p[6]
-#define h _p[7]
-#define n _p[8]
-#define q _p[9]
-#define KV42Pi _p[10]
-#define KV42i _p[11]
-#define KTESTi _p[12]
-#define KTESTPi _p[13]
-#define ek _p[14]
-#define minf _p[15]
-#define hinf _p[16]
-#define ninf _p[17]
-#define qinf _p[18]
-#define Dm _p[19]
-#define Dh _p[20]
-#define Dn _p[21]
-#define Dq _p[22]
-#define v _p[23]
-#define _g _p[24]
+#define coeff1 _p[5]
+#define coeff2 _p[6]
+#define ik _p[7]
+#define m _p[8]
+#define h _p[9]
+#define n _p[10]
+#define q _p[11]
+#define KV42Pi _p[12]
+#define KV42i _p[13]
+#define KTESTi _p[14]
+#define KTESTPi _p[15]
+#define ek _p[16]
+#define minf _p[17]
+#define hinf _p[18]
+#define ninf _p[19]
+#define qinf _p[20]
+#define Dm _p[21]
+#define Dh _p[22]
+#define Dn _p[23]
+#define Dq _p[24]
+#define v _p[25]
+#define _g _p[26]
 #define _ion_ek	*_ppvar[0]._pval
 #define _ion_ik	*_ppvar[1]._pval
 #define _ion_dikdv	*_ppvar[2]._pval
@@ -169,6 +171,8 @@ extern Memb_func* memb_func;
  "hshift_kaf", "mV",
  "mshift_mutant_kaf", "mV",
  "hshift_mutant_kaf", "mV",
+ "coeff1_kaf", "1",
+ "coeff2_kaf", "1",
  "ik_kaf", "mA/cm2",
  0,0
 };
@@ -220,6 +224,8 @@ static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  "hshift_kaf",
  "mshift_mutant_kaf",
  "hshift_mutant_kaf",
+ "coeff1_kaf",
+ "coeff2_kaf",
  0,
  "ik_kaf",
  0,
@@ -240,15 +246,17 @@ extern Prop* need_memb(Symbol*);
 static void nrn_alloc(Prop* _prop) {
 	Prop *prop_ion;
 	double *_p; Datum *_ppvar;
- 	_p = nrn_prop_data_alloc(_mechtype, 25, _prop);
+ 	_p = nrn_prop_data_alloc(_mechtype, 27, _prop);
  	/*initialize range parameters*/
  	gkbar = 0.019211;
  	mshift = 0;
  	hshift = 0;
  	mshift_mutant = 0;
  	hshift_mutant = 0;
+ 	coeff1 = 0.51;
+ 	coeff2 = 0.49;
  	_prop->param = _p;
- 	_prop->param_size = 25;
+ 	_prop->param_size = 27;
  	_ppvar = nrn_prop_datum_alloc(_mechtype, 10, _prop);
  	_prop->dparam = _ppvar;
  	/*connect ionic variables to this model*/
@@ -305,13 +313,13 @@ extern void _cvode_abstol( Symbol**, double*, int);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
      _nrn_thread_reg(_mechtype, 2, _update_ion_pointer);
-  hoc_register_dparam_size(_mechtype, 10);
+  hoc_register_prop_size(_mechtype, 27, 10);
  	nrn_writes_conc(_mechtype, 0);
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  	hoc_register_synonym(_mechtype, _ode_synonym);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 kaf /Users/maoss2/Documents/Kv4.2_Model/Mod_Files/x86_64/kv4_2.mod\n");
+ 	ivoc_help("help ?1 kaf /Users/ossenimazidabiodoun/Documents/Master/Kv4.2_Model/Mod_Files/x86_64/kv4_2.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -331,8 +339,6 @@ static int _ode_spec1(_threadargsproto_);
  static int states(_threadargsproto_);
  
 static void* _ptable_mtau = (void*)0;
- 
-extern double hoc_func_table();
  
 double mtau ( _threadargsprotocomma_ double _lv ) {
  double _arg[1];
@@ -547,7 +553,7 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
 }}
 
 static double _nrn_current(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt, double _v){double _current=0.;v=_v;{ {
-   ik = KTESTi * gkbar * pow( m , power ) * h * ( v - ek ) + KTESTPi * gkbar * pow( n , power ) * q * ( v - ek ) ;
+   ik = coeff1 * gkbar * pow( m , power ) * h * ( v - ek ) + coeff2 * gkbar * pow( n , power ) * q * ( v - ek ) ;
    }
  _current += ik;
 

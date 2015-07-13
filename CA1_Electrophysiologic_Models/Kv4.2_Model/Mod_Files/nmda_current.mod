@@ -14,7 +14,7 @@ ENDCOMMENT
 NEURON {
   SUFFIX nmda_current
   USEION ca WRITE ica
-  GLOBAL x : driven by an external function
+  POINTER x : driven by an external function
   RANGE gbar, e
   RANGE g
   :GLOBAL mg

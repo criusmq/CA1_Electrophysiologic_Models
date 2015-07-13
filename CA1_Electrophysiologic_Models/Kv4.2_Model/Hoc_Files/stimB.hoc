@@ -1,10 +1,5 @@
 //b) 30 uncaging pulses at 0.5 Hz in 4 mM Ca2+, 0 mM Mg2+, and 1 μM TTX
 load_file("nrngui.hoc")
-//load_file("CA1_Harvey_Svoboda_Stim.hoc")
-//load_file("CA1_new_geometry_ras.hoc")
-//load_file("CA1_new_geometry_raf.hoc")
-//load_file("CA1_new_geometry_mek.hoc")
-//load_file("CA1_new_geometry_mapk.hoc")
 load_file("CA1_Final_Geometry.hoc")
 load_file("synapses_definitions.hoc")
 
@@ -25,15 +20,15 @@ for i=21,21{
 	access spine[i-20]{
 		//netcon
 		nc_stim1 = new NetCon(stim_1, sNMDA[i])
-		nc_stim1.weight =  1.25 //1.25
+		nc_stim1.weight =  0.25 //
 		nc_stim1.delay = 0 
 		
 		nc_AMPA_stim1 = new NetCon(stim_1, sAMPA[i])
-		nc_AMPA_stim1.weight = 1.25 //1.25
+		nc_AMPA_stim1.weight = 0.25 //
 		nc_AMPA_stim1.delay = 0 
 		
 		nc_NMDA_CA_stim1 = new NetCon(stim_1, sNMDA_CA[0])
-		nc_NMDA_CA_stim1.weight = 1.25 //1.25
+		nc_NMDA_CA_stim1.weight = 0.25 //
 		nc_NMDA_CA_stim1.delay = 0 
 		}
 	}

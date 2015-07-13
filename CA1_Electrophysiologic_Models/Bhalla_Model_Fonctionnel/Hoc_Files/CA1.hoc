@@ -3,9 +3,7 @@
  LTP reversal and dendritic excitability), injecter un courant de 1nA, pendant 200ms, à soma(0).*/
 
 load_file("nrngui.hoc")
-//load_file("NMDA.hoc")
 
-//load_file("ca1_cell.ses")
 
 /*	Correspondances entre les fichiers 
 	basal[0] = basal_3	basal[1] = basal_5	basal[2] = basal_6	basal[3] = basal_8
@@ -38,7 +36,7 @@ forall{
 
 test_const = 0.04 //constante qui agit sur le beta pour influencer la réponse calcique conformément
  					//à celle de Bhalla. 
-
+//deplacer les insert nmda_current et nmda_ca_current dans le fichier de définitions des synapses
 //soma
 soma {
 	diam=8.46
@@ -146,7 +144,7 @@ for i=1,8{
  		insert k_ahp_Bh
  		insert k_c_Bh
  		insert k_a_Bh
- 		insert nmda_current
+ 		//insert nmda_current
  		
  		//volume6 = PI*diam/2*diam/2*L*1e-18
  		//var6 = (8.96e-3 / volume6) *1e-6 * area(.5) * 1e-8
@@ -169,7 +167,7 @@ for i=1,8{
  		insert k_dr_Bh
  		insert k_ahp_Bh
  		insert k_c_Bh
- 		insert nmda_current
+ 		//insert nmda_current
  		
  		//var2 = 26.404e6 * area(.5) * 1e-8
  		//apical[0].beta_ca_conc_Bh = ( 26.404e12 * (PI*diam/2*diam/2*L*1e-18) * 1e-6)
@@ -237,7 +235,7 @@ for i=0,11{
 	 	insert k_c_Bh
 	 	insert k_dr_Bh
 	 	insert k_a_Bh
-	 	insert nmda_current
+	 	//insert nmda_current
 	 	
 	 	//volume7 = PI*diam/2*diam/2*L*1e-18
  		//var7 = (8.96e-3 / volume7) *1e-6 * area(.5) * 1e-8
@@ -307,8 +305,8 @@ spine[1]{
 	diam = 0.5
 	insert nmda_ca_conc_Bh
 	insert ca_debug_Bh
-	insert nmda_current
-	insert nmda_ca_current
+	//insert nmda_current
+	//insert nmda_ca_current
 	
 	//volume8 = PI*diam/2*diam/2*L*1e-18
  	//var8 = (8.96e-3 / volume8) *1e-6 * area(.5) * 1e-8
@@ -323,8 +321,8 @@ spine[3]{
 	diam = 0.5
 	insert nmda_ca_conc_Bh
 	insert ca_debug_Bh
-	insert nmda_current
-	insert nmda_ca_current
+	//insert nmda_current
+	//insert nmda_ca_current
 	
 	//volume9 = PI*diam/2*diam/2*L*1e-18
  	//var9 = (8.96e-3 / volume9) *1e-6 * area(.5) * 1e-8
@@ -339,8 +337,8 @@ spine[5]{
 	diam = 0.5
 	insert nmda_ca_conc_Bh
 	insert ca_debug_Bh
-	insert nmda_current
-	insert nmda_ca_current
+	//insert nmda_current
+	//insert nmda_ca_current
 	
 	//volume10 = PI*diam/2*diam/2*L*1e-18
  	//var10 = (8.96e-3 / volume10) *1e-6 * area(.5) * 1e-8
@@ -416,7 +414,7 @@ s = new Shape()
 s.show(0)
 soma s.color(2)
 topology()
-finitialize()
+()
 
 
 //creation de la sous-section pour l'insertion des point-process

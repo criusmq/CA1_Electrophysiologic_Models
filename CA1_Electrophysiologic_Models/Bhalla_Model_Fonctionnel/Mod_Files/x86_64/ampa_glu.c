@@ -229,7 +229,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  pnt_receive[_mechtype] = _net_receive;
  pnt_receive_size[_mechtype] = 1;
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 ampa /Users/ossenimazidabiodoun/Desktop/Bhalla_Model_Fonctionnel/Mod_Files/x86_64/ampa_glu.mod\n");
+ 	ivoc_help("help ?1 ampa /Users/ossenimazidabiodoun/Documents/CA1_Electrophysiologic_Models/CA1_Electrophysiologic_Models/Bhalla_Model_Fonctionnel/Mod_Files/x86_64/ampa_glu.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }

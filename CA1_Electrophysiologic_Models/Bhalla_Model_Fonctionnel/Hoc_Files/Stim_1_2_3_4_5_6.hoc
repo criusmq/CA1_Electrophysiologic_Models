@@ -1,16 +1,6 @@
 load_file("nrngui.hoc")
 load_file("CA1.hoc")
-//load_file("CA1_diff_test.hoc")
 load_file("synapses_definitions.hoc")
-
-//load_file("stimulation_1.hoc")
-//load_file("stimulation_2.hoc")
-//load_file("stimulation_3.hoc")
-//load_file("stimulation_4.hoc")
-//load_file("stimulation_5.hoc")
-//load_file("stimulation_6.hoc")
-
-
 
 /*********Paramètres globaux des synapses********/
 Tau1	= 20	

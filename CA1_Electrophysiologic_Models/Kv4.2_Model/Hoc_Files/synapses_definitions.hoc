@@ -4,10 +4,10 @@ objref sNMDA[25],sAMPA[25],sNMDA_CA[4]
 //apical
 for i=0,8{
 	access apical[i]{
-	
+	insert nmda_current
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
-		setpointer sNMDA[i].x, x_nmda_current(0.5)
+		setpointer x_nmda_current(0.5), sNMDA[i].msg
 		
     //AMPA_SYNAPSES	
     	sAMPA[i] = new ampa(0.5)	
@@ -17,79 +17,83 @@ for i=0,8{
 //lateral	
 for i=9,20{
 	access lateral[i-9]{
-	
+	insert nmda_current
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
-		setpointer sNMDA[i].x, x_nmda_current(0.5)
+		setpointer x_nmda_current(0.5), sNMDA[i].msg
 		
     //AMPA_SYNAPSES	
     	sAMPA[i] = new ampa(0.5)
 		}
 	}
 	
-//spine 1,3 et 5
+//spine 1,3,5 et 7
 
 for i=21,21{ 
 	access spine[i-20]{
-	
+	insert nmda_current
+	insert nmda_ca_current
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
-		setpointer sNMDA[i].x, x_nmda_current(0.5)
+		setpointer x_nmda_current(0.5), sNMDA[i].msg
 	
     //AMPA_SYNAPSES	
     	sAMPA[i] = new ampa(0.5)
     		
     //NMDA_CA_SYNAPSES	
 		sNMDA_CA[0] = new nmda_ca(0.5)
-		setpointer sNMDA_CA[0].y, y_nmda_ca_current(0.5)
+		setpointer y_nmda_ca_current(0.5), sNMDA_CA[0].mesg
 		}
 	}
 
 for i=22,22{ 
 	access spine[i-19]{
-	
+	insert nmda_current
+	insert nmda_ca_current
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
-		setpointer sNMDA[i].x, x_nmda_current(0.5)
+		setpointer x_nmda_current(0.5), sNMDA[i].msg
 	
     //AMPA_SYNAPSES	
     	sAMPA[i] = new ampa(0.5)
     	
     //NMDA_CA_SYNAPSES	
 		sNMDA_CA[1] = new nmda_ca(0.5)
-		setpointer sNMDA_CA[1].y, y_nmda_ca_current(0.5)
+		setpointer y_nmda_ca_current(0.5), sNMDA_CA[1].mesg
 		}
 	}
 	
 for i=23,23{ 
 	access spine[i-18]{
-	
+	insert nmda_current
+	insert nmda_ca_current
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
-		setpointer sNMDA[i].x, x_nmda_current(0.5)
+		setpointer x_nmda_current(0.5), sNMDA[i].msg
 	
     //AMPA_SYNAPSES	
     	sAMPA[i] = new ampa(0.5)
     	
     //NMDA_CA_SYNAPSES	
 		sNMDA_CA[2] = new nmda_ca(0.5)
-		setpointer sNMDA_CA[2].y, y_nmda_ca_current(0.5)
+		setpointer y_nmda_ca_current(0.5), sNMDA_CA[2].mesg
 		}
 	}
 	
 	
 for i=24,24{ 
 	access spine[i-17]{
-	
+	insert nmda_current
+	insert nmda_ca_current
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
-		setpointer sNMDA[i].x, x_nmda_current(0.5)
+		setpointer  x_nmda_current(0.5), sNMDA[i].msg
 	
     //AMPA_SYNAPSES	
     	sAMPA[i] = new ampa(0.5)
     	
     //NMDA_CA_SYNAPSES	
 		sNMDA_CA[3] = new nmda_ca(0.5)
-		setpointer sNMDA_CA[3].y, y_nmda_ca_current(0.5)
+		setpointer y_nmda_ca_current(0.5), sNMDA_CA[3].mesg
 		}
 	}

@@ -4,7 +4,7 @@ objref sNMDA[24],sAMPA[24],sNMDA_CA[3]
 //apical
 for i=0,8{
 	access apical[i]{
-	
+	insert nmda_current
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
 		setpointer x_nmda_current(0.5), sNMDA[i].msg
@@ -17,7 +17,7 @@ for i=0,8{
 //lateral	
 for i=9,20{
 	access lateral[i-9]{
-	
+	insert nmda_current
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
 		setpointer x_nmda_current(0.5), sNMDA[i].msg
@@ -31,7 +31,8 @@ for i=9,20{
 
 for i=21,21{ 
 	access spine[i-20]{
-	
+	insert nmda_current
+	insert nmda_ca_current
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
 		setpointer x_nmda_current(0.5), sNMDA[i].msg
@@ -47,7 +48,8 @@ for i=21,21{
 
 for i=22,22{ 
 	access spine[i-19]{
-	
+	insert nmda_current
+	insert nmda_ca_current
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
 		setpointer x_nmda_current(0.5), sNMDA[i].msg
@@ -63,7 +65,8 @@ for i=22,22{
 	
 for i=23,23{ 
 	access spine[i-18]{
-	
+	insert nmda_current
+	insert nmda_ca_current
 	//NMDA_SYNAPSES
 		sNMDA[i] = new nmda(0.5)
 		setpointer x_nmda_current(0.5), sNMDA[i].msg

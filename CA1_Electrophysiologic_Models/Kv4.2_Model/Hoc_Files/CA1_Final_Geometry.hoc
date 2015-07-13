@@ -39,6 +39,8 @@ forall{
 	insert pas { g_pas=0.0001 e_pas=-60}
 }
 
+test_const = 0.04 //constante qui agit sur le beta pour influencer la réponse calcique conformément
+ 					//à celle de Bhalla. 
 
 //soma
 soma {
@@ -52,13 +54,13 @@ soma {
  	insert k_ahp_Bh
  	insert k_c_Bh
  	insert k_a_Bh
- 	soma.beta_cadifus = ( 2e-8 / (FARADAY*1e6*soma.diam*1e-18))
+ 	soma.beta_cadifus = ( 2e-8 / (FARADAY*1e6*soma.diam*1e-18)) * test_const
  	soma.gna_na_Bh = 0.03
  	soma.gca_ca_debug_Bh = 0.004
  	soma.gk_k_dr_Bh = 0.025
  	soma.gk_k_ahp_Bh = 0.0008
  	soma.gk_k_c_Bh = 0.01
- 	soma.gk_k_a_Bh = 0.0015
+ 	soma.gk_k_a_Bh = 0.0015 //bhalla values 0.005 value used 0.0015
  	soma.phi_cadifus = 0.075
  	soma.kf_rasGDP_cadifus = 0
  	
@@ -76,7 +78,7 @@ basal[0] {
  	insert ca_debug_Bh
  	insert k_ahp_Bh
  	insert k_c_Bh
- 	basal[0].beta_cadifus = ( 2e-8 / (FARADAY*1e6*basal[0].diam*1e-18))
+ 	basal[0].beta_cadifus = ( 2e-8 / (FARADAY*1e6*basal[0].diam*1e-18)) * test_const
  	basal[0].gca_ca_debug_Bh = 0.005
  	basal[0].gk_k_ahp_Bh = 0.0008
  	basal[0].gk_k_c_Bh = 0.005
@@ -94,7 +96,7 @@ basal[1] {
  	insert ca_debug_Bh
  	insert k_ahp_Bh
  	insert k_c_Bh
- 	basal[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*basal[1].diam*1e-18))
+ 	basal[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*basal[1].diam*1e-18)) * test_const
  	basal[1].gca_ca_debug_Bh = 0.007
  	basal[1].gk_k_ahp_Bh = 0.0008
  	basal[1].gk_k_c_Bh = 0.005
@@ -114,7 +116,7 @@ basal[2] {
  	insert k_dr_Bh
  	insert k_ahp_Bh
  	insert k_c_Bh
- 	basal[2].beta_cadifus = ( 2e-8 / (FARADAY*1e6*basal[2].diam*1e-18))
+ 	basal[2].beta_cadifus = ( 2e-8 / (FARADAY*1e6*basal[2].diam*1e-18)) * test_const
  	basal[2].gna_na_Bh = 0.02
  	basal[2].gca_ca_debug_Bh = 0.012
  	basal[2].gk_k_dr_Bh = 0.02
@@ -136,7 +138,7 @@ basal[3] {
  	insert k_dr_Bh
  	insert k_ahp_Bh
  	insert k_c_Bh
-	basal[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*basal[3].diam*1e-18))
+	basal[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*basal[3].diam*1e-18)) * test_const
  	basal[3].gna_na_Bh = 0.015
  	basal[3].gca_ca_debug_Bh = 0.008
  	basal[3].gk_k_dr_Bh = 0.01
@@ -159,7 +161,7 @@ for i=1,8{
  		insert k_ahp_Bh
  		insert k_c_Bh
  		insert k_a_Bh
- 		insert nmda_current
+ 		//insert nmda_current
  		
  		//volume6 = PI*diam/2*diam/2*L*1e-18
  		//var6 = (8.96e-3 / volume6) *1e-6 * area(.5) * 1e-8
@@ -168,7 +170,7 @@ for i=1,8{
  		apical[i].gk_k_dr_Bh = 0.006
  		apical[i].gk_k_ahp_Bh = 0.0008
  		apical[i].gk_k_c_Bh = 0.005
- 		apical[i].gk_k_a_Bh = 0.004
+ 		apical[i].gk_k_a_Bh = 0.004 //bhalla values 0.01 value used 0.004
  		
  		insert kaf
  		apical[i].gkbar_kaf = 0.019211
@@ -183,11 +185,11 @@ for i=1,8{
  		insert k_dr_Bh
  		insert k_ahp_Bh
  		insert k_c_Bh
- 		insert nmda_current
+ 		//insert nmda_current
  		
  		//var2 = 26.404e6 * area(.5) * 1e-8
  		//apical[0].beta_cadifus = ( 26.404e12 * (PI*diam/2*diam/2*L*1e-18) * 1e-6)
- 		apical[0].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[0].diam*1e-18))
+ 		apical[0].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[0].diam*1e-18)) * test_const
  		apical[0].gna_na_Bh = 0.015
  		apical[0].gca_ca_debug_Bh = 0.008
  		apical[0].gk_k_dr_Bh = 0.01
@@ -234,35 +236,35 @@ for i = 3,9{
 	apical[i] {diam = 2.6}
 	}
 
-apical[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[1].diam*1e-18))
+apical[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[1].diam*1e-18)) * test_const
 apical[1].phi_cadifus = 0.075
 apical[1].kf_rasGDP_cadifus = 0
 
-apical[2].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[2].diam*1e-18))
+apical[2].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[2].diam*1e-18)) * test_const
 apical[2].phi_cadifus = 0.075
 apical[2].kf_rasGDP_cadifus = 0
 
-apical[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[3].diam*1e-18))
+apical[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[3].diam*1e-18)) * test_const
 apical[3].phi_cadifus = 0.075
 apical[3].kf_rasGDP_cadifus = 0
 
-apical[4].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[4].diam*1e-18))
+apical[4].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[4].diam*1e-18)) * test_const
 apical[4].phi_cadifus = 0.075
 apical[4].kf_rasGDP_cadifus = 0
 
-apical[5].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[5].diam*1e-18))
+apical[5].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[5].diam*1e-18)) * test_const
 apical[5].phi_cadifus = 0.075
 apical[5].kf_rasGDP_cadifus = 0
 
-apical[6].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[6].diam*1e-18))
+apical[6].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[6].diam*1e-18)) * test_const
 apical[6].phi_cadifus = 0.075
 apical[6].kf_rasGDP_cadifus = 0
 
-apical[7].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[7].diam*1e-18))
+apical[7].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[7].diam*1e-18)) * test_const
 apical[7].phi_cadifus = 0.075
 apical[7].kf_rasGDP_cadifus = 0
 
-apical[8].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[8].diam*1e-18))
+apical[8].beta_cadifus = ( 2e-8 / (FARADAY*1e6*apical[8].diam*1e-18)) * test_const
 apical[8].phi_cadifus = 0.075
 apical[8].kf_rasGDP_cadifus = 0
 
@@ -277,12 +279,12 @@ for i=0,29{
 	 	insert k_c_Bh
 	 	insert k_dr_Bh
 	 	insert k_a_Bh
-	 	insert nmda_current
+	 	//insert nmda_current
 	 	lateral[i].gca_ca_debug_Bh = 0.007
 	 	lateral[i].gk_k_ahp_Bh = 0.0008
  	 	lateral[i].gk_k_c_Bh = 0.005
  	 	lateral[i].gk_k_dr_Bh = 0.006
- 	 	lateral[i].gk_k_a_Bh = 0.004
+ 	 	lateral[i].gk_k_a_Bh = 0.004 //bhalla values 0.01 value used 0.004
  	 	
  	 	insert kaf
  	 	lateral[i].gkbar_kaf = 0.019211
@@ -355,123 +357,123 @@ for i=4,29{
 	lateral[i] {diam=1}
 	}
 	
-lateral[0].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[0].diam*1e-18))
+lateral[0].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[0].diam*1e-18)) * test_const
 	lateral[0].phi_cadifus = 0.075
  	lateral[0].kf_rasGDP_cadifus = 0
 
-lateral[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[1].diam*1e-18))
+lateral[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[1].diam*1e-18)) * test_const
 	lateral[1].phi_cadifus = 0.075
  	lateral[1].kf_rasGDP_cadifus = 0
 
-lateral[2].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[2].diam*1e-18))
+lateral[2].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[2].diam*1e-18)) * test_const
 	lateral[2].phi_cadifus = 0.075
  	lateral[2].kf_rasGDP_cadifus = 0
 
-lateral[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[3].diam*1e-18))
+lateral[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[3].diam*1e-18)) * test_const
 	lateral[3].phi_cadifus = 0.075
  	lateral[3].kf_rasGDP_cadifus = 0
 
-lateral[4].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[4].diam*1e-18))
+lateral[4].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[4].diam*1e-18)) * test_const
 	lateral[4].phi_cadifus = 0.075
  	lateral[4].kf_rasGDP_cadifus = 0
 
-lateral[5].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[5].diam*1e-18))
+lateral[5].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[5].diam*1e-18)) * test_const
 	lateral[5].phi_cadifus = 0.075
  	lateral[5].kf_rasGDP_cadifus = 0
 
-lateral[6].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[6].diam*1e-18))
+lateral[6].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[6].diam*1e-18)) * test_const
 	lateral[6].phi_cadifus = 0.075
  	lateral[6].kf_rasGDP_cadifus = 0
 
-lateral[7].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[7].diam*1e-18))
+lateral[7].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[7].diam*1e-18)) * test_const
 	lateral[7].phi_cadifus = 0.075
  	lateral[7].kf_rasGDP_cadifus = 0
 
-lateral[8].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[8].diam*1e-18))
+lateral[8].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[8].diam*1e-18)) * test_const
 	lateral[8].phi_cadifus = 0.075
  	lateral[8].kf_rasGDP_cadifus = 0
 
-lateral[9].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[9].diam*1e-18))
+lateral[9].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[9].diam*1e-18)) * test_const
 	lateral[9].phi_cadifus = 0.075
  	lateral[9].kf_rasGDP_cadifus = 0
  
-lateral[10].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[10].diam*1e-18))
+lateral[10].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[10].diam*1e-18)) * test_const
 	lateral[10].phi_cadifus = 0.075
  	lateral[10].kf_rasGDP_cadifus = 0
 
-lateral[11].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[11].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[11].phi_cadifus = 0.075
 	lateral[11].kf_rasGDP_cadifus = 0
 
-lateral[12].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[12].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[12].phi_cadifus = 0.075
 	lateral[12].kf_rasGDP_cadifus = 0
 
-lateral[13].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[13].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[13].phi_cadifus = 0.075
 	lateral[13].kf_rasGDP_cadifus = 0
 
-lateral[14].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[14].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[14].phi_cadifus = 0.075
 	lateral[14].kf_rasGDP_cadifus = 0
 
-lateral[15].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[15].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[15].phi_cadifus = 0.075
 	lateral[15].kf_rasGDP_cadifus = 0
 
-lateral[16].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[16].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[16].phi_cadifus = 0.075
 	lateral[16].kf_rasGDP_cadifus = 0
 
-lateral[17].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[17].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[17].phi_cadifus = 0.075
 	lateral[17].kf_rasGDP_cadifus = 0
 
-lateral[18].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[18].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[18].phi_cadifus = 0.075
 	lateral[18].kf_rasGDP_cadifus = 0
 
-lateral[19].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[19].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[19].phi_cadifus = 0.075
 	lateral[19].kf_rasGDP_cadifus = 0
 
-lateral[20].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[20].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[20].phi_cadifus = 0.075
 	lateral[20].kf_rasGDP_cadifus = 0
 
-lateral[21].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[21].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[21].phi_cadifus = 0.075
 	lateral[21].kf_rasGDP_cadifus = 0
 
-lateral[22].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[22].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[22].phi_cadifus = 0.075
 	lateral[22].kf_rasGDP_cadifus = 0
 
-lateral[23].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[23].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[23].phi_cadifus = 0.075
 	lateral[23].kf_rasGDP_cadifus = 0
 
-lateral[24].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[24].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[24].phi_cadifus = 0.075
 	lateral[24].kf_rasGDP_cadifus = 0
 
-lateral[25].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[25].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[25].phi_cadifus = 0.075
 	lateral[25].kf_rasGDP_cadifus = 0
 
-lateral[26].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[26].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[26].phi_cadifus = 0.075
 	lateral[26].kf_rasGDP_cadifus = 0
 
-lateral[27].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[27].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[27].phi_cadifus = 0.075
 	lateral[27].kf_rasGDP_cadifus = 0
 
-lateral[28].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[28].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[28].phi_cadifus = 0.075
 	lateral[28].kf_rasGDP_cadifus = 0
 
-lateral[29].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18))
+lateral[29].beta_cadifus = ( 2e-8 / (FARADAY*1e6*lateral[11].diam*1e-18)) * test_const
 	lateral[29].phi_cadifus = 0.075
 	lateral[29].kf_rasGDP_cadifus = 0
 
@@ -482,9 +484,9 @@ spine[1]{
 	nseg = 1
 	diam = 0.5
 	insert ca_debug_Bh
-	insert nmda_current
-	insert nmda_ca_current
-	spine[1].gca_ca_debug_Bh = 0.06
+	//insert nmda_current
+	//insert nmda_ca_current
+	spine[1].gca_ca_debug_Bh = 0.006 //bhalla values 0.006 //values used previously 0.06
 	insert cadifus	
 	insert kaf
 	spine[1].gkbar_kaf = 0.019211
@@ -494,51 +496,51 @@ spine[1]{
 	
 	//spine[1].kf_rasGDP_cadifus = 0
 	}
-spine[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18))
+spine[1].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[1].diam*1e-18)) * test_const
 
 
 spine[3]{
 	nseg = 1
 	diam = 0.5
 	insert ca_debug_Bh
-	insert nmda_current
-	insert nmda_ca_current
-	spine[3].gca_ca_debug_Bh = 0.06	
+	//insert nmda_current
+	//insert nmda_ca_current
+	spine[3].gca_ca_debug_Bh = 0.006 //bhalla values 0.006 //values used previously 0.06
 	 insert cadifus
 	 insert kaf
 	 spine[3].gkbar_kaf = 0.01921
 	//spine[3].kf_rasGDP_cadifus = 0
 	}
-spine[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[3].diam*1e-18))
+spine[3].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[3].diam*1e-18)) * test_const
 	
 	
 spine[5]{
 	nseg = 1
 	diam = 0.5
 	insert ca_debug_Bh
-	insert nmda_current
-	insert nmda_ca_current
-	spine[5].gca_ca_debug_Bh = 0.06
+	//insert nmda_current
+	//insert nmda_ca_current
+	spine[5].gca_ca_debug_Bh = 0.006 //bhalla values 0.006 //values used previously 0.06
 	insert cadifus
 	insert kaf
 	spine[5].gkbar_kaf = 0.01921
 	//spine[5].kf_rasGDP_cadifus = 0
 	}
-spine[5].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18))
+spine[5].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18)) * test_const
 
 spine[7]{
 	nseg = 1
 	diam = 0.5
 	insert ca_debug_Bh
-	insert nmda_current
-	insert nmda_ca_current
-	spine[7].gca_ca_debug_Bh = 0.06
+	//insert nmda_current
+	//insert nmda_ca_current
+	spine[7].gca_ca_debug_Bh = 0.006 //bhalla values 0.006 //values used previously 0.06
 	insert cadifus
 	insert kaf
 	spine[7].gkbar_kaf = 0.01921
 	//spine[7].kf_rasGDP_cadifus = 0
 	}
-spine[7].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18))
+spine[7].beta_cadifus = ( 2e-8 / (FARADAY*1e6*spine[5].diam*1e-18)) * test_const
 
 for i=0,7{
 	spine[i] {L=0.5}
@@ -659,9 +661,8 @@ s.show(0)
 soma s.color(2)
 topology()
 finitialize()
-*/
 
-/*
+
 //creation de la sous-section pour l'insertion des point-process
 objref sl
 sl = new SectionList()
