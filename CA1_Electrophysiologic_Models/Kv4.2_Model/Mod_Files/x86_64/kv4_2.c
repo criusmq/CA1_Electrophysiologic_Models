@@ -253,8 +253,8 @@ static void nrn_alloc(Prop* _prop) {
  	hshift = 0;
  	mshift_mutant = 0;
  	hshift_mutant = 0;
- 	coeff1 = 0.51;
- 	coeff2 = 0.49;
+ 	coeff1 = 0.67;
+ 	coeff2 = 0.33;
  	_prop->param = _p;
  	_prop->param_size = 27;
  	_ppvar = nrn_prop_datum_alloc(_mechtype, 10, _prop);
@@ -313,13 +313,13 @@ extern void _cvode_abstol( Symbol**, double*, int);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
      _nrn_thread_reg(_mechtype, 2, _update_ion_pointer);
-  hoc_register_prop_size(_mechtype, 27, 10);
+  hoc_register_dparam_size(_mechtype, 10);
  	nrn_writes_conc(_mechtype, 0);
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  	hoc_register_synonym(_mechtype, _ode_synonym);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 kaf /Users/ossenimazidabiodoun/Documents/Master/Kv4.2_Model/Mod_Files/x86_64/kv4_2.mod\n");
+ 	ivoc_help("help ?1 kaf /Users/maoss2/Documents/Kv4.2_Model/Mod_Files/x86_64/kv4_2.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -339,6 +339,8 @@ static int _ode_spec1(_threadargsproto_);
  static int states(_threadargsproto_);
  
 static void* _ptable_mtau = (void*)0;
+ 
+extern double hoc_func_table();
  
 double mtau ( _threadargsprotocomma_ double _lv ) {
  double _arg[1];

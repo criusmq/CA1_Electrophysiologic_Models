@@ -9,7 +9,7 @@ ENDCOMMENT
 NEURON {
 	SUFFIX ca_debug_Bh
 	USEION ca WRITE ica
-	RANGE gca, m_inf, m_tau, h_inf, h_tau
+	RANGE gca, m_inf, m_tau, h_inf, h_tau, ica
 	
 }
 

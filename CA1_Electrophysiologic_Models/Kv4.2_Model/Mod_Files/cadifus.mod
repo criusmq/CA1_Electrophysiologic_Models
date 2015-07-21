@@ -34,7 +34,7 @@ PARAMETER {
 	beta = 17.402  
 	ceiling	= 2	(mM)
 	caiBase = 50e-6 (mM)
-	kf_cam1 = 1 (/mM-ms)
+	kf_cam1 = 1 (/mM-ms)				:1 (/mM-ms)
 	kr_cam1 =  8.4853e-3 (/ms)
 	kf_cam2 =  8.4846 (/mM-ms)
 	kr_cam2 =  8.4853e-3 (/ms)
@@ -46,7 +46,8 @@ PARAMETER {
 	kr_gef =  0.008333333e-3(/ms)
 	kf_rasGDP = 0.1 (/mM-ms) : for spine, 0 for dendrite
 	kr_rasGDP = 0.003703703703703704e-3 (/ms)
-	kcat_raf = 0.060992e-3	(/ms)					:0.049556e-3 (/ms)  			:0.07624e-3 (/ms)
+	kcat_raf = 0.07624e-3 (/ms) :0.0693784e-3 (/ms) :91%			:0.060992e-3	(/ms)					:0.049556e-3 (/ms)  			
+						:0.07624e-3 (/ms) :differentes valeurs adaptees pour regulariser la suite
 	km_raf = 0.072e-3 (mM)
 	kcat_rafP = 1e-3 (/ms)
 	km_rafP = 0.0167e-3 (mM)
@@ -154,7 +155,7 @@ KINETIC state {
    ~ ca << ( (- beta * ica)- (phi * (cai - caiBase)) ) 
     cai = ca 
     :ca_modif = ca - 0.00045 : basal activity of calcium without KV.4.2 in the model. It use to match the Gef_activated with the one's from the Vcell model
-    ca_modif = ca - 0.00027 
+    ca_modif = ca * 2.9 :constante pour ajuster l'activation de la GEF 3.2
   ~ ca_modif + Cam <-> Cam_Ca (kf_cam1, kr_cam1)
   ~ ca_modif + Cam_Ca <-> Cam_Ca2 (kf_cam2, kr_cam2)
   ~ ca_modif + Cam_Ca2 <-> Cam_Ca3 (kf_cam3, kr_cam3)

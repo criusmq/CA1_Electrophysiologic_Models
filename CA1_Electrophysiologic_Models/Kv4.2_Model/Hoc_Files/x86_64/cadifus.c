@@ -205,13 +205,13 @@ extern Memb_func* memb_func;
 #define km_raf km_raf_cadifus
  double km_raf = 7.2e-05;
 #define kcat_raf kcat_raf_cadifus
- double kcat_raf = 6.0992e-05;
+ double kcat_raf = 7.624e-05;
 #define kr_rasGDP kr_rasGDP_cadifus
  double kr_rasGDP = 3.7037e-06;
 #define kr_gef kr_gef_cadifus
- double kr_gef = 8.33333e-06;
+ double kr_gef = 0;
 #define kf_gef kf_gef_cadifus
- double kf_gef = 2.75;
+ double kf_gef = 0;
 #define kr_cam4 kr_cam4_cadifus
  double kr_cam4 = 0.01;
 #define kf_cam4 kf_cam4_cadifus
@@ -520,14 +520,14 @@ extern void _cvode_abstol( Symbol**, double*, int);
      _nrn_thread_reg(_mechtype, 1, _thread_mem_init);
      _nrn_thread_reg(_mechtype, 0, _thread_cleanup);
      _nrn_thread_reg(_mechtype, 2, _update_ion_pointer);
-  hoc_register_prop_size(_mechtype, 56, 24);
+  hoc_register_dparam_size(_mechtype, 24);
  	nrn_writes_conc(_mechtype, 0);
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  	hoc_register_synonym(_mechtype, _ode_synonym);
  	hoc_register_ldifus1(_difusfunc);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 cadifus /Users/ossenimazidabiodoun/Documents/Master/Kv4.2_Model/Mod_Files/x86_64/cadifus.mod\n");
+ 	ivoc_help("help ?1 cadifus /Users/maoss2/Documents/Kv4.2_Model/Mod_Files/x86_64/cadifus.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -627,7 +627,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  _RHS1( 20) += (b_flux =   ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) ) );
  /*FLUX*/
   cai = ca ;
-   ca_modif = ca - 0.00027 ;
+   ca_modif = ca * 2.9 ;
    /* ~ ca_modif + Cam <-> Cam_Ca ( kf_cam1 , kr_cam1 )*/
  f_flux =  kf_cam1 * Cam * ca_modif ;
  b_flux =  kr_cam1 * Cam_Ca ;
@@ -879,7 +879,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  Dca += (b_flux =   ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) ) );
  /*FLUX*/
   cai = ca ;
- ca_modif = ca - 0.00027 ;
+ ca_modif = ca * 2.9 ;
  /* ~ ca_modif + Cam <-> Cam_Ca ( kf_cam1 , kr_cam1 )*/
  f_flux =  kf_cam1 * Cam * ca_modif ;
  b_flux =  kr_cam1 * Cam_Ca ;
@@ -1063,7 +1063,7 @@ _MATELM1(18, 18) *= ( PI * diam);  }
  /* ~ ca < < ( ( - beta * ica ) - ( phi * ( cai - caiBase ) ) )*/
  /*FLUX*/
   cai = ca ;
- ca_modif = ca - 0.00027 ;
+ ca_modif = ca * 2.9 ;
  /* ~ ca_modif + Cam <-> Cam_Ca ( kf_cam1 , kr_cam1 )*/
  _term =  kf_cam1 * ca_modif ;
  _MATELM1( 4 ,4)  += _term;

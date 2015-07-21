@@ -841,8 +841,8 @@ soma input = new IClamp (0.5)
 input.del = 100
 input.dur = 200
 input.amp = 1.6 
-*/
 
+*/
 /*running simmulation*/
 //run()
 

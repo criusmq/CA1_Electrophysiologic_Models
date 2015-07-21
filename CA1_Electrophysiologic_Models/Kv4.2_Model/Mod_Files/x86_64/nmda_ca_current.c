@@ -91,6 +91,7 @@ extern Memb_func* memb_func;
  "e_nmda_ca_current", "mV",
  "gbar_nmda_ca_current", "mho/cm2",
  "g_nmda_ca_current", "mho/cm2",
+ "ica_nmda_ca_current", "mA/cm2",
  "y_nmda_ca_current", "1",
  0,0
 };
@@ -116,6 +117,7 @@ static void  nrn_jacob(_NrnThread*, _Memb_list*, int);
  "gbar_nmda_ca_current",
  0,
  "g_nmda_ca_current",
+ "ica_nmda_ca_current",
  0,
  0,
  "y_nmda_ca_current",
@@ -158,9 +160,9 @@ extern void _cvode_abstol( Symbol**, double*, int);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
      _nrn_thread_reg(_mechtype, 2, _update_ion_pointer);
-  hoc_register_prop_size(_mechtype, 5, 3);
+  hoc_register_dparam_size(_mechtype, 3);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 nmda_ca_current /Users/ossenimazidabiodoun/Documents/Master/Kv4.2_Model/Mod_Files/x86_64/nmda_ca_current.mod\n");
+ 	ivoc_help("help ?1 nmda_ca_current /Users/maoss2/Documents/Kv4.2_Model/Mod_Files/x86_64/nmda_ca_current.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }

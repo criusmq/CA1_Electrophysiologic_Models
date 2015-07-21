@@ -36,15 +36,15 @@ extern double hoc_Exp(double);
 #define t _nt->_t
 #define dt _nt->_dt
 #define gca _p[0]
-#define m_inf _p[1]
-#define m_tau _p[2]
-#define h_inf _p[3]
-#define h_tau _p[4]
-#define m _p[5]
-#define h _p[6]
-#define Dm _p[7]
-#define Dh _p[8]
-#define ica _p[9]
+#define ica _p[1]
+#define m_inf _p[2]
+#define m_tau _p[3]
+#define h_inf _p[4]
+#define h_tau _p[5]
+#define m _p[6]
+#define h _p[7]
+#define Dm _p[8]
+#define Dh _p[9]
 #define v _p[10]
 #define _g _p[11]
 #define _ion_ica	*_ppvar[0]._pval
@@ -104,6 +104,7 @@ extern Memb_func* memb_func;
  "erest_act_ca_debug_Bh", "mV",
  "eca_ca_debug_Bh", "mV",
  "gca_ca_debug_Bh", "mho/cm2",
+ "ica_ca_debug_Bh", "mA/cm2",
  "m_tau_ca_debug_Bh", "ms",
  "h_tau_ca_debug_Bh", "ms",
  0,0
@@ -139,6 +140,7 @@ static void _ode_matsol(_NrnThread*, _Memb_list*, int);
 "ca_debug_Bh",
  "gca_ca_debug_Bh",
  0,
+ "ica_ca_debug_Bh",
  "m_inf_ca_debug_Bh",
  "m_tau_ca_debug_Bh",
  "h_inf_ca_debug_Bh",
@@ -190,11 +192,11 @@ extern void _cvode_abstol( Symbol**, double*, int);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
      _nrn_thread_reg(_mechtype, 2, _update_ion_pointer);
-  hoc_register_prop_size(_mechtype, 12, 3);
+  hoc_register_dparam_size(_mechtype, 3);
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 ca_debug_Bh /Users/ossenimazidabiodoun/Documents/Master/Kv4.2_Model/Mod_Files/x86_64/ca_debug_bh.mod\n");
+ 	ivoc_help("help ?1 ca_debug_Bh /Users/maoss2/Documents/Kv4.2_Model/Mod_Files/x86_64/ca_debug_bh.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }

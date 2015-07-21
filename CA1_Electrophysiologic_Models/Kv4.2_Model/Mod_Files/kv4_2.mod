@@ -61,8 +61,10 @@ PARAMETER {
 	KTESTi		(mM)
 	KTESTPi		(mM)
 	
-	coeff1 = 0.51 (1)
-	coeff2 = 0.49 (1)
+	:coeff1 = 1 (1)
+	:coeff2 = 0 (1)
+	:coeff1 = 0.67 (1)
+	:coeff2 = 0.33 (1)
 }
 
 ASSIGNED { 
@@ -85,12 +87,12 @@ BREAKPOINT {
     
     :if (KV42Pi == 0) { ik  = gkbar * m^power * h * (v-ek) }
     :else {
-	:ik  = KTESTi * gkbar * m^power * h * (v-ek) + KTESTPi*gkbar * n^power * q * (v-ek) 
+	ik  = KTESTi * gkbar * m^power * h * (v-ek) + KTESTPi*gkbar * n^power * q * (v-ek) 
 	
 	
 	:if (KV42Pi == 0) { ik  = gkbar * m^power * h * (v-ek) }
     :else {
-	ik  = coeff1 * gkbar * m^power * h * (v-ek) + coeff2 * gkbar * n^power * q * (v-ek) 
+	:ik  = coeff1 * gkbar * m^power * h * (v-ek) + coeff2 * gkbar * n^power * q * (v-ek) 
 	
 }
 
